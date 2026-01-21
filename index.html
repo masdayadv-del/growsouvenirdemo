@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 
 <head>
@@ -19,6 +19,9 @@
     <meta name="mobile-web-app-capable" content="yes">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"
+        integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -157,6 +160,34 @@
         nav.glass-nav {
             bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
         }
+
+        /* Shake animation for login errors */
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-8px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(8px);
+            }
+        }
+
+        .animate-shake {
+            animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        }
     </style>
 
 </head>
@@ -171,7 +202,7 @@
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1" x-text="dateString">...</p>
         </div>
         <div
-            class="bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm text-center border border-white relative">
+            class="bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm text-center border border-white relative login-card">
             <div
                 class="w-14 h-14 bg-gradient-to-tr from-brand-500 to-brand-700 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-brand-500/30">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,23 +270,9 @@
                     <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">and advertising</p>
                 </div>
             </div>
-            <!-- DEMO MODE BADGE -->
-            <div x-show="isDemo" x-cloak class="absolute left-1/2 -translate-x-1/2 top-2 z-50">
-                <div
-                    class="bg-red-500 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg animate-pulse-slow flex items-center gap-1.5">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                        </path>
-                    </svg>
-                    MODE DEMO
-                </div>
-            </div>
             <div class="flex items-center gap-2">
-                <!-- Privacy Toggle Button: Disabled for Demo -->
-                <button x-show="!isDemo" @click="isSensitiveHidden = !isSensitiveHidden; vibrate()"
+                <button
+                    @click="isSensitiveHidden = !isSensitiveHidden; localStorage.setItem('grow_privacy_mode', isSensitiveHidden); vibrate();"
                     class="w-10 h-10 rounded-xl bg-white/50 border border-slate-200/50 flex items-center justify-center text-slate-400 active:scale-95 transition hover:bg-white hover:shadow-sm">
                     <svg x-show="!isSensitiveHidden" class="w-5 h-5" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
@@ -272,15 +289,21 @@
                         </path>
                     </svg>
                 </button>
-                <!-- Locked Privacy Indicator for Demo -->
-                <div x-show="isDemo" x-cloak title="Mode privacy terkunci untuk akun demo"
-                    class="w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-500 cursor-not-allowed">
+
+                <!-- Offline Queue Indicator -->
+                <button x-show="pendingQueue.length > 0" @click="processPendingQueue(); vibrate()"
+                    class="w-10 h-10 rounded-xl bg-white/50 border border-slate-200/50 flex items-center justify-center text-amber-600 active:scale-95 transition hover:bg-white hover:shadow-sm relative animate-pulse"
+                    x-cloak>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21">
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
                         </path>
                     </svg>
-                </div>
+                    <span
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full px-1.5 min-w-[18px] flex items-center justify-center"
+                        x-text="pendingQueue.length"></span>
+                </button>
+
                 <div @click="isLogoutOpen = true; vibrate()" class="flex items-center gap-3 cursor-pointer group">
 
                     <div class="text-right hidden sm:block">
@@ -825,13 +848,14 @@
                                     </div>
                                     <h4 class="font-bold text-xs text-slate-800 line-clamp-1" x-text="t.product"></h4>
                                     <p class="text-[9px] font-bold uppercase text-slate-400" x-text="t.customer"></p>
-                                    <p class="text-[8px] text-slate-300 mt-1">Modal: <span x-text="fmt(t.hpp)"></span>
-                                    </p>
+                                    <p class="text-[8px] text-slate-300 mt-1">Modal: <span
+                                            x-text="isSensitiveHidden ? 'Rp ****' : fmt(t.hpp)"></span></p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="font-black text-xs text-brand-600" x-text="fmt(t.total)"></p>
+                                    <p class="font-black text-xs text-brand-600"
+                                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(t.total)"></p>
                                     <p class="text-[8px] text-rose-500 font-bold" x-show="t.sisa > 0"
-                                        x-text="'Kurang: ' + fmt(t.sisa)"></p>
+                                        x-text="isSensitiveHidden ? 'Rp ****' : ('Kurang: ' + fmt(t.sisa))"></p>
                                 </div>
                             </div>
                             <div class="flex justify-end gap-2 border-t border-slate-50 pt-1">
@@ -860,7 +884,14 @@
                                     </svg>
                                     <span x-text="loadingPdf ? 'Loading...' : 'Print'"></span>
                                 </button>
-                                <template x-if="currentUser.role === 'Admin'">
+                                <button @click.stop="printReceipt(t);vibrate()"
+                                    class="flex items-center px-2 py-1 bg-green-50 text-green-600 rounded-lg text-[9px] font-bold active:bg-green-100 hover:bg-green-100 transition"><svg
+                                        class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4v-4m0 0h9m-9 0h9m-9 0v4m-9-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                        </path>
+                                    </svg>Struk</button>
+                                <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
                                     <button @click.stop="requestDelete(t.id); vibrate()"
                                         class="flex items-center px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-[9px] font-bold active:bg-rose-100 hover:bg-rose-100 transition"><svg
                                             class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -964,11 +995,12 @@
                                     <div>
                                         <p class="text-xs font-bold text-slate-800" x-text="item.productName"></p>
                                         <p class="text-[9px] text-slate-500"><span x-text="item.qty"></span> x <span
-                                                x-text="fmt(item.sellPrice)"></span></p>
+                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <p class="text-xs font-bold text-brand-600"
-                                            x-text="fmt(item.qty * item.sellPrice)"></p>
+                                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(item.qty * item.sellPrice)">
+                                        </p>
 
                                         <!-- Edit Button -->
                                         <button @click="editCartItem(index)" class="text-amber-400 p-1 active:scale-95">
@@ -989,7 +1021,8 @@
                             </template>
                             <div class="flex justify-between items-center px-2"><span
                                     class="text-xs font-bold text-slate-500">Total</span><span
-                                    class="text-sm font-extrabold text-slate-800" x-text="fmt(cartTotal)"></span></div>
+                                    class="text-sm font-extrabold text-slate-800"
+                                    x-text="isSensitiveHidden ? 'Rp *******' : fmt(cartTotal)"></span></div>
                         </div>
 
                         <div x-show="cart.length > 0" class="bg-amber-50 p-3 rounded-2xl border border-amber-100">
@@ -999,7 +1032,9 @@
                                     class="w-full bg-white rounded-xl pl-8 pr-3 py-3 text-right text-xs font-bold outline-none focus:ring-2 focus:ring-amber-500 transition shadow-sm"
                                     placeholder="0"></div>
                             <div class="flex gap-2 mt-2 overflow-x-auto no-scrollbar"><button
-                                    @click="form.dp = cartTotal; vibrate()"
+                                    @click="form.dp = 0; vibrate()"
+                                    class="px-3 py-1 bg-white border border-slate-200 rounded-lg text-[8px] font-bold">DP
+                                    0</button><button @click="form.dp = cartTotal; vibrate()"
                                     class="px-3 py-1 bg-white border border-slate-200 rounded-lg text-[8px] font-bold">Lunas</button><button
                                     @click="form.dp = 50000; vibrate()"
                                     class="px-3 py-1 bg-white border border-slate-200 rounded-lg text-[8px] font-bold">50k</button><button
@@ -1168,7 +1203,7 @@
                                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                         </path>
                                     </svg>Edit</button>
-                                <template x-if="currentUser.role === 'Admin'">
+                                <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
                                     <button @click="requestDeleteExpense(ex.id); vibrate()"
                                         class="flex items-center px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-[9px] font-bold active:bg-rose-100 hover:bg-rose-100 transition"><svg
                                             class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1180,6 +1215,20 @@
                             </div>
                         </div>
                     </template>
+                    <!-- Empty State for Expenses -->
+                    <div x-show="filteredExpenses.length === 0"
+                        class="flex flex-col items-center justify-center py-12 text-center opacity-50">
+                        <div
+                            class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-3 text-slate-400">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <p class="text-xs font-bold text-slate-400">Belum ada pengeluaran</p>
+                        <p class="text-[10px] text-slate-300 mt-1">Coba ubah filter periode</p>
+                    </div>
                 </div>
             </div>
 
@@ -1195,7 +1244,7 @@
                                 class="w-full appearance-none bg-slate-50 border-0 rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-brand-500">
                                 <template
                                     x-for="(m, i) in ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']">
-                                    <option :value="i" x-text="m"></option>
+                                    <option :value="i" x-text="m" :selected="i === reportDate.month"></option>
                                 </template>
                             </select>
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -1210,7 +1259,7 @@
                                 class="w-full appearance-none bg-slate-50 border-0 rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-brand-500">
                                 <template
                                     x-for="y in Array.from({length: 5}, (_, i) => new Date().getFullYear() - 2 + i)">
-                                    <option :value="y" x-text="y"></option>
+                                    <option :value="y" x-text="y" :selected="y === reportDate.year"></option>
                                 </template>
                             </select>
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -1659,21 +1708,24 @@
                     <div x-show="loadingDetail" class="space-y-2">
                         <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
                     </div>
-                    <div x-show="!loadingDetail" class="space-y-3">
+                    <div x-show="!loadingDetail" class="space-y-3 max-h-64 overflow-y-auto no-scrollbar">
                         <template x-for="item in detailItems" :key="item.productName">
                             <div class="flex justify-between items-start border-b border-slate-50 pb-2 last:border-0">
                                 <div class="pr-2">
                                     <p class="text-xs font-bold text-slate-800" x-text="item.productName"></p>
                                     <p class="text-[10px] text-slate-400"><span x-text="item.qty"></span> x <span
-                                            class="text-brand-600 font-bold" x-text="fmt(item.sellPrice)"></span></p>
-                                    <template x-if="currentUser.role === 'Admin'">
+                                            class="text-brand-600 font-bold"
+                                            x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
+                                    <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
                                         <p class="text-[9px] text-slate-400 mt-0.5">HPP: <span
-                                                x-text="fmt(item.costPrice)"></span> • Laba: <span
-                                                class="text-emerald-500 font-bold"
-                                                x-text="fmt((item.sellPrice - item.costPrice) * item.qty)"></span></p>
+                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.costPrice)"></span> •
+                                            Laba: <span class="text-emerald-500 font-bold"
+                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt((item.sellPrice - item.costPrice) * item.qty)"></span>
+                                        </p>
                                     </template>
                                 </div>
-                                <p class="text-xs font-black text-brand-600" x-text="fmt(item.sellPrice * item.qty)">
+                                <p class="text-xs font-black text-brand-600"
+                                    x-text="isSensitiveHidden ? 'Rp *******' : fmt(item.sellPrice * item.qty)">
                                 </p>
                             </div>
                         </template>
@@ -1681,116 +1733,66 @@
                 </div>
                 <div class="bg-slate-900 rounded-2xl p-4 text-white space-y-2">
                     <div class="flex justify-between text-xs opacity-70"><span>Total Tagihan</span><span
-                            x-text="fmt(selectedDetail?.total)"></span></div>
+                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.total)"></span></div>
                     <div class="flex justify-between text-xs opacity-70"><span>Sudah Bayar (DP)</span><span
-                            class="text-green-400" x-text="fmt(selectedDetail?.dp)"></span></div>
+                            class="text-green-400"
+                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.dp)"></span></div>
                     <div class="w-full h-px bg-white/10 my-1"></div>
                     <div class="flex justify-between font-bold text-sm"><span>Sisa Kekurangan</span><span
-                            class="text-red-400" x-text="fmt(selectedDetail?.sisa)"></span></div>
+                            class="text-red-400"
+                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.sisa)"></span></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div x-show="isSetorOpen"
-        class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
-        <div class="bg-white rounded-[2rem] w-full max-w-sm p-6 shadow-2xl">
-            <div class="mx-auto w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mb-4 text-brand-600">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18">
-                    </path>
-                </svg>
-            </div>
-            <h3 class="font-extrabold text-slate-800 text-lg text-center mb-1">Setor Modal</h3>
-            <p class="text-xs text-slate-500 text-center mb-5">Setor modal ke bank untuk restock barang</p>
-            <form @submit.prevent="submitSetor">
-                <div class="space-y-3">
-                    <!-- Bank Selection dengan Icon Modern -->
-                    <div>
-                        <label class="text-xs font-bold text-slate-600 mb-2 block">Pilih Bank Tujuan</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <!-- Bank Mandiri -->
-                            <button type="button" @click="setorForm.bank='Mandiri'; vibrate()"
-                                :class="setorForm.bank==='Mandiri' ? 'bg-brand-500 border-brand-600 text-white' : 'bg-white border-slate-200 text-slate-700 hover:border-brand-400'"
-                                class="border-2 rounded-xl px-3 py-2 transition flex items-center gap-2">
-                                <svg class="w-5 h-5"
-                                    :class="setorForm.bank==='Mandiri' ? 'text-white' : 'text-brand-600'"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                                </svg>
-                                <span class="text-xs font-bold">Mandiri</span>
-                            </button>
 
-                            <!-- Bank BCA -->
-                            <button type="button" @click="setorForm.bank='BCA'; vibrate()"
-                                :class="setorForm.bank==='BCA' ? 'bg-brand-500 border-brand-600 text-white' : 'bg-white border-slate-200 text-slate-700 hover:border-brand-400'"
-                                class="border-2 rounded-xl px-3 py-2 transition flex items-center gap-2">
-                                <svg class="w-5 h-5" :class="setorForm.bank==='BCA' ? 'text-white' : 'text-slate-600'"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                </svg>
-                                <span class="text-xs font-bold">BCA</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="relative">
-                        <span
-                            class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-brand-600">Rp</span>
-                        <input type="number" x-model="setorForm.amount"
-                            class="w-full bg-slate-50 border-0 rounded-xl pl-10 pr-3 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-500"
-                            placeholder="Nominal Setor" required>
-                    </div>
-                    <input type="text" x-model="setorForm.note"
-                        class="w-full bg-slate-50 border-0 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-500"
-                        placeholder="Catatan (opsional)">
-                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
-                            </path>
-                        </svg>
-                        <p class="text-xs text-brand-600 font-bold flex-1">Modal di Laci: <span
-                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(modalStats.modalGantung)"></span></p>
-                    </div>
-                </div>
-                <div class="flex gap-3 mt-5">
-                    <button type="button" @click="isSetorOpen=false; vibrate()"
-                        class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 transition">Batal</button>
-                    <button type="submit" :disabled="bgProcess"
-                        class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg hover:bg-brand-700 active:scale-95 transition disabled:opacity-50 flex items-center justify-center gap-2">
-                        <svg x-show="bgProcess" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                            </circle>
-                            <path class="opacity-75" fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                            </path>
-                        </svg>
-                        <span x-show="!bgProcess">SETOR</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <script>
         // === KONFIGURASI API ===
         // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA YANG BARU
-        const API_URL = "https://script.google.com/macros/s/AKfycbxCs04mc_DICJJcUB0nFNmntwHjiqaIhAAv_PJAM9ylffN3xcwzouEcR4NNEYdGaqjM/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbz9faI5IerS5gVP51ffP1qmSfqU6FJI6xcc6cQg7gXhDcAjbeyZuhyYEX2P0bkfGMZpTg/exec";
         const API_TOKEN = "GROW_SECURE_2026";
+        const ENCRYPTION_KEY = "GROW_2026_SECRET_KEY_XYZ"; // Change this in production!
+
+        // === ENCRYPTION HELPERS ===
+        const SecureStorage = {
+            encrypt(data) {
+                if (!window.CryptoJS) return JSON.stringify(data);
+                return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
+            },
+            decrypt(encryptedData) {
+                if (!encryptedData) return null;
+                if (!window.CryptoJS) {
+                    try { return JSON.parse(encryptedData); } catch { return null; }
+                }
+                try {
+                    const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+                    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+                    return decrypted ? JSON.parse(decrypted) : null;
+                } catch (e) {
+                    console.warn('Decryption failed, trying plain parse:', e);
+                    try { return JSON.parse(encryptedData); } catch { return null; }
+                }
+            },
+            set(key, data) {
+                const encrypted = this.encrypt(data);
+                localStorage.setItem(key, encrypted);
+            },
+            get(key) {
+                const encrypted = localStorage.getItem(key);
+                return this.decrypt(encrypted);
+            }
+        };
 
         function app() {
             return {
-                currentUser: JSON.parse(localStorage.getItem('grow_user')) || null,
+                currentUser: SecureStorage.get('grow_user') || null,
                 loginForm: { u: '', p: '' },
                 isLogoutOpen: false, isDetailOpen: false, loadingDetail: false, selectedDetail: null, detailItems: [],
 
                 tab: 'home', initialLoading: true, bgProcess: false, loading: false, loadingPdf: false, notifications: [], isMasterOpen: false, isSetorOpen: false, isDeleteOpen: false, deleteId: null, isOffline: false, loadingData: true,
-                isSensitiveHidden: false, // Will be set properly in init()
+                isSensitiveHidden: localStorage.getItem('grow_privacy_mode') === 'true',
                 allProducts: [], categories: [], history: [], expenses: [], deposits: [],
                 stats: { omzet: 0, grossProfit: 0, netProfit: 0, totalExpense: 0, totalHPP: 0 },
                 modalStats: { modalGantung: 0, totalHPP: 0, totalDisetor: 0 },
@@ -1798,9 +1800,14 @@
                 filterDate: '', isService: false, selectedCategory: "", filterStatus: '', productSearch: '', showProductList: false,
                 searchQuery: '', filterStartDate: '', filterEndDate: '', quickFilter: '',
 
+                // === OFFLINE QUEUE SYSTEM ===
+                pendingQueue: SecureStorage.get('grow_pending_queue') || [],
+                isOnline: navigator.onLine,
+                syncInProgress: false,
+
                 expFilterStart: '', expFilterEnd: '', expQuickFilter: '',
                 form: { id: null, customer: '', productName: '', serviceName: '', qty: 1, sellPrice: '', costPrice: '', dp: 0, deadline: '' }, newProd: { category: '', name: '' }, setorForm: { amount: '', note: '', bank: 'Mandiri' }, expForm: { id: null, category: '', desc: '', amount: '' }, deleteType: 'transaction',
-                cart: [], loadingText: 'MENGHUBUNGKAN...', loadingMessages: ['MENYAMBUNGKAN SERVER...', 'SINKRONISASI DATA...', 'MEMUAT DASHBOARD...', 'MENYIAPKAN TRANSAKSI...'], timeString: '', dateString: '',
+                cart: [], loadingText: 'MENGHUBUNGKAN...', loadingMessages: ['MENYAMBUNGKAN SERVER...', 'SINKRONISASI DATA...', '🔐 ENKRIPSI AKTIF...', 'MEMUAT DASHBOARD...', 'MENYIAPKAN TRANSAKSI...'], timeString: '', dateString: '',
                 topProduct: { name: '-', qty: 0 },
 
                 // USER MGMT STATE
@@ -1808,22 +1815,29 @@
                 currUserForm: { username: '', password: '', role: 'Kasir', name: '', photo: '', isEdit: false },
 
                 init() {
-                    // Set privacy mode: always true for demo, otherwise from localStorage
-                    if (this.isDemo) {
-                        this.isSensitiveHidden = true;
-                    } else {
-                        this.isSensitiveHidden = localStorage.getItem('grow_privacy_mode') === 'true';
-                    }
-
                     setInterval(() => this.updateTime(), 1000); this.updateTime();
+                    this.restoreCart();
+
+                    // === CONNECTION MONITORING ===
+                    window.addEventListener('online', () => {
+                        this.isOnline = true;
+                        this.notify('✅ Koneksi Kembali! Sinkronisasi...', 'success');
+                        this.processPendingQueue();
+                    });
+
+                    window.addEventListener('offline', () => {
+                        this.isOnline = false;
+                        this.notify('⚠️ Mode Offline - Data disimpan lokal', 'error');
+                    });
+
+                    if (this.currentUser) { this.startApp(); }
                     let msgIndex = 0; const msgInterval = setInterval(() => { this.loadingText = this.loadingMessages[msgIndex]; msgIndex = (msgIndex + 1) % this.loadingMessages.length; }, 800);
-                    window.addEventListener('offline', () => this.isOffline = true); window.addEventListener('online', () => this.isOffline = false);
+
 
                     const savedCart = localStorage.getItem('grow_cart_backup');
                     if (savedCart) { this.cart = JSON.parse(savedCart); if (this.cart.length > 0) this.notify("Keranjang dipulihkan", 'info'); }
                     this.$watch('cart', (val) => localStorage.setItem('grow_cart_backup', JSON.stringify(val)));
-                    // Only save privacy mode if NOT demo user
-                    this.$watch('isSensitiveHidden', (val) => { if (!this.isDemo) localStorage.setItem('grow_privacy_mode', val); });
+                    this.$watch('isSensitiveHidden', (val) => localStorage.setItem('grow_privacy_mode', val));
 
                     // Init Report Filters
                     const today = new Date();
@@ -1834,7 +1848,6 @@
 
                 updateTime() { const now = new Date(); this.timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); this.dateString = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
                 get greeting() { const h = new Date().getHours(); if (h < 11) return 'Selamat Pagi'; if (h < 15) return 'Selamat Siang'; if (h < 18) return 'Selamat Sore'; return 'Selamat Malam'; },
-                get isDemo() { return this.currentUser?.role === 'Demo'; },
                 startApp(interval) { fetch(`${API_URL}?action=ping`, { mode: 'no-cors' }); this.fetch(true).then(() => { if (interval) clearInterval(interval); }); },
                 vibrate() { if (navigator.vibrate) navigator.vibrate(15); },
 
@@ -1855,17 +1868,26 @@
 
                         if (res.success) {
                             this.currentUser = res.user;
-                            localStorage.setItem('grow_user', JSON.stringify(res.user));
+                            SecureStorage.set('grow_user', res.user);
                             this.loginForm = { u: '', p: '' };
                             this.initialLoading = true;
                             this.showWelcome = true; // Show Welcome
                             this.startApp();
                         } else {
-                            this.notify(res.message, 'error');
+                            // Enhanced error message
+                            const errorMsg = res.message || 'Username atau Password salah!';
+                            this.notify(errorMsg, 'error');
                             this.bgProcess = false;
+
+                            // Shake animation for login form
+                            const loginCard = document.querySelector('.login-card');
+                            if (loginCard) {
+                                loginCard.classList.add('animate-shake');
+                                setTimeout(() => loginCard.classList.remove('animate-shake'), 500);
+                            }
                         }
                     } catch (e) {
-                        this.notify("Gagal Login: Server Error", 'error');
+                        this.notify("Gagal Login: Cek Koneksi Internet", 'error');
                         this.bgProcess = false;
                     }
                 },
@@ -1984,34 +2006,20 @@
                 },
 
                 async fetch(isInitial = false) {
-                    // 1. NYALAKAN ANIMASI (Agar tombol reload berputar)
                     this.loading = true;
-
                     if (isInitial) {
-                        // Cek apakah ada data tersimpan di HP?
-                        const cached = localStorage.getItem('grow_data_cache');
-                        if (cached) {
-                            const c = JSON.parse(cached);
-                            // Langsung tampilkan data lama (Instan!)
-                            this.applyData(c);
-                            this.initialLoading = false;
-                        } else {
-                            this.initialLoading = true;
+                        const cache = SecureStorage.get('grow_data_cache');
+                        if (cache) {
+                            this.applyData(cache);
                         }
                     }
-
-                    // Download data baru di background
                     const e = await this.api('getInitialData');
-
                     if (e) {
                         this.applyData(e);
-                        // Simpan data baru ke HP
-                        localStorage.setItem('grow_data_cache', JSON.stringify(e));
-                        this.initialLoading = false;
+                        SecureStorage.set('grow_data_cache', e);
                         this.loadingData = false;
+                        this.initialLoading = false;
                     }
-
-                    // 2. MATIKAN ANIMASI (Data selesai diambil, stop putaran)
                     this.loading = false;
                 },
 
@@ -2035,18 +2043,22 @@
                     const item = this.cart[index];
                     if (!item) return;
 
+                    // Clear form first to prevent collision
+                    this.form.productName = '';
+                    this.form.serviceName = '';
+                    this.productSearch = '';
+                    this.form.qty = 1;
+                    this.form.sellPrice = '';
+                    this.form.costPrice = '';
+
                     // Detect if service or product
                     const isService = item.productName.startsWith('[JASA] ');
                     this.isService = isService;
 
                     if (isService) {
                         this.form.serviceName = item.productName.replace('[JASA] ', '');
-                        this.form.productName = '';
-                        this.productSearch = '';
                     } else {
                         this.form.productName = item.productName;
-                        // Use the full name including category for display so user knows what it is
-                        this.form.serviceName = '';
                         this.productSearch = item.productName;
                     }
 
@@ -2111,6 +2123,12 @@
                         this.filterEndDate = '';
                     } else if (type === 'custom') {
                         // Don't set dates, let user choose
+                        // Validate after user inputs
+                        this.$watch('filterEndDate', () => {
+                            if (this.filterStartDate && this.filterEndDate && this.filterEndDate < this.filterStartDate) {
+                                this.notify("Tanggal akhir tidak boleh lebih awal dari tanggal mulai", 'error');
+                            }
+                        });
                     } else {
                         // Clear filter
                         this.filterStartDate = '';
@@ -2231,28 +2249,39 @@
 
                 async save() {
                     this.vibrate();
-                    if (this.cart.length === 0) return this.notify("Keranjang Kosong", 'error');
+
+                    // Validations
+                    if (!this.form.customer || this.form.customer.trim() === '') {
+                        return this.notify("Nama pelanggan wajib diisi", 'error');
+                    }
+                    if (this.cart.length === 0) {
+                        return this.notify("Keranjang Kosong", 'error');
+                    }
 
                     // 1. SIMPAN DATA SEMENTARA (Snapshot)
                     const payload = { id: this.form.id, customer: this.form.customer, items: this.cart, dp: this.form.dp, deadline: this.form.deadline, originalDate: this.form.originalDate };
 
                     // 2. OPTIMISTIC UI: Anggap Sukses Duluan!
-                    this.notify("Memproses Transaksi..."); // Notif kuning/info
+                    this.notify("Memproses Transaksi...");
                     this.resetForm();
                     this.cart = [];
                     localStorage.removeItem('grow_cart_backup');
-                    this.tab = 'home'; // Langsung pindah tab
+                    this.tab = 'home';
 
                     // 3. KIRIM KE SERVER DI BACKGROUND
                     const res = await this.api('saveTransaction', payload);
 
                     // 4. CEK HASIL ASLINYA
                     if (res && res.success) {
-                        this.notify("Data Tersimpan di Server!", "success"); // Update notif jadi hijau
-                        this.fetch(); // Ambil data terbaru untuk update omzet
+                        this.notify("Data Tersimpan di Server!", "success");
+                        this.fetch();
                     } else {
-                        this.notify("GAGAL SIMPAN! Cek Koneksi", 'error');
-                        // Di sini idealnya Anda mengembalikan data ke form (Restore) jika gagal
+                        // Add to offline queue if failed
+                        if (!navigator.onLine) {
+                            this.addToQueue('saveTransaction', payload);
+                        } else {
+                            this.notify("GAGAL SIMPAN! Cek Koneksi", 'error');
+                        }
                     }
                 },
 
@@ -2346,14 +2375,13 @@
                 handlePDF(e) {
                     this.loadingPdf = false;
                     if (e && e.success) {
+                        // Auto-download PDF
                         const link = document.createElement('a');
                         link.href = e.data;
-                        link.download = e.filename;
-                        document.body.appendChild(link);
+                        link.download = e.filename || 'invoice.pdf';
                         link.click();
-                        document.body.removeChild(link);
+                        this.notify("PDF berhasil didownload", 'success');
                     } else {
-                        // Show specific error message
                         this.notify("Gagal PDF: " + (e ? e.message : "Koneksi Bermasalah"), 'error')
                     }
                 },
@@ -2382,10 +2410,111 @@
                 },
                 openSetorModal() { this.setorForm.amount = this.modalStats.modalGantung; this.setorForm.bank = 'Mandiri'; this.isSetorOpen = true; },
                 resetForm() { this.isService = false; this.selectedCategory = ""; this.cart = []; this.form = { id: null, customer: '', productName: '', serviceName: '', qty: 1, sellPrice: '', costPrice: '', dp: 0, deadline: '', originalDate: null }; },
-                fmt(e) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(e || 0) }
+
+                // === OFFLINE QUEUE SYSTEM ===
+                async processPendingQueue() {
+                    if (this.syncInProgress || this.pendingQueue.length === 0) return;
+
+                    this.syncInProgress = true;
+                    const queue = [...this.pendingQueue];
+
+                    for (let i = 0; i < queue.length; i++) {
+                        const item = queue[i];
+                        try {
+                            const res = await this.api(item.action, item.payload);
+                            if (res && res.success) {
+                                this.pendingQueue = this.pendingQueue.filter(q => q.timestamp !== item.timestamp);
+                                SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                            }
+                        } catch (e) {
+                            console.error('Failed to sync:', e);
+                        }
+                    }
+
+                    this.syncInProgress = false;
+                    if (this.pendingQueue.length === 0) {
+                        this.notify("✅ Semua data tersinkronkan!", 'success');
+                        this.fetch();
+                    }
+                },
+
+                addToQueue(action, payload) {
+                    const queueItem = {
+                        action,
+                        payload,
+                        timestamp: Date.now(),
+                        type: action === 'saveTransaction' ? 'Transaksi' : action === 'saveExpense' ? 'Biaya' : 'Data'
+                    };
+                    this.pendingQueue.push(queueItem);
+                    SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                    this.notify(`📦 ${queueItem.type} di queue (${this.pendingQueue.length})`, 'success');
+                },
+
+                logout() {
+                    this.isLogoutOpen = false;
+                    this.currentUser = null;
+                    localStorage.clear(); // Clear all encrypted data
+                    this.pendingQueue = [];
+                    window.location.reload();
+                },
+
+                restoreCart() { const saved = SecureStorage.get('grow_cart_backup'); if (saved && Array.isArray(saved)) this.cart = saved; },
+                backupCart() { if (this.cart.length > 0) SecureStorage.set('grow_cart_backup', this.cart); else localStorage.removeItem('grow_cart_backup'); },
+                fmt(e) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(e || 0) },
+
+                // === THERMAL RECEIPT PRINTING ===
+                async printReceipt(t) {
+                    this.vibrate();
+                    this.loadingDetail = true;
+                    const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
+                    this.loadingDetail = false;
+                    if (!res || !res.success) return this.notify("Gagal memuat detail", 'error');
+
+                    const items = res.items || [];
+                    const total = items.reduce((sum, item) => sum + (item.qty * item.sellPrice), 0);
+                    const dp = t.dp || 0;
+                    const sisa = total - dp;
+                    const isLunas = sisa <= 0;
+
+                    const receiptHTML = `<div style="font-family: 'Courier New', monospace; width: 72mm; margin: 0 auto; padding: 3mm; font-size: 10px; line-height: 1.3; color: #000;"><div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;"><div style="font-weight: bold; font-size: 12px;">GROW SOUVENIR</div><div style="font-size: 8px;">Jl. Vetpur Raya III</div><div style="font-size: 8px;">0815 8899 407</div></div><div style="text-align: center; margin: 5px 0;"><div style="font-weight: bold;">INVOICE #${t.id.substring(0, 8).toUpperCase()}</div><div style="font-size: 9px;">${t.fullDate || t.displayDate}</div></div><div style="border-top: 1px dashed #000; padding: 5px 0;"><div>Kepada: <b>${t.customer}</b></div>${t.deadline ? `<div style="font-size: 9px;">Deadline: ${t.deadline}</div>` : ''}</div><div style="border-top: 1px dashed #000; padding: 5px 0;">${items.map(item => `<div style="margin: 3px 0;"><div style="display: flex; justify-content: space-between;"><span style="flex: 1;">${item.productName}</span></div><div style="display: flex; justify-content: space-between; font-size: 9px;"><span>${item.qty} x ${this.fmt(item.sellPrice)}</span><span><b>${this.fmt(item.qty * item.sellPrice)}</b></span></div></div>`).join('')}</div><div style="border-top: 1px dashed #000; padding: 5px 0;"><div style="display: flex; justify-content: space-between; font-weight: bold;"><span>TOTAL</span><span>${this.fmt(total)}</span></div>${!isLunas ? `<div style="display: flex; justify-content: space-between; font-size: 9px;"><span>DP</span><span>${this.fmt(dp)}</span></div><div style="display: flex; justify-content: space-between; font-weight: bold;"><span>KURANG</span><span>${this.fmt(sisa)}</span></div>` : ''}</div><div style="text-align: center; margin: 10px 0;"><div style="border: 2px solid #000; padding: 5px; font-weight: bold; font-size: 14px;">${isLunas ? 'LUNAS' : 'BELUM LUNAS'}</div></div><div style="text-align: center; border-top: 1px dashed #000; padding-top: 5px; margin-top: 5px; font-size: 9px;"><div>Terima Kasih</div></div></div>`;
+
+                    let receiptDiv = document.getElementById('thermal-receipt');
+                    if (!receiptDiv) {
+                        receiptDiv = document.createElement('div');
+                        receiptDiv.id = 'thermal-receipt';
+                        receiptDiv.style.display = 'none';
+                        document.body.appendChild(receiptDiv);
+                    }
+                    receiptDiv.innerHTML = receiptHTML;
+                    window.print();
+                }
             }
         }
     </script>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden
+            }
+
+            #thermal-receipt,
+            #thermal-receipt * {
+                visibility: visible
+            }
+
+            #thermal-receipt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: block !important
+            }
+
+            @page {
+                margin: 0;
+                size: 80mm auto
+            }
+        }
+    </style>
 </body>
 
 </html>

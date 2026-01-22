@@ -479,18 +479,9 @@
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-2"><span
                             class="w-1.5 h-1.5 bg-brand-500 rounded-full"></span> Ringkasan</p>
                     <div class="flex items-center gap-2">
-                        <p class="text-[9px] font-bold text-slate-400" x-text="dateString"></p>
-                        <button @click="fetch(true); vibrate()"
-                            class="p-1.5 rounded-full bg-white border border-slate-100 shadow-sm active:scale-90 transition-transform group">
-                            <svg :class="loading ? 'animate-spin text-brand-600' : 'text-slate-400 group-hover:text-brand-600'"
-                                class="w-3.5 h-3.5 transition-colors" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                                </path>
-                            </svg>
-
-                        </button>
+                        <p @click="fetch(true); vibrate()"
+                            class="text-[9px] font-bold text-slate-400 cursor-pointer active:opacity-50 transition-opacity select-none"
+                            x-text="dateString"></p>
                     </div>
                 </div>
 
@@ -1471,57 +1462,147 @@
                     </template>
                 </div>
             </div>
-        </main>
+    </div>
+    </div>
 
-        <nav
-            class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-nav px-4 py-3 z-40 flex items-center gap-2 w-[95%] max-w-sm justify-between rounded-full shadow-2xl shadow-slate-300/50">
-            <button @click="tab='home'; vibrate()" class="p-2 rounded-full transition duration-300"
-                :class="tab==='home'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                    </path>
-                </svg></button>
-            <button @click="tab='list'; vibrate()" class="p-2 rounded-full transition duration-300"
-                :class="tab==='list'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
-                    </path>
-                </svg></button>
-            <button @click="resetForm(); tab='add'; vibrate()"
-                class="w-14 h-14 bg-gradient-to-b from-brand-600 to-brand-700 rounded-full text-white shadow-xl shadow-brand-500/40 flex items-center justify-center transform transition hover:scale-110 active:scale-95 -mt-8 border-[4px] border-[#F1F5F9]"><svg
-                    class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg></button>
-            <button @click="tab='expense'; vibrate()" class="p-2 rounded-full transition duration-300"
-                :class="tab==='expense'?'text-red-500 bg-red-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                    </path>
-                </svg></button>
-            <button
-                @click="(currentUser?.role === 'Admin' || currentUser?.role === 'Owner') ? (tab='report', vibrate()) : (notify('Anda tidak memiliki akses!', 'error'), vibrate())"
-                class="p-2 rounded-full transition duration-300"
-                :class="tab==='report'?'text-amber-500 bg-amber-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                    </path>
-                </svg></button>
+    <!-- TAB: USER LOG (OWNER) -->
+    <div x-show="tab === 'userLog'" class="space-y-4 max-w-md mx-auto fade-in">
+        <div class="px-1">
+            <h2 class="text-2xl font-black text-slate-800">Aktivitas Tim</h2>
+            <p class="text-xs text-slate-500 font-medium">Monitoring kinerja & riwayat</p>
+        </div>
 
-            <!-- MENU TIM (OWNER) -->
-            <button x-show="currentUser?.role === 'Owner'" @click="tab='team'; fetchUsers(); vibrate()"
-                class="p-2 rounded-full transition duration-300"
-                :class="tab==='team'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </svg>
-            </button>
-        </nav>
+        <div class="grid grid-cols-1 gap-4">
+            <template x-for="u in users" :key="u.username">
+                <div x-data="{ expandedUser: false }"
+                    class="glass-card p-4 rounded-[2rem] shadow-soft relative overflow-hidden group">
+
+                    <!-- Header User -->
+                    <div @click="expandedUser = !expandedUser; vibrate()"
+                        class="flex items-center gap-4 relative z-10 cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl p-0.5 bg-white shadow-sm flex-shrink-0">
+                            <img :src="u.photo || `https://ui-avatars.com/api/?name=${u.name}&background=random`"
+                                class="w-full h-full rounded-xl object-cover">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-black text-slate-800 truncate" x-text="u.name"></h3>
+                            <div class="flex items-center gap-2">
+                                <div class="inline-block px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border"
+                                    :class="{
+                                                'bg-brand-50 text-brand-600 border-brand-100': u.role === 'Owner',
+                                                'bg-blue-50 text-blue-600 border-blue-100': u.role === 'Admin',
+                                                'bg-emerald-50 text-emerald-600 border-emerald-100': u.role === 'Kasir'
+                                            }" x-text="u.role"></div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">Omzet</p>
+                            <p class="text-xs font-black text-brand-600"
+                                x-text="fmt(history.filter(h => (h.cashier === u.name || h.cashier === u.username || h.user === u.username)).reduce((acc, curr) => acc + (parseFloat(curr.total) || 0), 0))">
+                            </p>
+                        </div>
+                        <svg class="w-4 h-4 text-slate-400 transition-transform duration-300"
+                            :class="expandedUser ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <!-- Detail Riwayat User -->
+                    <div x-show="expandedUser" x-collapse class="mt-4 pt-4 border-t border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Riwayat Transaksi Terbaru</p>
+                        <div class="space-y-2 max-h-60 overflow-y-auto no-scrollbar">
+                            <template
+                                x-for="h in history.filter(h => (h.cashier === u.name || h.cashier === u.username || h.user === u.username)).slice(0, 10)">
+                                <div class="flex justify-between items-center bg-slate-50 p-2 rounded-xl mb-1">
+                                    <div>
+                                        <p class="text-[10px] font-bold text-slate-700" x-text="h.customer"></p>
+                                        <p class="text-[9px] text-slate-400" x-text="h.displayDate || h.date"></p>
+                                    </div>
+                                    <p class="text-[10px] font-black text-brand-600" x-text="fmt(h.total)"></p>
+                                </div>
+                            </template>
+                            <div x-show="history.filter(h => (h.cashier === u.name || h.cashier === u.username || h.user === u.username)).length === 0"
+                                class="text-center text-[10px] text-slate-400 py-2">
+                                Belum ada transaksi
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+    </main>
+
+    <nav
+        class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-nav px-4 py-3 z-40 flex items-center gap-2 w-[98%] max-w-sm justify-between rounded-full shadow-2xl shadow-slate-300/50">
+        <!-- 1. HOME -->
+        <button @click="tab='home'; vibrate()" class="p-2 rounded-full transition duration-300"
+            :class="tab==='home'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
+                class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                </path>
+            </svg></button>
+
+        <!-- 2. HISTORY (LIST) -->
+        <button @click="tab='list'; vibrate()" class="p-2 rounded-full transition duration-300"
+            :class="tab==='list'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
+                class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                </path>
+            </svg></button>
+
+        <!-- 3. EXPENSE -->
+        <button @click="tab='expense'; vibrate()" class="p-2 rounded-full transition duration-300"
+            :class="tab==='expense'?'text-red-500 bg-red-50':'text-slate-400 hover:text-slate-600'"><svg class="w-6 h-6"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                </path>
+            </svg></button>
+
+        <!-- 4. ADD (CENTER) -->
+        <button @click="resetForm(); tab='add'; vibrate()"
+            class="w-14 h-14 bg-gradient-to-b from-brand-600 to-brand-700 rounded-full text-white shadow-xl shadow-brand-500/40 flex items-center justify-center transform transition hover:scale-110 active:scale-95 -mt-8 border-[4px] border-[#F1F5F9]"><svg
+                class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg></button>
+
+        <!-- 5. REPORT -->
+        <button
+            @click="(currentUser?.role === 'Admin' || currentUser?.role === 'Owner') ? (tab='report', vibrate()) : (notify('Anda tidak memiliki akses!', 'error'), vibrate())"
+            class="p-2 rounded-full transition duration-300"
+            :class="tab==='report'?'text-amber-500 bg-amber-50':'text-slate-400 hover:text-slate-600'"><svg
+                class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
+            </svg></button>
+
+        <!-- 6. TEAM (OWNER) -->
+        <button x-show="currentUser?.role === 'Owner'" @click="tab='team'; fetchUsers(); vibrate()"
+            class="p-2 rounded-full transition duration-300"
+            :class="tab==='team'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                </path>
+            </svg>
+        </button>
+
+        <!-- 7. USER LOG (OWNER) - NEW -->
+        <button x-show="currentUser?.role === 'Owner'" @click="tab='userLog'; fetchUsers(); vibrate()"
+            class="p-2 rounded-full transition duration-300"
+            :class="tab==='userLog'?'text-indigo-600 bg-indigo-50':'text-slate-400 hover:text-slate-600'">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </button>
+    </nav>
     </div>
 
     <div x-show="isDeleteOpen"
@@ -1716,52 +1797,57 @@
                         <p class="text-[9px] font-bold text-slate-400 uppercase">Pelanggan</p>
                         <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.customer"></p>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase">Waktu</p>
-                        <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.fullDate"></p>
-                    </div>
+                    <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.fullDate"></p>
                 </div>
-                <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Rincian Barang</p>
-                    <div x-show="loadingDetail" class="space-y-2">
-                        <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
-                    </div>
-                    <div x-show="!loadingDetail" class="space-y-3 max-h-64 overflow-y-auto no-scrollbar">
-                        <template x-for="item in detailItems" :key="item.productName">
-                            <div class="flex justify-between items-start border-b border-slate-50 pb-2 last:border-0">
-                                <div class="pr-2">
-                                    <p class="text-xs font-bold text-slate-800" x-text="item.productName"></p>
-                                    <p class="text-[10px] text-slate-400"><span x-text="item.qty"></span> x <span
-                                            class="text-brand-600 font-bold"
-                                            x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
-                                    <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                        <p class="text-[9px] text-slate-400 mt-0.5">HPP: <span
-                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.costPrice)"></span> •
-                                            Laba: <span class="text-emerald-500 font-bold"
-                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt((item.sellPrice - item.costPrice) * item.qty)"></span>
-                                        </p>
-                                    </template>
-                                </div>
-                                <p class="text-xs font-black text-brand-600"
-                                    x-text="isSensitiveHidden ? 'Rp *******' : fmt(item.sellPrice * item.qty)">
-                                </p>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="bg-slate-900 rounded-2xl p-4 text-white space-y-2">
-                    <div class="flex justify-between text-xs opacity-70"><span>Total Tagihan</span><span
-                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.total)"></span></div>
-                    <div class="flex justify-between text-xs opacity-70"><span>Sudah Bayar (DP)</span><span
-                            class="text-green-400"
-                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.dp)"></span></div>
-                    <div class="w-full h-px bg-white/10 my-1"></div>
-                    <div class="flex justify-between font-bold text-sm"><span>Sisa Kekurangan</span><span
-                            class="text-red-400"
-                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.sisa)"></span></div>
+                <!-- Cashier Detail -->
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 col-span-2"
+                    x-show="selectedDetail?.cashier || selectedDetail?.user">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase">Kasir / Petugas</p>
+                    <p class="font-bold text-slate-800 text-sm mt-0.5"
+                        x-text="selectedDetail?.cashier || selectedDetail?.user || '-'"></p>
                 </div>
             </div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Rincian Barang</p>
+                <div x-show="loadingDetail" class="space-y-2">
+                    <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                </div>
+                <div x-show="!loadingDetail" class="space-y-3 max-h-64 overflow-y-auto no-scrollbar">
+                    <template x-for="item in detailItems" :key="item.productName">
+                        <div class="flex justify-between items-start border-b border-slate-50 pb-2 last:border-0">
+                            <div class="pr-2">
+                                <p class="text-xs font-bold text-slate-800" x-text="item.productName"></p>
+                                <p class="text-[10px] text-slate-400"><span x-text="item.qty"></span> x <span
+                                        class="text-brand-600 font-bold"
+                                        x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
+                                <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
+                                    <p class="text-[9px] text-slate-400 mt-0.5">HPP: <span
+                                            x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.costPrice)"></span> •
+                                        Laba: <span class="text-emerald-500 font-bold"
+                                            x-text="isSensitiveHidden ? 'Rp ****' : fmt((item.sellPrice - item.costPrice) * item.qty)"></span>
+                                    </p>
+                                </template>
+                            </div>
+                            <p class="text-xs font-black text-brand-600"
+                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(item.sellPrice * item.qty)">
+                            </p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="bg-slate-900 rounded-2xl p-4 text-white space-y-2">
+                <div class="flex justify-between text-xs opacity-70"><span>Total Tagihan</span><span
+                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.total)"></span></div>
+                <div class="flex justify-between text-xs opacity-70"><span>Sudah Bayar (DP)</span><span
+                        class="text-green-400"
+                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.dp)"></span></div>
+                <div class="w-full h-px bg-white/10 my-1"></div>
+                <div class="flex justify-between font-bold text-sm"><span>Sisa Kekurangan</span><span
+                        class="text-red-400"
+                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.sisa)"></span></div>
+            </div>
         </div>
+    </div>
     </div>
 
 
@@ -2338,6 +2424,7 @@
                         sisa: sisa,
                         status: status,
                         deadline: this.form.deadline,
+                        cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A',
                         items: JSON.parse(JSON.stringify(items)) // STORE ITEMS FOR INSTANT EDIT
                     };
 
@@ -2389,7 +2476,15 @@
 
                     // 1. SIMPAN DATA SEMENTARA (Snapshot)
                     // Use tempId (which is the UUID) so backend uses it too
-                    const payload = { id: tempId, customer: this.form.customer, items: this.cart, dp: this.form.dp, deadline: this.form.deadline, originalDate: this.form.originalDate };
+                    const payload = {
+                        id: tempId,
+                        customer: this.form.customer,
+                        items: this.cart,
+                        dp: this.form.dp,
+                        deadline: this.form.deadline,
+                        originalDate: this.form.originalDate,
+                        cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A'
+                    };
 
                     // 2. UI Updates Immediate
                     // this.notify("Data Disimpan (Layar diupdate)!"); // Removed for cleaner UI
@@ -2822,4 +2917,3 @@
 </body>
 
 </html>
-

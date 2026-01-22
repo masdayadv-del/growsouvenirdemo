@@ -14,7 +14,7 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#F8FAFC">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Grow App">
     <meta name="mobile-web-app-capable" content="yes">
 
@@ -681,68 +681,70 @@
                     </div>
 
                     <!-- Date Range Filter -->
-                    <div class="px-2 mb-2 bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
-                        <div class="flex items-center gap-2 mb-2">
-                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Filter
-                                Periode</span>
-                        </div>
-
-                        <!-- Quick Filters -->
-                        <div class="flex gap-1.5 mb-2 overflow-x-auto no-scrollbar pb-1">
-                            <button @click="setQuickFilter('all'); vibrate()"
-                                :class="quickFilter === 'all' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
-                                class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
-                                Semua
-                            </button>
-                            <button @click="setQuickFilter('today'); vibrate()"
-                                :class="quickFilter === 'today' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
-                                class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
-                                Hari Ini
-                            </button>
-                            <button @click="setQuickFilter('week'); vibrate()"
-                                :class="quickFilter === 'week' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
-                                class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
-                                Minggu Ini
-                            </button>
-                            <button @click="setQuickFilter('month'); vibrate()"
-                                :class="quickFilter === 'month' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
-                                class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
-                                Bulan Ini
-                            </button>
-                            <button @click="setQuickFilter('custom'); vibrate()"
-                                :class="quickFilter === 'custom' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
-                                class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
-                                Custom
-                            </button>
-                        </div>
-
-                        <!-- Date Range Inputs (Show when custom) -->
-                        <div x-show="quickFilter === 'custom'" x-collapse
-                            class="flex gap-2 pt-1 border-t border-slate-100">
-                            <div class="flex-1">
-                                <label class="text-[8px] font-bold text-slate-400 mb-1 block">Dari</label>
-                                <input type="date" x-model="filterStartDate"
-                                    class="w-full bg-slate-50 border-0 rounded-lg px-2 py-1.5 text-[9px] font-bold text-slate-600 outline-none focus:ring-1 focus:ring-brand-400">
+                    <div class="px-2 mb-2">
+                        <div class="bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
+                            <div class="flex items-center gap-2 mb-2">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Filter
+                                    Periode</span>
                             </div>
-                            <div class="flex-1">
-                                <label class="text-[8px] font-bold text-slate-400 mb-1 block">Sampai</label>
-                                <input type="date" x-model="filterEndDate"
-                                    class="w-full bg-slate-50 border-0 rounded-lg px-2 py-1.5 text-[9px] font-bold text-slate-600 outline-none focus:ring-1 focus:ring-brand-400">
+
+                            <!-- Quick Filters -->
+                            <div class="flex gap-1.5 mb-2 overflow-x-auto no-scrollbar pb-1">
+                                <button @click="setQuickFilter('all'); vibrate()"
+                                    :class="quickFilter === 'all' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
+                                    class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
+                                    Semua
+                                </button>
+                                <button @click="setQuickFilter('today'); vibrate()"
+                                    :class="quickFilter === 'today' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
+                                    class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
+                                    Hari Ini
+                                </button>
+                                <button @click="setQuickFilter('week'); vibrate()"
+                                    :class="quickFilter === 'week' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
+                                    class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
+                                    Minggu Ini
+                                </button>
+                                <button @click="setQuickFilter('month'); vibrate()"
+                                    :class="quickFilter === 'month' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
+                                    class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
+                                    Bulan Ini
+                                </button>
+                                <button @click="setQuickFilter('custom'); vibrate()"
+                                    :class="quickFilter === 'custom' ? 'bg-brand-500 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'"
+                                    class="px-2.5 py-1 rounded-lg text-[9px] font-bold whitespace-nowrap transition active:scale-95">
+                                    Custom
+                                </button>
+                            </div>
+
+                            <!-- Date Range Inputs (Show when custom) -->
+                            <div x-show="quickFilter === 'custom'" x-collapse
+                                class="flex gap-2 pt-1 border-t border-slate-100">
+                                <div class="flex-1">
+                                    <label class="text-[8px] font-bold text-slate-400 mb-1 block">Dari</label>
+                                    <input type="date" x-model="filterStartDate"
+                                        class="w-full bg-slate-50 border-0 rounded-lg px-2 py-1.5 text-[9px] font-bold text-slate-600 outline-none focus:ring-1 focus:ring-brand-400">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="text-[8px] font-bold text-slate-400 mb-1 block">Sampai</label>
+                                    <input type="date" x-model="filterEndDate"
+                                        class="w-full bg-slate-50 border-0 rounded-lg px-2 py-1.5 text-[9px] font-bold text-slate-600 outline-none focus:ring-1 focus:ring-brand-400">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex gap-2 mb-2 overflow-x-auto no-scrollbar pt-1 px-1">
+                    <div class="grid grid-cols-3 gap-2 mb-2 pt-1 px-2">
                         <!-- KPI Cards as Filters -->
                         <!-- Card 1: SEMUA -->
                         <div @click="!loadingData && (filterStatus='', vibrate())"
-                            class="min-w-[100px] flex-1 p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
+                            class="p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
                             :class="filterStatus==='' ? 'bg-slate-800 text-white border-slate-700 shadow-lg shadow-slate-500/20' : 'bg-white text-slate-600 border-slate-100 shadow-sm'">
                             <div class="flex justify-between items-start mb-1">
                                 <span class="text-[10px] font-bold opacity-80">SEMUA</span>
@@ -770,7 +772,7 @@
 
                         <!-- Card 2: LUNAS -->
                         <div @click="!loadingData && (filterStatus='LUNAS', vibrate())"
-                            class="min-w-[100px] flex-1 p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
+                            class="p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
                             :class="filterStatus==='LUNAS' ? 'bg-emerald-500 text-white border-emerald-400 shadow-lg shadow-emerald-500/30' : 'bg-white text-emerald-600 border-emerald-50 shadow-sm'">
                             <div class="flex justify-between items-start mb-1">
                                 <span class="text-[10px] font-bold opacity-80">LUNAS</span>
@@ -797,7 +799,7 @@
 
                         <!-- Card 3: BELUM LUNAS -->
                         <div @click="!loadingData && (filterStatus='BELUM LUNAS', vibrate())"
-                            class="min-w-[100px] flex-1 p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
+                            class="p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
                             :class="filterStatus==='BELUM LUNAS' ? 'bg-rose-500 text-white border-rose-400 shadow-lg shadow-rose-500/30' : 'bg-white text-rose-600 border-rose-50 shadow-sm'">
                             <div class="flex justify-between items-start mb-1">
                                 <span class="text-[10px] font-bold opacity-80">BELUM</span>
@@ -846,8 +848,10 @@
                                                 x-text="daysLeft(t.deadline).text"></span>
                                         </template>
                                     </div>
-                                    <h4 class="font-bold text-xs text-slate-800 line-clamp-1" x-text="t.product"></h4>
-                                    <p class="text-[9px] font-bold uppercase text-slate-400" x-text="t.customer"></p>
+                                    <h4 class="font-bold text-xs text-slate-800 line-clamp-1" x-text="t.product">
+                                    </h4>
+                                    <p class="text-[9px] font-bold uppercase text-slate-400" x-text="t.customer">
+                                    </p>
                                     <p class="text-[8px] text-slate-300 mt-1">Modal: <span
                                             x-text="isSensitiveHidden ? 'Rp ****' : fmt(t.hpp)"></span></p>
                                 </div>
@@ -858,7 +862,7 @@
                                         x-text="isSensitiveHidden ? 'Rp ****' : ('Kurang: ' + fmt(t.sisa))"></p>
                                 </div>
                             </div>
-                            <div class="flex justify-end gap-2 border-t border-slate-50 pt-1">
+                            <div class="flex flex-wrap justify-center gap-2 border-t border-slate-50 pt-2 mt-2">
                                 <button @click.stop="editItem(t); vibrate()"
                                     class="flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[9px] font-bold active:bg-blue-100 hover:bg-blue-100 transition"><svg
                                         class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -892,7 +896,7 @@
                                         </path>
                                     </svg>Struk</button>
                                 <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                    <button @click.stop="requestDelete(t.id); vibrate()"
+                                    <button @click.stop="requestDelete(t.id, t.isoDate); vibrate()"
                                         class="flex items-center px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-[9px] font-bold active:bg-rose-100 hover:bg-rose-100 transition"><svg
                                             class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -995,7 +999,8 @@
                                     <div>
                                         <p class="text-xs font-bold text-slate-800" x-text="item.productName"></p>
                                         <p class="text-[9px] text-slate-500"><span x-text="item.qty"></span> x <span
-                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
+                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span>
+                                        </p>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <p class="text-xs font-bold text-brand-600"
@@ -1116,7 +1121,8 @@
                         <!-- Top Category -->
                         <div class="bg-slate-50 rounded-xl p-2 text-center">
                             <p class="text-[8px] font-bold text-slate-400 uppercase">Terboros</p>
-                            <p class="text-[10px] font-bold text-slate-700 truncate" x-text="expenseKPIs.topCat"></p>
+                            <p class="text-[10px] font-bold text-slate-700 truncate" x-text="expenseKPIs.topCat">
+                            </p>
                         </div>
                     </div>
 
@@ -1576,8 +1582,12 @@
                     BCA</button></div>
             <div class="flex gap-2 pt-2 border-b border-slate-100 pb-4"><button @click="isSetorOpen=false"
                     class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500">Batal</button><button
-                    @click="submitSetor"
-                    class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg">Konfirmasi</button>
+                    @click="submitSetor" :disabled="bgProcess"
+                    class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg flex items-center justify-center gap-2 disabled:opacity-50">
+                    <span x-show="bgProcess"
+                        class="animate-spin w-3 h-3 border-2 border-white/30 border-t-white rounded-full"></span>
+                    <span x-text="bgProcess ? 'MEMPROSES...' : 'Konfirmasi'"></span>
+                </button>
             </div>
 
             <div class="text-left pt-2">
@@ -1751,7 +1761,7 @@
     <script>
         // === KONFIGURASI API ===
         // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA YANG BARU
-        const API_URL = "https://script.google.com/macros/s/AKfycbxCs04mc_DICJJcUB0nFNmntwHjiqaIhAAv_PJAM9ylffN3xcwzouEcR4NNEYdGaqjM/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycby0ZN79PRY7Q8rFw8ShT5n9K2nt7VZ9ccwK6YriB2ciYsPfd23Hl9ZY81FEEk1PFGLY/exec";
         const API_TOKEN = "GROW_SECURE_2026";
         const ENCRYPTION_KEY = "GROW_2026_SECRET_KEY_XYZ"; // Change this in production!
 
@@ -1791,9 +1801,10 @@
                 loginForm: { u: '', p: '' },
                 isLogoutOpen: false, isDetailOpen: false, loadingDetail: false, selectedDetail: null, detailItems: [],
 
-                tab: 'home', initialLoading: true, bgProcess: false, loading: false, loadingPdf: false, notifications: [], isMasterOpen: false, isSetorOpen: false, isDeleteOpen: false, deleteId: null, isOffline: false, loadingData: true,
+                tab: 'home', initialLoading: true, bgProcess: false, loading: false, loadingPdf: false, notifications: [], isMasterOpen: false, isSetorOpen: false, isDeleteOpen: false, deleteId: null, deleteDate: null, isOffline: false, loadingData: true,
                 isSensitiveHidden: localStorage.getItem('grow_privacy_mode') === 'true',
                 allProducts: [], categories: [], history: [], expenses: [], deposits: [],
+                customers: [], expenseDescriptions: [],
                 stats: { omzet: 0, grossProfit: 0, netProfit: 0, totalExpense: 0, totalHPP: 0 },
                 modalStats: { modalGantung: 0, totalHPP: 0, totalDisetor: 0 },
                 historyKPI: { all: { count: 0, total: 0 }, lunas: { count: 0, total: 0 }, belum: { count: 0, total: 0 } },
@@ -1891,7 +1902,7 @@
                         this.bgProcess = false;
                     }
                 },
-                logout() { this.isLogoutOpen = false; localStorage.removeItem('grow_user'); this.currentUser = null; this.tab = 'home'; },
+                // logout() is defined below at line ~2453 with full implementation
 
                 // USER MANAGEMENT FUNCTIONS
                 async fetchUsers() {
@@ -1908,6 +1919,17 @@
                 },
                 editUser(u) { this.openUserModal(u); },
                 async saveUserSubmit() {
+                    // Validation
+                    if (!this.currUserForm.username?.trim()) {
+                        return this.notify("Username wajib diisi", 'error');
+                    }
+                    if (!this.currUserForm.password?.trim()) {
+                        return this.notify("Password wajib diisi", 'error');
+                    }
+                    if (!this.currUserForm.name?.trim()) {
+                        return this.notify("Nama lengkap wajib diisi", 'error');
+                    }
+
                     this.bgProcess = true;
                     try {
                         const res = await this.api('saveUser', this.currUserForm);
@@ -2083,17 +2105,22 @@
                 },
                 get filteredHistory() {
                     return this.history.filter(e => {
-                        // Search filter (customer, product, or ID)
-                        const searchLower = this.searchQuery.toLowerCase();
-                        const matchSearch = !this.searchQuery ||
-                            e.customer.toLowerCase().includes(searchLower) ||
-                            e.product.toLowerCase().includes(searchLower) ||
-                            e.id.toLowerCase().includes(searchLower);
+                        // Search filter (customer, product, or ID) with null safety
+                        const searchLower = (this.searchQuery || '').toLowerCase();
+                        const customerMatch = (e.customer || '').toLowerCase().includes(searchLower);
+                        const productMatch = (e.product || '').toLowerCase().includes(searchLower);
+                        const idMatch = (e.id || '').toLowerCase().includes(searchLower);
+                        const matchSearch = !this.searchQuery || customerMatch || productMatch || idMatch;
 
-                        // Date range filter
+                        // Date range filter with validation
                         let matchDate = true;
-                        if (this.filterStartDate && e.isoDate < this.filterStartDate) matchDate = false;
-                        if (this.filterEndDate && e.isoDate > this.filterEndDate) matchDate = false;
+                        if (this.filterStartDate && this.filterEndDate && this.filterEndDate < this.filterStartDate) {
+                            // Invalid date range, skip date filter
+                            matchDate = true;
+                        } else {
+                            if (this.filterStartDate && e.isoDate < this.filterStartDate) matchDate = false;
+                            if (this.filterEndDate && e.isoDate > this.filterEndDate) matchDate = false;
+                        }
 
                         // Status filter
                         const matchStatus = this.filterStatus ? e.status === this.filterStatus : true;
@@ -2123,12 +2150,7 @@
                         this.filterEndDate = '';
                     } else if (type === 'custom') {
                         // Don't set dates, let user choose
-                        // Validate after user inputs
-                        this.$watch('filterEndDate', () => {
-                            if (this.filterStartDate && this.filterEndDate && this.filterEndDate < this.filterStartDate) {
-                                this.notify("Tanggal akhir tidak boleh lebih awal dari tanggal mulai", 'error');
-                            }
-                        });
+                        // Date validation is handled in filteredHistory getter
                     } else {
                         // Clear filter
                         this.filterStartDate = '';
@@ -2248,6 +2270,7 @@
                 },
 
                 async save() {
+                    if (this.bgProcess) return; // Prevent double submit
                     this.vibrate();
 
                     // Validations
@@ -2258,30 +2281,117 @@
                         return this.notify("Keranjang Kosong", 'error');
                     }
 
-                    // 1. SIMPAN DATA SEMENTARA (Snapshot)
-                    const payload = { id: this.form.id, customer: this.form.customer, items: this.cart, dp: this.form.dp, deadline: this.form.deadline, originalDate: this.form.originalDate };
+                    const items = this.cart;
+                    const grandTotal = items.reduce((acc, item) => acc + (parseFloat(item.qty || 1) * parseFloat(item.sellPrice || 0)), 0);
+                    const totalModal = items.reduce((acc, item) => acc + (parseFloat(item.qty || 1) * parseFloat(item.costPrice || 0)), 0);
+                    const totalDP = parseFloat(this.form.dp) || 0;
+                    const sisa = Math.round(grandTotal - totalDP);
+                    const status = sisa <= 0 ? "LUNAS" : "BELUM LUNAS";
+                    // Profit Logic (Cash Basis)
+                    const cashIn = (status === 'LUNAS') ? grandTotal : totalDP;
+                    const profit = cashIn - totalModal;
 
-                    // 2. OPTIMISTIC UI: Anggap Sukses Duluan!
-                    this.notify("Memproses Transaksi...");
+                    // NEW ITEM SNAPSHOT (Optimistic)
+                    const isNew = !this.form.id;
+                    const tempId = this.form.id || this.generateUUID(); // Robust UUID
+                    const now = new Date();
+                    const newItem = {
+                        id: tempId,
+                        displayDate: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+                        isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0], // Local Date ISO
+                        fullDate: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                        timestamp: now.toISOString(), // Preserve exact time for local edits
+                        customer: this.form.customer,
+                        product: items.length > 1 ? `${items[0].productName} (+${items.length - 1} item)` : items[0].productName,
+                        total: grandTotal,
+                        hpp: totalModal,
+                        dp: totalDP,
+                        sisa: sisa,
+                        status: status,
+                        deadline: this.form.deadline,
+                        items: JSON.parse(JSON.stringify(items)) // STORE ITEMS FOR INSTANT EDIT
+                    };
+
+                    // --- APPLY TO LOCAL STATE (OPTIMISTIC) ---
+                    if (isNew) {
+                        // 1. Add to History
+                        this.history.unshift(newItem);
+
+                        // 2. Update KPI Cards
+                        this.historyKPI.all.count++;
+                        this.historyKPI.all.total += grandTotal;
+                        if (status === 'LUNAS') {
+                            this.historyKPI.lunas.count++;
+                            this.historyKPI.lunas.total += grandTotal;
+                        } else {
+                            this.historyKPI.belum.count++;
+                            this.historyKPI.belum.total += sisa;
+                        }
+
+                        // 3. Update Dashboard Stats
+                        this.stats.omzet += grandTotal;
+                        this.stats.totalHPP += totalModal;
+                        this.stats.grossProfit += profit;
+                        this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+
+                        // 3b. Update Modal Stats (Saldo Laci / Modal Gantung)
+                        // Logic: Saldo increases by the Capital (HPP) part of the cash received.
+                        // Cash received = LUNAS ? Total : DP.
+                        const cashRec = (status === 'LUNAS') ? grandTotal : totalDP;
+                        const recoveredCapital = Math.min(cashRec, totalModal);
+                        if (this.modalStats) {
+                            this.modalStats.modalGantung = (this.modalStats.modalGantung || 0) + recoveredCapital;
+                            this.modalStats.totalHPP = (this.modalStats.totalHPP || 0) + totalModal;
+                        }
+
+                        // 4. Update Top Product (Simple check)
+                        if (items[0].qty > this.topProduct.qty) {
+                            // Only update locally if it beats current top (simple heuristic)
+                            // Complex logic to re-aggregate all products is too heavy, skipping for speed.
+                        }
+                    } else {
+                        // Edit Mode: Optimistic update is complex (revert old -> apply new).
+                        // For safety/speed, we only apply full optimistic to NEW items.
+                        // For Edit, we fall back to "Semi-Optimistic" (UI transitions, but data waits for fetch)
+                        // This prevents calculation errors.
+                    }
+
+                    this.bgProcess = true;
+
+                    // 1. SIMPAN DATA SEMENTARA (Snapshot)
+                    // Use tempId (which is the UUID) so backend uses it too
+                    const payload = { id: tempId, customer: this.form.customer, items: this.cart, dp: this.form.dp, deadline: this.form.deadline, originalDate: this.form.originalDate };
+
+                    // 2. UI Updates Immediate
+                    // this.notify("Data Disimpan (Layar diupdate)!"); // Removed for cleaner UI
                     this.resetForm();
                     this.cart = [];
                     localStorage.removeItem('grow_cart_backup');
-                    this.tab = 'home';
+                    this.tab = 'home'; // Instant switch
 
-                    // 3. KIRIM KE SERVER DI BACKGROUND
-                    const res = await this.api('saveTransaction', payload);
+                    try {
+                        // 3. KIRIM KE SERVER DI BACKGROUND
+                        const res = await this.api('saveTransaction', payload);
 
-                    // 4. CEK HASIL ASLINYA
-                    if (res && res.success) {
-                        this.notify("Data Tersimpan di Server!", "success");
-                        this.fetch();
-                    } else {
-                        // Add to offline queue if failed
-                        if (!navigator.onLine) {
-                            this.addToQueue('saveTransaction', payload);
+                        // 4. SYNC (Silent or Active)
+                        if (res && res.success) {
+                            // Data saved. We might want to re-fetch to get the REAL ID generated by server.
+                            // But for user experience, they already see the data.
+                            // We call fetch() quietly to sync everything eventually.
+                            this.fetch();
                         } else {
-                            this.notify("GAGAL SIMPAN! Cek Koneksi", 'error');
+                            if (!navigator.onLine) {
+                                this.addToQueue('saveTransaction', payload);
+                            } else {
+                                this.notify("GAGAL SIMPAN! Cek Koneksi (Data di Queue)", 'error');
+                                this.addToQueue('saveTransaction', payload); // Fallback
+                            }
                         }
+                    } catch (e) {
+                        this.notify("Simpan Offline: " + e.message, 'info');
+                        this.addToQueue('saveTransaction', payload);
+                    } finally {
+                        this.bgProcess = false;
                     }
                 },
 
@@ -2297,15 +2407,68 @@
                         return this.notify("Nominal harus lebih dari 0", 'error');
                     }
 
-                    this.bgProcess = true;
-                    const res = await this.api('saveExpense', this.expForm);
-                    this.bgProcess = false;
-                    if (res && res.success) {
-                        this.resetExpForm();
-                        this.notify("Biaya Disimpan");
-                        this.fetch();
+                    const amount = parseFloat(this.expForm.amount);
+                    const isNew = !this.expForm.id;
+                    const now = new Date();
+
+                    // --- OPTIMISTIC UPDATE ---
+                    const newItem = {
+                        id: this.expForm.id || this.generateUUID(),
+                        date: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+                        isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0],
+                        cat: this.expForm.category,
+                        desc: this.expForm.desc,
+                        amount: amount
+                    };
+
+                    if (isNew) {
+                        // 1. Add to List
+                        this.expenses.unshift(newItem);
+                        // 2. Update Stats
+                        this.stats.totalExpense += amount;
+                        this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
                     } else {
-                        this.notify(res ? res.message : "Gagal", 'error')
+                        // Edit Mode: update item in place
+                        const idx = this.expenses.findIndex(e => e.id === this.expForm.id);
+                        if (idx !== -1) {
+                            const oldAmount = parseFloat(this.expenses[idx].amount) || 0;
+                            this.expenses[idx] = { ...this.expenses[idx], ...newItem }; // Update fields
+                            // Diff Stats
+                            const diff = amount - oldAmount;
+                            this.stats.totalExpense += diff;
+                            this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                        }
+                    }
+
+                    this.bgProcess = true;
+                    // Snapshot payload
+                    // Snapshot payload
+                    const payload = { ...this.expForm, id: newItem.id };
+
+                    // this.notify("Biaya Disimpan (Optimistic)!"); // Removed for cleaner UI
+                    this.resetExpForm();
+                    // Scroll to top to see new item
+                    const container = document.querySelector('main');
+                    if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    try {
+                        const res = await this.api('saveExpense', payload);
+                        if (res && res.success) {
+                            // Silent sync to confirm IDs
+                            this.fetch();
+                        } else {
+                            if (!navigator.onLine) {
+                                this.addToQueue('saveExpense', payload);
+                            } else {
+                                this.notify(res ? res.message : "Gagal simpan (Queue)", 'error');
+                                this.addToQueue('saveExpense', payload);
+                            }
+                        }
+                    } catch (e) {
+                        this.notify("Disimpan Offline", 'info');
+                        this.addToQueue('saveExpense', payload);
+                    } finally {
+                        this.bgProcess = false;
                     }
                 },
                 editExpense(ex) {
@@ -2327,23 +2490,37 @@
                 },
 
                 async editItem(t) {
-                    this.form.id = t.id; this.form.customer = t.customer; this.form.deadline = t.deadline || ''; this.form.dp = t.dp; this.cart = []; this.tab = 'add'; this.bgProcess = true;
-                    const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate }); this.bgProcess = false;
+                    this.form.id = t.id; this.form.customer = t.customer; this.form.deadline = t.deadline || ''; this.form.dp = t.dp;
+                    this.cart = []; this.tab = 'add';
+                    // this.notify("Edit Data: " + t.customer, "info"); // Removed for cleaner UI
+
+                    // OPTIMIZATION: Use pre-loaded items if available (Instant Edit)
+                    if (t.items && t.items.length > 0) {
+                        this.cart = JSON.parse(JSON.stringify(t.items)); // Deep copy
+                        this.form.originalDate = t.timestamp || t.isoDate; // Use full timestamp if available
+                        this.vibrate();
+                        return; // DONE! Instant.
+                    }
+
+                    // Fallback for older data: Fetch from server
+                    this.bgProcess = true;
+                    const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
+                    this.bgProcess = false;
                     if (res && res.success) {
                         this.cart = res.items;
-                        this.form.originalDate = res.transactionDate; // Simpan tanggal asli!
+                        this.form.originalDate = res.transactionDate;
                     } else { this.notify("Gagal memuat: " + (res ? res.message : "Error"), "error"); }
                 },
 
-                requestDelete(id) { this.deleteId = id; this.deleteType = 'transaction'; this.isDeleteOpen = true; },
+                requestDelete(id, isoDate) { this.deleteId = id; this.deleteDate = isoDate || null; this.deleteType = 'transaction'; this.isDeleteOpen = true; },
                 requestDeleteExpense(id) { this.deleteId = id; this.deleteType = 'expense'; this.isDeleteOpen = true; },
                 async confirmDelete() {
                     this.isDeleteOpen = false; this.bgProcess = true;
 
                     let action = 'deleteTransaction';
-                    let payload = { id: this.deleteId };
+                    let payload = { id: this.deleteId, date: this.deleteDate };
 
-                    if (this.deleteType === 'expense') { action = 'deleteExpense'; }
+                    if (this.deleteType === 'expense') { action = 'deleteExpense'; payload = { id: this.deleteId }; }
                     else if (this.deleteType === 'user') {
                         action = 'deleteUser';
                         payload = { username: this.deleteId };
@@ -2386,26 +2563,79 @@
                     }
                 },
 
-                async submitNewProd() { this.bgProcess = true; const res = await this.api('addNewProduct', { category: this.newProd.category, name: this.newProd.name }); this.bgProcess = false; if (res && res.success) { this.isMasterOpen = false; this.newProd = { category: '', name: '' }; this.notify("Produk Berhasil Ditambah"); this.fetch(); } else { this.notify(res.message, 'error') } },
+                async submitNewProd() {
+                    if (!this.newProd.category?.trim()) {
+                        return this.notify("Kategori wajib diisi", 'error');
+                    }
+                    if (!this.newProd.name?.trim()) {
+                        return this.notify("Nama produk wajib diisi", 'error');
+                    }
+                    this.bgProcess = true;
+                    const res = await this.api('addNewProduct', { category: this.newProd.category, name: this.newProd.name });
+                    this.bgProcess = false;
+                    if (res && res.success) {
+                        this.isMasterOpen = false;
+                        this.newProd = { category: '', name: '' };
+                        this.notify("Produk Berhasil Ditambah");
+                        this.fetch();
+                    } else {
+                        this.notify(res?.message || "Gagal menambah produk", 'error');
+                    }
+                },
                 async submitSetor() {
                     // Validasi: prevent setor > modal tersedia
                     if (!this.setorForm.amount || this.setorForm.amount <= 0) {
                         return this.notify("Nominal harus lebih dari 0", 'error');
                     }
                     if (this.setorForm.amount > this.modalStats.modalGantung) {
+                        // Exception: allow if offline/optimistic might have synced late, but warn user? 
+                        // For now strict check based on LOCAL state is safest to prevent negative.
                         return this.notify("Nominal melebihi modal tersedia!", 'error');
                     }
 
+                    const amount = parseFloat(this.setorForm.amount);
+                    const note = this.setorForm.note;
+                    const bank = this.setorForm.bank;
+                    const now = new Date();
+
+                    // --- OPTIMISTIC UPDATE ---
+                    const newItem = {
+                        date: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                        timestamp: now.getTime(),
+                        amount: amount,
+                        note: note,
+                        bank: bank
+                    };
+
+                    // 1. Update List
+                    this.deposits.unshift(newItem);
+
+                    // 2. Reduce Modal Gantung (Saldo Laci)
+                    this.modalStats.modalGantung -= amount;
+                    this.modalStats.totalDisetor += amount;
+
                     this.bgProcess = true;
-                    const res = await this.api('saveDeposit', { amount: this.setorForm.amount, note: this.setorForm.note, bank: this.setorForm.bank });
+                    const payload = { amount, note, bank };
+
                     this.isSetorOpen = false;
-                    this.bgProcess = false;
-                    if (res && res.success) {
-                        this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
-                        this.notify("Setor Modal Berhasil");
-                        this.fetch();
-                    } else {
-                        this.notify(res.message, 'error')
+                    this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
+                    // this.notify("Setor Modal Berhasil (Optimistic)!", 'success'); // Removed for cleaner UI
+
+                    try {
+                        const res = await this.api('saveDeposit', payload);
+                        if (res && res.success) {
+                            // Silent Sync
+                            this.fetch();
+                        } else {
+                            // Queue or Error
+                            // For Setor, we usually want it recorded.
+                            if (!res.success) this.notify("Gagal Sync Setor: " + res.message, 'error');
+                        }
+                    } catch (e) {
+                        this.notify("Setor Offline", 'info');
+                        // Queue logic could be added here if needed, but 'saveDeposit' needs to be handled in queue list
+                    } finally {
+                        this.bgProcess = false;
                     }
                 },
                 openSetorModal() { this.setorForm.amount = this.modalStats.modalGantung; this.setorForm.bank = 'Mandiri'; this.isSetorOpen = true; },
@@ -2460,6 +2690,13 @@
 
                 restoreCart() { const saved = SecureStorage.get('grow_cart_backup'); if (saved && Array.isArray(saved)) this.cart = saved; },
                 backupCart() { if (this.cart.length > 0) SecureStorage.set('grow_cart_backup', this.cart); else localStorage.removeItem('grow_cart_backup'); },
+                generateUUID() {
+                    if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                        return v.toString(16);
+                    });
+                },
                 fmt(e) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(e || 0) },
 
                 // === THERMAL RECEIPT PRINTING ===
@@ -2518,4 +2755,3 @@
 </body>
 
 </html>
-

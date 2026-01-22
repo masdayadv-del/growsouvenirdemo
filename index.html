@@ -1395,6 +1395,68 @@
                             </div>
                         </div>
                     </button>
+
+                    <!-- Nav to TEAM (Owner Only) -->
+                    <template x-if="currentUser?.role === 'Owner'">
+                        <button @click="tab='team'; vibrate()"
+                            class="glass-card p-6 rounded-[2rem] shadow-soft relative overflow-hidden group active:scale-95 transition">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-brand-50 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition duration-500">
+                            </div>
+                            <div class="flex justify-between items-center relative z-10">
+                                <div class="text-left">
+                                    <div
+                                        class="w-10 h-10 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center mb-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-lg font-black text-slate-800">Kelola Tim</p>
+                                    <p class="text-[10px] text-slate-500 font-medium">Manajemen karyawan & akses</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 group-hover:text-brand-600 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </button>
+                    </template>
+
+                    <!-- Nav to USER LOG (Owner Only) -->
+                    <template x-if="currentUser?.role === 'Owner'">
+                        <button @click="tab='userLog'; vibrate()"
+                            class="glass-card p-6 rounded-[2rem] shadow-soft relative overflow-hidden group active:scale-95 transition">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-indigo-50 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition duration-500">
+                            </div>
+                            <div class="flex justify-between items-center relative z-10">
+                                <div class="text-left">
+                                    <div
+                                        class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-lg font-black text-slate-800">Aktivitas Tim</p>
+                                    <p class="text-[10px] text-slate-500 font-medium">Log kinerja & audit sistem</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </button>
+                    </template>
                 </div>
             </div>
             <!-- TAB TEAM (OWNER ONLY) -->
@@ -1659,1423 +1721,1430 @@
                 </div>
 
             </div>
-    </div>
 
 
 
-    </main>
+        </main>
 
-    <template x-if="currentUser">
-        <nav x-show="!initialLoading" x-transition.opacity.duration.500ms x-cloak
-            class="fixed bottom-6 inset-x-0 mx-auto glass-nav px-4 py-3 z-40 flex items-center gap-2 w-[98%] max-w-sm justify-between rounded-full shadow-2xl shadow-slate-300/50">
-            <!-- 1. HOME -->
-            <button @click="tab='home'; vibrate()" class="p-2 rounded-full transition duration-300"
-                :class="tab==='home'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                    </path>
-                </svg></button>
-
-            <!-- 2. HISTORY (LIST) -->
-            <button @click="tab='list'; vibrate()" class="p-2 rounded-full transition duration-300"
-                :class="tab==='list'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
-                    </path>
-                </svg></button>
-
-            <!-- 3. EXPENSE -->
-            <button @click="tab='expense'; vibrate()" class="p-2 rounded-full transition duration-300"
-                :class="tab==='expense'?'text-red-500 bg-red-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                    </path>
-                </svg></button>
-
-            <!-- 4. ADD (CENTER) -->
-            <button @click="resetForm(); tab='add'; vibrate()"
-                class="w-14 h-14 bg-gradient-to-b from-brand-600 to-brand-700 rounded-full text-white shadow-xl shadow-brand-500/40 flex items-center justify-center transform transition hover:scale-110 active:scale-95 -mt-8 border-[4px] border-[#F1F5F9]"><svg
-                    class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg></button>
-
-            <!-- 5. REPORT -->
-            <!-- 5. REPORT -->
-            <button
-                @click="(currentUser?.role === 'Admin' || currentUser?.role === 'Owner') ? (tab='report', vibrate()) : (notify('⛔ Akses Terbatas: Khusus Owner/Admin', 'error'), vibrate())"
-                class="p-2 rounded-full transition duration-300"
-                :class="tab==='report'?'text-amber-500 bg-amber-50':'text-slate-400 hover:text-slate-600'"><svg
-                    class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                    </path>
-                </svg></button>
-
-            <!-- 6. TEAM (OWNER) -->
-            <button
-                @click="(currentUser?.role === 'Owner') ? (tab='team', fetchUsers(), vibrate()) : (notify('⛔ Akses Terbatas: Khusus Owner', 'error'), vibrate())"
-                class="p-2 rounded-full transition duration-300"
-                :class="tab==='team'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </svg>
-            </button>
-
-            <!-- 7. USER LOG (OWNER) -->
-            <button
-                @click="(currentUser?.role === 'Owner') ? (tab='userLog', fetchUsers(), vibrate()) : (notify('⛔ Akses Terbatas: Khusus Owner', 'error'), vibrate())"
-                class="p-2 rounded-full transition duration-300"
-                :class="tab==='userLog'?'text-indigo-600 bg-indigo-50':'text-slate-400 hover:text-slate-600'">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </button>
-        </nav>
-    </template>
-
-    <div x-show="isDeleteOpen"
-        class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
-        <div class="bg-white rounded-[2rem] w-full max-w-xs p-6 shadow-2xl text-center">
-            <div class="mx-auto w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-3 text-red-500">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                    </path>
-                </svg>
-            </div>
-            <h3 class="font-extrabold text-slate-800">Hapus Data?</h3>
-            <div class="flex gap-2 mt-4"><button @click="isDeleteOpen=false"
-                    class="flex-1 bg-slate-100 py-3 rounded-xl text-xs font-bold text-slate-500">Batal</button><button
-                    @click="confirmDelete"
-                    class="flex-1 bg-red-600 text-white py-3 rounded-xl text-xs font-bold shadow-lg">Hapus</button>
-            </div>
-        </div>
-    </div>
-    <div x-show="isMasterOpen"
-        class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
-        <div class="bg-white rounded-[2rem] w-full max-w-sm p-6 shadow-2xl space-y-4">
-            <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2"><span
-                    class="w-1.5 h-6 bg-brand-600 rounded-full"></span> Tambah Produk</h3><input type="text"
-                x-model="newProd.category" list="catList"
-                class="w-full bg-slate-50 border-0 rounded-xl p-4 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500"
-                placeholder="Kategori"><datalist id="catList"><template x-for="c in categories" :key="c">
-                    <option :value="c"></option>
-                </template></datalist><input type="text" x-model="newProd.name"
-                class="w-full bg-slate-50 border-0 rounded-xl p-4 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500"
-                placeholder="Nama Produk">
-            <div class="flex gap-2 pt-2"><button @click="isMasterOpen=false"
-                    class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500">Batal</button><button
-                    @click="submitNewProd" :disabled="bgProcess"
-                    class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg">Simpan</button>
-            </div>
-        </div>
-    </div>
-
-    <div x-show="isSetorOpen"
-        class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
-        <div
-            class="bg-white rounded-[2.5rem] w-full max-w-sm p-6 shadow-2xl space-y-4 text-center max-h-[85vh] overflow-y-auto no-scrollbar">
-            <h3 class="font-extrabold text-slate-800 text-lg">Setor Modal</h3>
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wide">
-                    <span>Saldo Laci</span><span class="text-slate-800 text-sm"
-                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(modalStats.modalGantung)"></span>
-                </div>
-            </div>
-
-            <div class="relative"><span
-                    class="absolute left-5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-400">Rp</span><input
-                    type="tel" :value="formatRupiah(setorForm.amount)"
-                    @input="setorForm.amount = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
-                    class="w-full bg-slate-50 border-0 rounded-2xl pl-10 pr-5 py-4 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-500 transition"
-                    placeholder="Nominal Disetor"></div>
-            <input type="text" x-model="setorForm.note"
-                class="w-full bg-slate-50 border-0 rounded-2xl px-5 py-4 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 transition"
-                placeholder="Keterangan">
-            <div class="flex gap-2 justify-center"><button @click="setorForm.note='Setor ke Mandiri'; vibrate()"
-                    class="px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500 active:bg-brand-50 active:border-brand-500 transition">Ke
-                    Mandiri</button><button @click="setorForm.note='Setor ke BCA'; vibrate()"
-                    class="px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500 active:bg-brand-50 active:border-brand-500 transition">Ke
-                    BCA</button></div>
-            <div class="flex gap-2 pt-2 border-b border-slate-100 pb-4"><button @click="isSetorOpen=false"
-                    class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500">Batal</button><button
-                    @click="submitSetor" :disabled="bgProcess"
-                    class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg flex items-center justify-center gap-2 disabled:opacity-50">
-                    <span x-show="bgProcess"
-                        class="animate-spin w-3 h-3 border-2 border-white/30 border-t-white rounded-full"></span>
-                    <span x-text="bgProcess ? 'MEMPROSES...' : 'Konfirmasi'"></span>
-                </button>
-            </div>
-
-            <div class="text-left pt-2">
-                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Riwayat Setor (Terakhir)</p>
-                <div class="space-y-2" x-data="{ expandedDeposit: null }">
-                    <template x-for="(d, idx) in deposits" :key="d.date + idx">
-                        <div class="bg-slate-50 rounded-lg border border-slate-100 overflow-hidden">
-                            <!-- Header (Always Visible) -->
-                            <div @click="expandedDeposit = expandedDeposit === idx ? null : idx"
-                                class="flex justify-between items-center p-2 cursor-pointer hover:bg-slate-100 transition active:scale-[0.99]">
-                                <div class="flex-1">
-                                    <p class="text-[9px] font-bold text-slate-700" x-text="d.note"></p>
-                                    <p class="text-[8px] text-slate-400" x-text="d.date"></p>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <p class="text-[10px] font-black text-brand-600"
-                                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(d.amount)"></p>
-                                    <svg class="w-3 h-3 text-slate-400 transition-transform"
-                                        :class="{ 'rotate-180': expandedDeposit === idx }" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <!-- Detail (Expandable) -->
-                            <div x-show="expandedDeposit === idx" x-collapse
-                                class="px-3 pb-3 pt-1 border-t border-slate-200 bg-white">
-                                <div class="space-y-2">
-                                    <!-- Nominal Detail -->
-                                    <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
-                                        <span class="text-[8px] text-slate-500 uppercase font-bold">Nominal
-                                            Disetor</span>
-                                        <span class="text-[9px] font-black text-brand-600"
-                                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(d.amount)"></span>
-                                    </div>
-
-                                    <!-- Bank/Tujuan -->
-                                    <div class="flex justify-between items-center py-1.5 border-b border-slate-100"
-                                        x-show="d.bank">
-                                        <span class="text-[8px] text-slate-500 uppercase font-bold">Bank
-                                            Tujuan</span>
-                                        <span class="text-[9px] font-bold text-slate-700" x-text="d.bank || '-'"></span>
-                                    </div>
-
-                                    <!-- Waktu Lengkap -->
-                                    <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
-                                        <span class="text-[8px] text-slate-500 uppercase font-bold">Waktu</span>
-                                        <span class="text-[9px] font-bold text-slate-700" x-text="d.date"></span>
-                                    </div>
-
-                                    <!-- Keterangan -->
-                                    <div class="py-1.5">
-                                        <p class="text-[8px] text-slate-500 uppercase font-bold mb-1">Keterangan</p>
-                                        <p class="text-[9px] text-slate-700 bg-slate-50 p-2 rounded" x-text="d.note">
-                                        </p>
-                                    </div>
-
-                                    <!-- Status Badge -->
-                                    <div class="pt-1">
-                                        <span
-                                            class="inline-block px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded text-[8px] font-bold">
-                                            ✓ TERCATAT
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                    <div x-show="deposits.length === 0" class="text-center text-[9px] text-slate-300 py-2">Belum ada
-                        riwayat.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div x-show="isLogoutOpen"
-        class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
-        <div class="bg-white rounded-[2rem] w-full max-w-xs p-6 shadow-2xl text-center fade-in">
-            <div class="mx-auto w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 text-red-500">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                    </path>
-                </svg>
-            </div>
-            <h3 class="font-extrabold text-slate-800 text-lg">Keluar Aplikasi?</h3>
-            <p class="text-xs text-slate-500 mt-2 leading-relaxed">Anda harus login ulang untuk masuk kembali ke
-                sistem.
-            </p>
-            <div class="flex gap-3 mt-6"><button @click="isLogoutOpen=false"
-                    class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 transition">Batal</button><button
-                    @click="logout"
-                    class="flex-1 bg-red-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg hover:bg-red-700 transition">Keluar</button>
-            </div>
-        </div>
-    </div>
-
-    <div x-show="isDetailOpen"
-        class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
-        x-cloak>
-        <div class="bg-white rounded-[2.5rem] w-full max-w-md shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
-                <div>
-                    <h3 class="font-extrabold text-slate-800 text-lg">Detail Transaksi</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider"
-                        x-text="selectedDetail?.id"></p>
-                </div>
-                <button @click="isDetailOpen=false"
-                    class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-400 flex items-center justify-center hover:bg-slate-100"><svg
-                        class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+        <template x-if="currentUser">
+            <nav x-show="!initialLoading" x-transition.opacity.duration.500ms x-cloak
+                class="fixed bottom-6 inset-x-0 mx-auto glass-nav px-4 py-3 z-40 flex items-center gap-2 w-[98%] max-w-sm justify-between rounded-full shadow-2xl shadow-slate-300/50">
+                <!-- 1. HOME -->
+                <button @click="tab='home'; vibrate()" class="p-2 rounded-full transition duration-300"
+                    :class="tab==='home'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
+                        class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></button>
-            </div>
-            <div class="p-6 overflow-y-auto no-scrollbar space-y-6">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase">Pelanggan</p>
-                        <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.customer"></p>
-                    </div>
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase">Tanggal</p>
-                        <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.fullDate"></p>
-                    </div>
-                </div>
-                <!-- Cashier Detail -->
-                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100"
-                    x-show="selectedDetail?.cashier || selectedDetail?.user">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase">Kasir / Petugas</p>
-                    <p class="font-bold text-slate-800 text-sm mt-0.5"
-                        x-text="selectedDetail?.cashier || selectedDetail?.user || '-'"></p>
-                </div>
 
-                <!-- Rincian Barang -->
-                <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Rincian Barang</p>
-                    <div x-show="loadingDetail" class="space-y-2">
-                        <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
-                    </div>
-                    <div x-show="!loadingDetail" class="space-y-3 max-h-64 overflow-y-auto no-scrollbar">
-                        <template x-for="item in detailItems" :key="item.productName">
-                            <div class="flex justify-between items-start border-b border-slate-50 pb-2 last:border-0">
-                                <div class="pr-2">
-                                    <p class="text-xs font-bold text-slate-800" x-text="item.productName"></p>
-                                    <p class="text-[10px] text-slate-400"><span x-text="item.qty"></span> x <span
-                                            class="text-brand-600 font-bold"
-                                            x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
-                                    <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                        <p class="text-[9px] text-slate-400 mt-0.5">HPP: <span
-                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.costPrice)"></span>
-                                            •
-                                            Laba: <span class="text-emerald-500 font-bold"
-                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt((item.sellPrice - item.costPrice) * item.qty)"></span>
-                                        </p>
-                                    </template>
-                                </div>
-                                <p class="text-xs font-black text-brand-600"
-                                    x-text="isSensitiveHidden ? 'Rp *******' : fmt(item.sellPrice * item.qty)">
-                                </p>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+                <!-- 2. HISTORY (LIST) -->
+                <button @click="tab='list'; vibrate()" class="p-2 rounded-full transition duration-300"
+                    :class="tab==='list'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'"><svg
+                        class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg></button>
 
-                <!-- Total Summary -->
-                <div class="bg-slate-900 rounded-2xl p-4 text-white space-y-2">
-                    <div class="flex justify-between text-xs opacity-70"><span>Total Tagihan</span><span
-                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.total)"></span></div>
-                    <div class="flex justify-between text-xs opacity-70"><span>Sudah Bayar (DP)</span><span
-                            class="text-green-400"
-                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.dp)"></span></div>
-                    <div class="w-full h-px bg-white/10 my-1"></div>
-                    <div class="flex justify-between font-bold text-sm"><span>Sisa Kekurangan</span><span
-                            class="text-red-400"
-                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.sisa)"></span></div>
+                <!-- 3. EXPENSE -->
+                <button @click="tab='expense'; vibrate()" class="p-2 rounded-full transition duration-300"
+                    :class="tab==='expense'?'text-red-500 bg-red-50':'text-slate-400 hover:text-slate-600'"><svg
+                        class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg></button>
+
+                <!-- 4. ADD (CENTER) -->
+                <button @click="resetForm(); tab='add'; vibrate()"
+                    class="w-14 h-14 bg-gradient-to-b from-brand-600 to-brand-700 rounded-full text-white shadow-xl shadow-brand-500/40 flex items-center justify-center transform transition hover:scale-110 active:scale-95 -mt-8 border-[4px] border-[#F1F5F9]"><svg
+                        class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg></button>
+
+                <!-- 5. REPORT -->
+                <!-- 5. REPORT -->
+                <button
+                    @click="(currentUser?.role === 'Admin' || currentUser?.role === 'Owner') ? (tab='report', vibrate()) : (notify('Akses Terbatas: Khusus Owner/Admin', 'error'), vibrate())"
+                    class="p-2 rounded-full transition duration-300"
+                    :class="tab==='report'?'text-amber-500 bg-amber-50':'text-slate-400 hover:text-slate-600'"><svg
+                        class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg></button>
+
+                <!-- 6. TEAM (OWNER) -->
+                <button
+                    @click="(currentUser?.role === 'Owner') ? (tab='team', fetchUsers(), vibrate()) : (notify('Akses Terbatas: Khusus Owner', 'error'), vibrate())"
+                    class="p-2 rounded-full transition duration-300"
+                    :class="tab==='team'?'text-brand-600 bg-brand-50':'text-slate-400 hover:text-slate-600'">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                </button>
+
+                <!-- 7. USER LOG (OWNER) -->
+                <button
+                    @click="(currentUser?.role === 'Owner') ? (tab='userLog', fetchUsers(), vibrate()) : (notify('Akses Terbatas: Khusus Owner', 'error'), vibrate())"
+                    class="p-2 rounded-full transition duration-300"
+                    :class="tab==='userLog'?'text-indigo-600 bg-indigo-50':'text-slate-400 hover:text-slate-600'">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </template>
+
+        <div x-show="isDeleteOpen"
+            class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
+            <div class="bg-white rounded-[2rem] w-full max-w-xs p-6 shadow-2xl text-center">
+                <div
+                    class="mx-auto w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-3 text-red-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-extrabold text-slate-800">Hapus Data?</h3>
+                <div class="flex gap-2 mt-4"><button @click="isDeleteOpen=false"
+                        class="flex-1 bg-slate-100 py-3 rounded-xl text-xs font-bold text-slate-500">Batal</button><button
+                        @click="confirmDelete"
+                        class="flex-1 bg-red-600 text-white py-3 rounded-xl text-xs font-bold shadow-lg">Hapus</button>
                 </div>
             </div>
         </div>
-    </div>
+        <div x-show="isMasterOpen"
+            class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
+            <div class="bg-white rounded-[2rem] w-full max-w-sm p-6 shadow-2xl space-y-4">
+                <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2"><span
+                        class="w-1.5 h-6 bg-brand-600 rounded-full"></span> Tambah Produk</h3><input type="text"
+                    x-model="newProd.category" list="catList"
+                    class="w-full bg-slate-50 border-0 rounded-xl p-4 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500"
+                    placeholder="Kategori"><datalist id="catList"><template x-for="c in categories" :key="c">
+                        <option :value="c"></option>
+                    </template></datalist><input type="text" x-model="newProd.name"
+                    class="w-full bg-slate-50 border-0 rounded-xl p-4 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500"
+                    placeholder="Nama Produk">
+                <div class="flex gap-2 pt-2"><button @click="isMasterOpen=false"
+                        class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500">Batal</button><button
+                        @click="submitNewProd" :disabled="bgProcess"
+                        class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg">Simpan</button>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="isSetorOpen"
+            class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
+            <div
+                class="bg-white rounded-[2.5rem] w-full max-w-sm p-6 shadow-2xl space-y-4 text-center max-h-[85vh] overflow-y-auto no-scrollbar">
+                <h3 class="font-extrabold text-slate-800 text-lg">Setor Modal</h3>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <div
+                        class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wide">
+                        <span>Saldo Laci</span><span class="text-slate-800 text-sm"
+                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(modalStats.modalGantung)"></span>
+                    </div>
+                </div>
+
+                <div class="relative"><span
+                        class="absolute left-5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-400">Rp</span><input
+                        type="tel" :value="formatRupiah(setorForm.amount)"
+                        @input="setorForm.amount = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
+                        class="w-full bg-slate-50 border-0 rounded-2xl pl-10 pr-5 py-4 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-500 transition"
+                        placeholder="Nominal Disetor"></div>
+                <input type="text" x-model="setorForm.note"
+                    class="w-full bg-slate-50 border-0 rounded-2xl px-5 py-4 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 transition"
+                    placeholder="Keterangan">
+                <div class="flex gap-2 justify-center"><button @click="setorForm.note='Setor ke Mandiri'; vibrate()"
+                        class="px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500 active:bg-brand-50 active:border-brand-500 transition">Ke
+                        Mandiri</button><button @click="setorForm.note='Setor ke BCA'; vibrate()"
+                        class="px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500 active:bg-brand-50 active:border-brand-500 transition">Ke
+                        BCA</button></div>
+                <div class="flex gap-2 pt-2 border-b border-slate-100 pb-4"><button @click="isSetorOpen=false"
+                        class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500">Batal</button><button
+                        @click="submitSetor" :disabled="bgProcess"
+                        class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg flex items-center justify-center gap-2 disabled:opacity-50">
+                        <span x-show="bgProcess"
+                            class="animate-spin w-3 h-3 border-2 border-white/30 border-t-white rounded-full"></span>
+                        <span x-text="bgProcess ? 'MEMPROSES...' : 'Konfirmasi'"></span>
+                    </button>
+                </div>
+
+                <div class="text-left pt-2">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Riwayat Setor (Terakhir)</p>
+                    <div class="space-y-2" x-data="{ expandedDeposit: null }">
+                        <template x-for="(d, idx) in deposits" :key="d.date + idx">
+                            <div class="bg-slate-50 rounded-lg border border-slate-100 overflow-hidden">
+                                <!-- Header (Always Visible) -->
+                                <div @click="expandedDeposit = expandedDeposit === idx ? null : idx"
+                                    class="flex justify-between items-center p-2 cursor-pointer hover:bg-slate-100 transition active:scale-[0.99]">
+                                    <div class="flex-1">
+                                        <p class="text-[9px] font-bold text-slate-700" x-text="d.note"></p>
+                                        <p class="text-[8px] text-slate-400" x-text="d.date"></p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-[10px] font-black text-brand-600"
+                                            x-text="isSensitiveHidden ? 'Rp *******' : fmt(d.amount)"></p>
+                                        <svg class="w-3 h-3 text-slate-400 transition-transform"
+                                            :class="{ 'rotate-180': expandedDeposit === idx }" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Detail (Expandable) -->
+                                <div x-show="expandedDeposit === idx" x-collapse
+                                    class="px-3 pb-3 pt-1 border-t border-slate-200 bg-white">
+                                    <div class="space-y-2">
+                                        <!-- Nominal Detail -->
+                                        <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
+                                            <span class="text-[8px] text-slate-500 uppercase font-bold">Nominal
+                                                Disetor</span>
+                                            <span class="text-[9px] font-black text-brand-600"
+                                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(d.amount)"></span>
+                                        </div>
+
+                                        <!-- Bank/Tujuan -->
+                                        <div class="flex justify-between items-center py-1.5 border-b border-slate-100"
+                                            x-show="d.bank">
+                                            <span class="text-[8px] text-slate-500 uppercase font-bold">Bank
+                                                Tujuan</span>
+                                            <span class="text-[9px] font-bold text-slate-700"
+                                                x-text="d.bank || '-'"></span>
+                                        </div>
+
+                                        <!-- Waktu Lengkap -->
+                                        <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
+                                            <span class="text-[8px] text-slate-500 uppercase font-bold">Waktu</span>
+                                            <span class="text-[9px] font-bold text-slate-700" x-text="d.date"></span>
+                                        </div>
+
+                                        <!-- Keterangan -->
+                                        <div class="py-1.5">
+                                            <p class="text-[8px] text-slate-500 uppercase font-bold mb-1">Keterangan</p>
+                                            <p class="text-[9px] text-slate-700 bg-slate-50 p-2 rounded"
+                                                x-text="d.note">
+                                            </p>
+                                        </div>
+
+                                        <!-- Status Badge -->
+                                        <div class="pt-1">
+                                            <span
+                                                class="inline-block px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded text-[8px] font-bold">
+                                                ✓ TERCATAT
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <div x-show="deposits.length === 0" class="text-center text-[9px] text-slate-300 py-2">Belum ada
+                            riwayat.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="isLogoutOpen"
+            class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
+            <div class="bg-white rounded-[2rem] w-full max-w-xs p-6 shadow-2xl text-center fade-in">
+                <div
+                    class="mx-auto w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 text-red-500">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-extrabold text-slate-800 text-lg">Keluar Aplikasi?</h3>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">Anda harus login ulang untuk masuk kembali ke
+                    sistem.
+                </p>
+                <div class="flex gap-3 mt-6"><button @click="isLogoutOpen=false"
+                        class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 transition">Batal</button><button
+                        @click="logout"
+                        class="flex-1 bg-red-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg hover:bg-red-700 transition">Keluar</button>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="isDetailOpen"
+            class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+            x-cloak>
+            <div
+                class="bg-white rounded-[2.5rem] w-full max-w-md shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                <div class="p-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-extrabold text-slate-800 text-lg">Detail Transaksi</h3>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider"
+                            x-text="selectedDetail?.id"></p>
+                    </div>
+                    <button @click="isDetailOpen=false"
+                        class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-400 flex items-center justify-center hover:bg-slate-100"><svg
+                            class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg></button>
+                </div>
+                <div class="p-6 overflow-y-auto no-scrollbar space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">Pelanggan</p>
+                            <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.customer"></p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">Tanggal</p>
+                            <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.fullDate"></p>
+                        </div>
+                    </div>
+                    <!-- Cashier Detail -->
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100"
+                        x-show="selectedDetail?.cashier || selectedDetail?.user">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase">Kasir / Petugas</p>
+                        <p class="font-bold text-slate-800 text-sm mt-0.5"
+                            x-text="selectedDetail?.cashier || selectedDetail?.user || '-'"></p>
+                    </div>
+
+                    <!-- Rincian Barang -->
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Rincian Barang</p>
+                        <div x-show="loadingDetail" class="space-y-2">
+                            <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                        </div>
+                        <div x-show="!loadingDetail" class="space-y-3 max-h-64 overflow-y-auto no-scrollbar">
+                            <template x-for="item in detailItems" :key="item.productName">
+                                <div
+                                    class="flex justify-between items-start border-b border-slate-50 pb-2 last:border-0">
+                                    <div class="pr-2">
+                                        <p class="text-xs font-bold text-slate-800" x-text="item.productName"></p>
+                                        <p class="text-[10px] text-slate-400"><span x-text="item.qty"></span> x <span
+                                                class="text-brand-600 font-bold"
+                                                x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
+                                        <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
+                                            <p class="text-[9px] text-slate-400 mt-0.5">HPP: <span
+                                                    x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.costPrice)"></span>
+                                                •
+                                                Laba: <span class="text-emerald-500 font-bold"
+                                                    x-text="isSensitiveHidden ? 'Rp ****' : fmt((item.sellPrice - item.costPrice) * item.qty)"></span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                    <p class="text-xs font-black text-brand-600"
+                                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(item.sellPrice * item.qty)">
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Total Summary -->
+                    <div class="bg-slate-900 rounded-2xl p-4 text-white space-y-2">
+                        <div class="flex justify-between text-xs opacity-70"><span>Total Tagihan</span><span
+                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.total)"></span></div>
+                        <div class="flex justify-between text-xs opacity-70"><span>Sudah Bayar (DP)</span><span
+                                class="text-green-400"
+                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.dp)"></span></div>
+                        <div class="w-full h-px bg-white/10 my-1"></div>
+                        <div class="flex justify-between font-bold text-sm"><span>Sisa Kekurangan</span><span
+                                class="text-red-400"
+                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.sisa)"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
-    <script>
-        // === KONFIGURASI API ===
-        // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA YANG BARU
-        const API_URL = "https://script.google.com/macros/s/AKfycby0ZN79PRY7Q8rFw8ShT5n9K2nt7VZ9ccwK6YriB2ciYsPfd23Hl9ZY81FEEk1PFGLY/exec";
-        const API_TOKEN = "GROW_SECURE_2026";
-        const ENCRYPTION_KEY = "GROW_2026_SECRET_KEY_XYZ"; // Change this in production!
+        <script>
+            // === KONFIGURASI API ===
+            // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA YANG BARU
+            const API_URL = "https://script.google.com/macros/s/AKfycby0ZN79PRY7Q8rFw8ShT5n9K2nt7VZ9ccwK6YriB2ciYsPfd23Hl9ZY81FEEk1PFGLY/exec";
+            const API_TOKEN = "GROW_SECURE_2026";
+            const ENCRYPTION_KEY = "GROW_2026_SECRET_KEY_XYZ"; // Change this in production!
 
-        // === ENCRYPTION HELPERS ===
-        const SecureStorage = {
-            encrypt(data) {
-                if (!window.CryptoJS) return JSON.stringify(data);
-                return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
-            },
-            decrypt(encryptedData) {
-                if (!encryptedData) return null;
-                if (!window.CryptoJS) {
-                    try { return JSON.parse(encryptedData); } catch { return null; }
-                }
-                try {
-                    const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
-                    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-                    return decrypted ? JSON.parse(decrypted) : null;
-                } catch (e) {
-                    console.warn('Decryption failed, trying plain parse:', e);
-                    try { return JSON.parse(encryptedData); } catch { return null; }
-                }
-            },
-            set(key, data) {
-                const encrypted = this.encrypt(data);
-                localStorage.setItem(key, encrypted);
-            },
-            get(key) {
-                const encrypted = localStorage.getItem(key);
-                return this.decrypt(encrypted);
-            }
-        };
-
-        function app() {
-            return {
-                currentUser: SecureStorage.get('grow_user') || null,
-                loginForm: { u: '', p: '' },
-                isLogoutOpen: false, isDetailOpen: false, loadingDetail: false, selectedDetail: null, detailItems: [],
-
-                tab: 'home', initialLoading: true, bgProcess: false, loading: false, loadingPdf: false, notifications: [], isMasterOpen: false, isSetorOpen: false, isDeleteOpen: false, deleteId: null, deleteDate: null, isOffline: false, loadingData: true,
-                isSensitiveHidden: localStorage.getItem('grow_privacy_mode') === 'true',
-                allProducts: [], categories: [], history: [], expenses: [], deposits: [],
-                customers: [], expenseDescriptions: [],
-                stats: { omzet: 0, grossProfit: 0, netProfit: 0, totalExpense: 0, totalHPP: 0 },
-                modalStats: { modalGantung: 0, totalHPP: 0, totalDisetor: 0 },
-                historyKPI: { all: { count: 0, total: 0 }, lunas: { count: 0, total: 0 }, belum: { count: 0, total: 0 } },
-                filterDate: '', isService: false, selectedCategory: "", filterStatus: '', productSearch: '', showProductList: false,
-                searchQuery: '', filterStartDate: '', filterEndDate: '', quickFilter: '',
-
-                // === OFFLINE QUEUE SYSTEM ===
-                pendingQueue: SecureStorage.get('grow_pending_queue') || [],
-                isOnline: navigator.onLine,
-                syncInProgress: false,
-
-                expFilterStart: '', expFilterEnd: '', expQuickFilter: '',
-                form: { id: null, customer: '', productName: '', serviceName: '', qty: 1, sellPrice: '', costPrice: '', dp: 0, deadline: '' }, newProd: { category: '', name: '' }, setorForm: { amount: '', note: '', bank: 'Mandiri' }, expForm: { id: null, category: '', desc: '', amount: '' }, deleteType: 'transaction',
-                cart: [], loadingText: 'MENGHUBUNGKAN...', loadingMessages: ['MENYAMBUNGKAN SERVER...', 'SINKRONISASI DATA...', '🔐 ENKRIPSI AKTIF...', 'MEMUAT DASHBOARD...', 'MENYIAPKAN TRANSAKSI...'], timeString: '', dateString: '',
-                topProduct: { name: '-', qty: 0 },
-                reportDate: { month: new Date().getMonth(), year: new Date().getFullYear() },
-
-                // USER MGMT STATE
-                users: [], showWelcome: false, isUserModalOpen: false, deleteUserItem: null,
-                currUserForm: { username: '', password: '', role: 'Kasir', name: '', photo: '', isEdit: false },
-
-                // LOGS STATE
-                logs: [], loadingLogs: false, logFilterUser: '', logFilterAction: '',
-
-                init() {
-                    setInterval(() => this.updateTime(), 1000); this.updateTime();
-                    this.restoreCart();
-
-                    // === CONNECTION MONITORING ===
-                    window.addEventListener('online', () => {
-                        this.isOnline = true;
-                        this.notify('✅ Koneksi Kembali! Sinkronisasi...', 'success');
-                        this.processPendingQueue();
-                    });
-
-                    window.addEventListener('offline', () => {
-                        this.isOnline = false;
-                        this.notify('⚠️ Mode Offline - Data disimpan lokal', 'error');
-                    });
-
-                    if (this.currentUser) { this.startApp(); }
-                    let msgIndex = 0; const msgInterval = setInterval(() => { this.loadingText = this.loadingMessages[msgIndex]; msgIndex = (msgIndex + 1) % this.loadingMessages.length; }, 800);
-
-
-                    const savedCart = localStorage.getItem('grow_cart_backup');
-                    if (savedCart) { this.cart = JSON.parse(savedCart); if (this.cart.length > 0) this.notify("Keranjang dipulihkan", 'info'); }
-                    this.$watch('cart', (val) => localStorage.setItem('grow_cart_backup', JSON.stringify(val)));
-                    this.$watch('isSensitiveHidden', (val) => localStorage.setItem('grow_privacy_mode', val));
-
-                    // Init Report Filters (Already initialized in state)
-                    // this.reportDate is declared in state, so we don't need to re-init here
-
-                    if (this.currentUser) { this.startApp(msgInterval); } else { this.initialLoading = false; clearInterval(msgInterval); }
+            // === ENCRYPTION HELPERS ===
+            const SecureStorage = {
+                encrypt(data) {
+                    if (!window.CryptoJS) return JSON.stringify(data);
+                    return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
                 },
-
-                updateTime() { const now = new Date(); this.timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); this.dateString = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
-                get greeting() { const h = new Date().getHours(); if (h < 11) return 'Selamat Pagi'; if (h < 15) return 'Selamat Siang'; if (h < 18) return 'Selamat Sore'; return 'Selamat Malam'; },
-                startApp(interval) { fetch(`${API_URL}?action=ping`, { mode: 'no-cors' }); this.fetch(true).then(() => { if (interval) clearInterval(interval); }); },
-                vibrate() { if (navigator.vibrate) navigator.vibrate(15); },
-
-                async login() {
-                    if (!this.loginForm.u || !this.loginForm.p) return this.notify("Isi Username & Password!", 'error');
-
-                    this.bgProcess = true;
-
+                decrypt(encryptedData) {
+                    if (!encryptedData) return null;
+                    if (!window.CryptoJS) {
+                        try { return JSON.parse(encryptedData); } catch { return null; }
+                    }
                     try {
-                        const response = await fetch(`${API_URL}?action=login`, {
-                            method: 'POST',
-                            redirect: "follow",
-                            headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: JSON.stringify({ username: this.loginForm.u, password: this.loginForm.p })
+                        const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+                        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+                        return decrypted ? JSON.parse(decrypted) : null;
+                    } catch (e) {
+                        console.warn('Decryption failed, trying plain parse:', e);
+                        try { return JSON.parse(encryptedData); } catch { return null; }
+                    }
+                },
+                set(key, data) {
+                    const encrypted = this.encrypt(data);
+                    localStorage.setItem(key, encrypted);
+                },
+                get(key) {
+                    const encrypted = localStorage.getItem(key);
+                    return this.decrypt(encrypted);
+                }
+            };
+
+            function app() {
+                return {
+                    currentUser: SecureStorage.get('grow_user') || null,
+                    loginForm: { u: '', p: '' },
+                    isLogoutOpen: false, isDetailOpen: false, loadingDetail: false, selectedDetail: null, detailItems: [],
+
+                    tab: 'home', initialLoading: true, bgProcess: false, loading: false, loadingPdf: false, notifications: [], isMasterOpen: false, isSetorOpen: false, isDeleteOpen: false, deleteId: null, deleteDate: null, isOffline: false, loadingData: true,
+                    isSensitiveHidden: localStorage.getItem('grow_privacy_mode') === 'true',
+                    allProducts: [], categories: [], history: [], expenses: [], deposits: [],
+                    customers: [], expenseDescriptions: [],
+                    stats: { omzet: 0, grossProfit: 0, netProfit: 0, totalExpense: 0, totalHPP: 0 },
+                    modalStats: { modalGantung: 0, totalHPP: 0, totalDisetor: 0 },
+                    historyKPI: { all: { count: 0, total: 0 }, lunas: { count: 0, total: 0 }, belum: { count: 0, total: 0 } },
+                    filterDate: '', isService: false, selectedCategory: "", filterStatus: '', productSearch: '', showProductList: false,
+                    searchQuery: '', filterStartDate: '', filterEndDate: '', quickFilter: '',
+
+                    // === OFFLINE QUEUE SYSTEM ===
+                    pendingQueue: SecureStorage.get('grow_pending_queue') || [],
+                    isOnline: navigator.onLine,
+                    syncInProgress: false,
+
+                    expFilterStart: '', expFilterEnd: '', expQuickFilter: '',
+                    form: { id: null, customer: '', productName: '', serviceName: '', qty: 1, sellPrice: '', costPrice: '', dp: 0, deadline: '' }, newProd: { category: '', name: '' }, setorForm: { amount: '', note: '', bank: 'Mandiri' }, expForm: { id: null, category: '', desc: '', amount: '' }, deleteType: 'transaction',
+                    cart: [], loadingText: 'MENGHUBUNGKAN...', loadingMessages: ['MENYAMBUNGKAN SERVER...', 'SINKRONISASI DATA...', '🔐 ENKRIPSI AKTIF...', 'MEMUAT DASHBOARD...', 'MENYIAPKAN TRANSAKSI...'], timeString: '', dateString: '',
+                    topProduct: { name: '-', qty: 0 },
+                    reportDate: { month: new Date().getMonth(), year: new Date().getFullYear() },
+
+                    // USER MGMT STATE
+                    users: [], showWelcome: false, isUserModalOpen: false, deleteUserItem: null,
+                    currUserForm: { username: '', password: '', role: 'Kasir', name: '', photo: '', isEdit: false },
+
+                    // LOGS STATE
+                    logs: [], loadingLogs: false, logFilterUser: '', logFilterAction: '',
+
+                    init() {
+                        setInterval(() => this.updateTime(), 1000); this.updateTime();
+                        this.restoreCart();
+
+                        // === CONNECTION MONITORING ===
+                        window.addEventListener('online', () => {
+                            this.isOnline = true;
+                            this.notify('✅ Koneksi Kembali! Sinkronisasi...', 'success');
+                            this.processPendingQueue();
                         });
 
-                        const res = await response.json();
+                        window.addEventListener('offline', () => {
+                            this.isOnline = false;
+                            this.notify('⚠️ Mode Offline - Data disimpan lokal', 'error');
+                        });
 
-                        if (res.success) {
-                            this.currentUser = res.user;
-                            SecureStorage.set('grow_user', res.user);
-                            this.loginForm = { u: '', p: '' };
-                            this.initialLoading = true;
-                            this.showWelcome = true; // Show Welcome
-                            this.startApp();
-                        } else {
-                            // Enhanced error message
-                            const errorMsg = res.message || 'Username atau Password salah!';
-                            this.notify(errorMsg, 'error');
+                        if (this.currentUser) { this.startApp(); }
+                        let msgIndex = 0; const msgInterval = setInterval(() => { this.loadingText = this.loadingMessages[msgIndex]; msgIndex = (msgIndex + 1) % this.loadingMessages.length; }, 800);
+
+
+                        const savedCart = localStorage.getItem('grow_cart_backup');
+                        if (savedCart) { this.cart = JSON.parse(savedCart); if (this.cart.length > 0) this.notify("Keranjang dipulihkan", 'info'); }
+                        this.$watch('cart', (val) => localStorage.setItem('grow_cart_backup', JSON.stringify(val)));
+                        this.$watch('isSensitiveHidden', (val) => localStorage.setItem('grow_privacy_mode', val));
+
+                        // Init Report Filters (Already initialized in state)
+                        // this.reportDate is declared in state, so we don't need to re-init here
+
+                        if (this.currentUser) { this.startApp(msgInterval); } else { this.initialLoading = false; clearInterval(msgInterval); }
+                    },
+
+                    updateTime() { const now = new Date(); this.timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); this.dateString = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
+                    get greeting() { const h = new Date().getHours(); if (h < 11) return 'Selamat Pagi'; if (h < 15) return 'Selamat Siang'; if (h < 18) return 'Selamat Sore'; return 'Selamat Malam'; },
+                    startApp(interval) { fetch(`${API_URL}?action=ping`, { mode: 'no-cors' }); this.fetch(true).then(() => { if (interval) clearInterval(interval); }); },
+                    vibrate() { if (navigator.vibrate) navigator.vibrate(15); },
+
+                    async login() {
+                        if (!this.loginForm.u || !this.loginForm.p) return this.notify("Isi Username & Password!", 'error');
+
+                        this.bgProcess = true;
+
+                        try {
+                            const response = await fetch(`${API_URL}?action=login`, {
+                                method: 'POST',
+                                redirect: "follow",
+                                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                body: JSON.stringify({ username: this.loginForm.u, password: this.loginForm.p })
+                            });
+
+                            const res = await response.json();
+
+                            if (res.success) {
+                                this.currentUser = res.user;
+                                SecureStorage.set('grow_user', res.user);
+                                this.loginForm = { u: '', p: '' };
+                                this.initialLoading = true;
+                                this.showWelcome = true; // Show Welcome
+                                this.startApp();
+                            } else {
+                                // Enhanced error message
+                                const errorMsg = res.message || 'Username atau Password salah!';
+                                this.notify(errorMsg, 'error');
+                                this.bgProcess = false;
+
+                                // Shake animation for login form
+                                const loginCard = document.querySelector('.login-card');
+                                if (loginCard) {
+                                    loginCard.classList.add('animate-shake');
+                                    setTimeout(() => loginCard.classList.remove('animate-shake'), 500);
+                                }
+                            }
+                        } catch (e) {
+                            this.notify("Gagal Login: Cek Koneksi Internet", 'error');
                             this.bgProcess = false;
-
-                            // Shake animation for login form
-                            const loginCard = document.querySelector('.login-card');
-                            if (loginCard) {
-                                loginCard.classList.add('animate-shake');
-                                setTimeout(() => loginCard.classList.remove('animate-shake'), 500);
-                            }
                         }
-                    } catch (e) {
-                        this.notify("Gagal Login: Cek Koneksi Internet", 'error');
-                        this.bgProcess = false;
-                    }
-                },
-                // logout() is defined below at line ~2453 with full implementation
+                    },
+                    // logout() is defined below at line ~2453 with full implementation
 
-                // USER MANAGEMENT FUNCTIONS
-                async fetchUsers() {
-                    this.loadingData = true;
-                    this.users = []; // Clear to show skeletons
-                    const res = await this.api('getUsers');
-                    if (res && res.success) { this.users = res.users; }
-                    this.loadingData = false;
-                },
-                openUserModal(u = null) {
-                    if (u) {
-                        this.currUserForm = { ...u, isEdit: true, password: u.password };
-                    } else {
-                        this.currUserForm = { username: '', password: '', role: 'Kasir', name: '', photo: '', isEdit: false };
-                    }
-                    this.isUserModalOpen = true;
-                },
-                editUser(u) { this.openUserModal(u); },
-                async saveUserSubmit() {
-                    // Validation
-                    if (!this.currUserForm.username?.trim()) {
-                        return this.notify("Username wajib diisi", 'error');
-                    }
-                    if (!this.currUserForm.password?.trim()) {
-                        return this.notify("Password wajib diisi", 'error');
-                    }
-                    if (!this.currUserForm.name?.trim()) {
-                        return this.notify("Nama lengkap wajib diisi", 'error');
-                    }
-
-                    this.bgProcess = true;
-                    try {
-                        const res = await this.api('saveUser', this.currUserForm);
-                        if (res && res.success) {
-                            this.notify("Data karyawan tersimpan", 'success');
-                            this.isUserModalOpen = false;
-                            this.fetchUsers();
-                        } else {
-                            this.notify(res?.message || "Gagal menyimpan (Cek Koneksi/Permission)", 'error');
-                        }
-                    } catch (e) {
-                        this.notify("Error: " + e.message, 'error');
-                    } finally {
-                        this.bgProcess = false;
-                    }
-                },
-                async fetchLogs() {
-                    this.loadingLogs = true;
-                    try {
-                        const response = await fetch(`${API_URL}?action=getLogs`, {
-                            method: 'POST',
-                            headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: JSON.stringify({ token: API_TOKEN })
-                        });
-                        const res = await response.json();
-                        if (res.success) {
-                            this.logs = res.logs;
-                        }
-                    } catch (e) { console.error(e); } finally { this.loadingLogs = false; }
-                },
-                handlePhotoUpload(e) {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    if (file.size > 2 * 1024 * 1024) return this.notify("Ukuran foto max 2MB", 'error');
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        const img = new Image();
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            const MAX_SIZE = 128; // Reduced size to safe limit
-                            let width = img.width, height = img.height;
-                            if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } }
-                            else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
-                            canvas.width = width; canvas.height = height;
-                            ctx.drawImage(img, 0, 0, width, height);
-                            const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
-                            this.currUserForm.photo = dataUrl; // Lower quality
-                            this.notify(`Foto Siap! Ukuran: ${Math.round(dataUrl.length / 1024)}KB`, "success");
-                        };
-                        img.src = event.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                },
-                confirmDeleteUser(u) {
-                    this.deleteId = u.username;
-                    this.deleteType = 'user';
-                    this.isDeleteOpen = true;
-                    this.deleteUserItem = u;
-                },
-                notify(e, t = 'success') { const n = Date.now(); this.notifications.push({ id: n, message: e, type: t }); setTimeout(() => this.notifications = this.notifications.filter(e => e.id !== n), 1500); },
-
-
-                async api(action, payload = null) {
-                    if (navigator.onLine === false) { this.notify("Anda sedang Offline!", 'error'); return null; }
-
-                    const controller = new AbortController();
-                    const id = setTimeout(() => controller.abort(), 30000); // 30s Timeout (GAS can be slow)
-
-                    const url = `${API_URL}?action=${action}`;
-                    const bodyData = payload || {};
-                    bodyData.token = API_TOKEN;
-
-                    try {
-                        const response = await fetch(url, {
-                            method: 'POST',
-                            redirect: "follow",
-                            signal: controller.signal,
-                            headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: JSON.stringify(bodyData)
-                        });
-                        clearTimeout(id);
-
-                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                        // Attempt to parse JSON
-                        const text = await response.text();
-                        try {
-                            const data = JSON.parse(text);
-                            if (data && data.success === false && data.message.includes("Token")) {
-                                this.notify("Akses Ditolak: Token API Salah", 'error');
-                                return null;
-                            }
-                            return data;
-                        } catch (e) {
-                            console.error("API Non-JSON Response:", text);
-                            throw new Error("Respon Server Masalah (HTML/Auth)");
-                        }
-
-                    } catch (error) {
-                        console.error("API Error:", error);
-                        clearTimeout(id);
-                        if (error.name === 'AbortError') {
-                            this.notify("Koneksi Timeout (Lambat)", 'error');
-                        } else {
-                            this.notify(error.message || "Koneksi Gagal", 'error');
-                        }
-                        return null;
-                    }
-                },
-
-                async fetch(isInitial = false) {
-                    this.loading = true;
-                    if (isInitial) {
-                        const cache = SecureStorage.get('grow_data_cache');
-                        if (cache) {
-                            this.applyData(cache);
-                        }
-                    }
-                    const e = await this.api('getInitialData');
-                    if (e) {
-                        this.applyData(e);
-                        SecureStorage.set('grow_data_cache', e);
+                    // USER MANAGEMENT FUNCTIONS
+                    async fetchUsers() {
+                        this.loadingData = true;
+                        this.users = []; // Clear to show skeletons
+                        const res = await this.api('getUsers');
+                        if (res && res.success) { this.users = res.users; }
                         this.loadingData = false;
-                        this.initialLoading = false;
-                    }
-                    this.loading = false;
-                },
-
-                // Pindahkan logika mapping data ke fungsi terpisah agar rapi
-                applyData(e) {
-                    this.allProducts = e.products || [];
-                    this.categories = [...new Set(this.allProducts.map(p => p.category))];
-                    this.history = e.history || [];
-                    this.expenses = e.expenses || [];
-                    this.deposits = e.deposits || [];
-                    this.customers = e.customers || []; // New Customer List
-                    this.expenseDescriptions = e.expenseDescriptions || []; // New Expense Desc List
-                    this.modalStats = e.modalStats || { modalGantung: 0, totalHPP: 0, totalDisetor: 0 };
-                    this.stats = e.stats || { omzet: 0, grossProfit: 0, netProfit: 0, totalExpense: 0, totalHPP: 0 };
-                    this.historyKPI = e.historyKPI || { all: { count: 0, total: 0 }, lunas: { count: 0, total: 0 }, belum: { count: 0, total: 0 } };
-                    this.topProduct = e.topProduct || { name: '-', qty: 0 }; // Top Product Binding
-                    this.loadingData = false;
-                },
-
-                editCartItem(index) {
-                    const item = this.cart[index];
-                    if (!item) return;
-
-                    // Clear form first to prevent collision
-                    this.form.productName = '';
-                    this.form.serviceName = '';
-                    this.productSearch = '';
-                    this.form.qty = 1;
-                    this.form.sellPrice = '';
-                    this.form.costPrice = '';
-
-                    // Detect if service or product
-                    const isService = item.productName.startsWith('[JASA] ');
-                    this.isService = isService;
-
-                    if (isService) {
-                        this.form.serviceName = item.productName.replace('[JASA] ', '');
-                    } else {
-                        this.form.productName = item.productName;
-                        this.productSearch = item.productName;
-                    }
-
-                    this.form.qty = item.qty;
-                    this.form.sellPrice = item.sellPrice;
-                    this.form.costPrice = item.costPrice;
-
-                    // Remove from cart
-                    this.cart.splice(index, 1);
-                    this.vibrate();
-                    this.notify("Item dikembalikan ke form untuk diedit", 'info');
-
-                    // Scroll to form top if needed (optional)
-                    const formEl = document.getElementById('transactionForm');
-                    if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
-                },
-
-                get filteredProducts() {
-                    if (!this.productSearch) return [];
-                    const lower = this.productSearch.toLowerCase();
-                    return this.allProducts.filter(p => p.name.toLowerCase().includes(lower) || p.category.toLowerCase().includes(lower)).slice(0, 10);
-                },
-                get filteredHistory() {
-                    return this.history.filter(e => {
-                        // Search filter (customer, product, or ID) with null safety
-                        const searchLower = (this.searchQuery || '').toLowerCase();
-                        const customerMatch = (e.customer || '').toLowerCase().includes(searchLower);
-                        const productMatch = (e.product || '').toLowerCase().includes(searchLower);
-                        const idMatch = (e.id || '').toLowerCase().includes(searchLower);
-                        const matchSearch = !this.searchQuery || customerMatch || productMatch || idMatch;
-
-                        // Date range filter with validation
-                        let matchDate = true;
-                        if (this.filterStartDate && this.filterEndDate && this.filterEndDate < this.filterStartDate) {
-                            // Invalid date range, skip date filter
-                            matchDate = true;
+                    },
+                    openUserModal(u = null) {
+                        if (u) {
+                            this.currUserForm = { ...u, isEdit: true, password: u.password };
                         } else {
-                            if (this.filterStartDate && e.isoDate < this.filterStartDate) matchDate = false;
-                            if (this.filterEndDate && e.isoDate > this.filterEndDate) matchDate = false;
+                            this.currUserForm = { username: '', password: '', role: 'Kasir', name: '', photo: '', isEdit: false };
+                        }
+                        this.isUserModalOpen = true;
+                    },
+                    editUser(u) { this.openUserModal(u); },
+                    async saveUserSubmit() {
+                        // Validation
+                        if (!this.currUserForm.username?.trim()) {
+                            return this.notify("Username wajib diisi", 'error');
+                        }
+                        if (!this.currUserForm.password?.trim()) {
+                            return this.notify("Password wajib diisi", 'error');
+                        }
+                        if (!this.currUserForm.name?.trim()) {
+                            return this.notify("Nama lengkap wajib diisi", 'error');
                         }
 
-                        // Status filter
-                        const matchStatus = this.filterStatus ? e.status === this.filterStatus : true;
-
-                        return matchSearch && matchDate && matchStatus;
-                    });
-                },
-                setQuickFilter(type) {
-                    this.quickFilter = type;
-                    const today = new Date();
-                    const formatDate = (d) => d.toISOString().split('T')[0];
-
-                    if (type === 'today') {
-                        this.filterStartDate = formatDate(today);
-                        this.filterEndDate = formatDate(today);
-                    } else if (type === 'week') {
-                        const weekStart = new Date(today);
-                        weekStart.setDate(today.getDate() - today.getDay()); // Sunday
-                        this.filterStartDate = formatDate(weekStart);
-                        this.filterEndDate = formatDate(today);
-                    } else if (type === 'month') {
-                        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-                        this.filterStartDate = formatDate(monthStart);
-                        this.filterEndDate = formatDate(today);
-                    } else if (type === 'all') {
-                        this.filterStartDate = '';
-                        this.filterEndDate = '';
-                    } else if (type === 'custom') {
-                        // Don't set dates, let user choose
-                        // Date validation is handled in filteredHistory getter
-                    } else {
-                        // Clear filter
-                        this.filterStartDate = '';
-                        this.filterEndDate = '';
-                        this.quickFilter = '';
-                    }
-                },
-                setExpenseQuickFilter(type) {
-                    this.expQuickFilter = type;
-                    const today = new Date();
-                    const formatDate = (d) => d.toISOString().split('T')[0];
-
-                    if (type === 'today') {
-                        this.expFilterStart = formatDate(today);
-                        this.expFilterEnd = formatDate(today);
-                    } else if (type === 'week') {
-                        const weekStart = new Date(today);
-                        weekStart.setDate(today.getDate() - today.getDay()); // Sunday
-                        this.expFilterStart = formatDate(weekStart);
-                        this.expFilterEnd = formatDate(today);
-                    } else if (type === 'month') {
-                        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-                        this.expFilterStart = formatDate(monthStart);
-                        this.expFilterEnd = formatDate(today);
-                    } else if (type === 'all') {
-                        this.expFilterStart = '';
-                        this.expFilterEnd = '';
-                    } else if (type === 'custom') {
-                        // Let user choose
-                    }
-                },
-                get filteredExpenses() {
-                    return this.expenses.filter(e => {
-                        // Jika tidak ada filter, tampilkan semua
-                        if (!this.expFilterStart && !this.expFilterEnd) return true;
-
-                        // Jika expense tidak punya isoDate, tetap tampilkan (backward compatibility)
-                        if (!e.isoDate) return true;
-
-                        const expenseDate = e.isoDate; // Format: yyyy-MM-dd
-
-                        // Filter berdasarkan start date
-                        if (this.expFilterStart) {
-                            if (expenseDate < this.expFilterStart) return false;
-                        }
-
-                        // Filter berdasarkan end date
-                        if (this.expFilterEnd) {
-                            if (expenseDate > this.expFilterEnd) return false;
-                        }
-
-                        return true;
-                    });
-                },
-                get filteredExpenseTotal() {
-                    // Logic: Jika user sedang filter tanggal, hitung total dari yang tampil (filtered).
-                    // Jika tidak (default view), tampilkan "Total Keluar Bulan Ini" dari server (stats.totalExpense) agar sesuai UX sebelumnya.
-                    if (this.expFilterStart || this.expFilterEnd) {
-                        return this.filteredExpenses.reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0);
-                    }
-                    return this.stats.totalExpense;
-                },
-                get expenseKPIs() {
-                    const filtered = this.filteredExpenses;
-                    const total = filtered.reduce((acc, e) => acc + (parseFloat(e.amount) || 0), 0);
-                    const count = filtered.length;
-
-                    // Hitung kategori terboros
-                    const catMap = {};
-                    filtered.forEach(e => {
-                        const cat = e.cat || 'Lainnya';
-                        if (!catMap[cat]) catMap[cat] = 0;
-                        catMap[cat] += parseFloat(e.amount) || 0;
-                    });
-
-                    let topCat = '-';
-                    let maxAmount = 0;
-                    for (const cat in catMap) {
-                        if (catMap[cat] > maxAmount) {
-                            maxAmount = catMap[cat];
-                            topCat = cat;
-                        }
-                    }
-
-                    return { total, count, topCat };
-                },
-                get cartTotal() { return this.cart.reduce((acc, item) => acc + (item.qty * item.sellPrice), 0); },
-
-                daysLeft(e) {
-                    if (!e) return null;
-
-                    // 1. Ambil Waktu Hari Ini (Jam dinolkan)
-                    const t = new Date();
-                    t.setHours(0, 0, 0, 0);
-
-                    // 2. Ambil Waktu Deadline
-                    const a = new Date(e);
-                    // FIX: Paksa deadline jadi jam 00:00 lokal juga, agar tidak ada sisa jam
-                    if (a.getHours() !== 0) a.setHours(0, 0, 0, 0);
-
-                    // 3. Hitung Selisih Hari
-                    const n = Math.ceil((a - t) / 864e5);
-
-                    if (n < 0) return { text: 'TERLEWAT', class: 'bg-red-500 animate-pulse-slow' };
-                    if (0 === n) return { text: 'HARI INI', class: 'bg-orange-500 animate-bounce-slow' };
-                    if (1 === n) return { text: 'BESOK', class: 'bg-brand-500' }; // Tambahan biar lebih natural
-                    if (n <= 3) return { text: `H-${n}`, class: 'bg-amber-400' };
-                    if (n <= 7) return { text: `H-${n}`, class: 'bg-blue-400' };
-                    return null;
-                },
-                addToCart() {
-                    const e = this.isService ? "[JASA] " + this.form.serviceName : this.form.productName; const t = this.isService ? 0 : this.form.costPrice;
-                    if (!e) { this.notify("Pilih Produk/Isi Nama Jasa", 'error'); return; } if (!this.isService && (!t || t <= 0)) { this.notify("Harga Modal Wajib Diisi!", 'error'); return; } if (!this.form.qty || this.form.qty <= 0) { this.notify("Qty minimal 1", 'error'); return; } if (!this.form.sellPrice) { this.notify("Harga Jual Wajib Diisi", 'error'); return; }
-                    this.cart.push({ productName: e, qty: parseFloat(this.form.qty), sellPrice: parseFloat(this.form.sellPrice), costPrice: parseFloat(t) });
-                    this.form.productName = ''; this.form.serviceName = ''; this.form.qty = 1; this.form.sellPrice = ''; this.form.costPrice = '';
-                    this.productSearch = '';
-                },
-
-                formatRupiah(value) {
-                    if (!value && value !== 0) return '';
-                    let number_string = value.toString().replace(/[^,\d]/g, '').toString(),
-                        split = number_string.split(','),
-                        sisa = split[0].length % 3,
-                        rupiah = split[0].substr(0, sisa),
-                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-                    if (ribuan) {
-                        let separator = sisa ? '.' : '';
-                        rupiah += separator + ribuan.join('.');
-                    }
-
-                    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                    return rupiah;
-                },
-                cleanRupiah(value) {
-                    if (!value) return '';
-                    return Number(value.toString().replace(/\./g, ''));
-                },
-
-                async save() {
-                    if (this.bgProcess) return; // Prevent double submit
-                    this.vibrate();
-
-                    // Validations
-                    if (!this.form.customer || this.form.customer.trim() === '') {
-                        return this.notify("Nama pelanggan wajib diisi", 'error');
-                    }
-                    if (this.cart.length === 0) {
-                        return this.notify("Keranjang Kosong", 'error');
-                    }
-
-                    const items = this.cart;
-                    const grandTotal = items.reduce((acc, item) => acc + (parseFloat(item.qty || 1) * parseFloat(item.sellPrice || 0)), 0);
-                    const totalModal = items.reduce((acc, item) => acc + (parseFloat(item.qty || 1) * parseFloat(item.costPrice || 0)), 0);
-                    const totalDP = parseFloat(this.form.dp) || 0;
-                    const sisa = Math.round(grandTotal - totalDP);
-                    const status = sisa <= 0 ? "LUNAS" : "BELUM LUNAS";
-                    // Profit Logic (Cash Basis)
-                    const cashIn = (status === 'LUNAS') ? grandTotal : totalDP;
-                    const profit = cashIn - totalModal;
-
-                    // NEW ITEM SNAPSHOT (Optimistic)
-                    const isNew = !this.form.id;
-                    const tempId = this.form.id || this.generateUUID(); // Robust UUID
-                    const now = new Date();
-                    const newItem = {
-                        id: tempId,
-                        displayDate: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
-                        isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0], // Local Date ISO
-                        fullDate: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                        timestamp: now.toISOString(), // Preserve exact time for local edits
-                        customer: this.form.customer,
-                        product: items.length > 1 ? `${items[0].productName} (+${items.length - 1} item)` : items[0].productName,
-                        total: grandTotal,
-                        hpp: totalModal,
-                        dp: totalDP,
-                        sisa: sisa,
-                        status: status,
-                        deadline: this.form.deadline,
-                        cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A',
-                        items: JSON.parse(JSON.stringify(items)) // STORE ITEMS FOR INSTANT EDIT
-                    };
-
-                    // --- APPLY TO LOCAL STATE (OPTIMISTIC) ---
-                    if (isNew) {
-                        // 1. Add to History
-                        this.history.unshift(newItem);
-
-                        // 2. Update KPI Cards
-                        this.historyKPI.all.count++;
-                        this.historyKPI.all.total += grandTotal;
-                        if (status === 'LUNAS') {
-                            this.historyKPI.lunas.count++;
-                            this.historyKPI.lunas.total += grandTotal;
-                        } else {
-                            this.historyKPI.belum.count++;
-                            this.historyKPI.belum.total += sisa;
-                        }
-
-                        // 3. Update Dashboard Stats
-                        this.stats.omzet += grandTotal;
-                        this.stats.totalHPP += totalModal;
-                        this.stats.grossProfit += profit;
-                        this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
-
-                        // 3b. Update Modal Stats (Saldo Laci / Modal Gantung)
-                        // Logic: Saldo increases by the Capital (HPP) part of the cash received.
-                        // Cash received = LUNAS ? Total : DP.
-                        const cashRec = (status === 'LUNAS') ? grandTotal : totalDP;
-                        const recoveredCapital = Math.min(cashRec, totalModal);
-                        if (this.modalStats) {
-                            this.modalStats.modalGantung = (this.modalStats.modalGantung || 0) + recoveredCapital;
-                            this.modalStats.totalHPP = (this.modalStats.totalHPP || 0) + totalModal;
-                        }
-
-                        // 4. Update Top Product (Simple check)
-                        if (items[0].qty > this.topProduct.qty) {
-                            // Only update locally if it beats current top (simple heuristic)
-                            // Complex logic to re-aggregate all products is too heavy, skipping for speed.
-                        }
-                    } else {
-                        // Edit Mode: Optimistic update is complex (revert old -> apply new).
-                        // For safety/speed, we only apply full optimistic to NEW items.
-                        // For Edit, we fall back to "Semi-Optimistic" (UI transitions, but data waits for fetch)
-                        // This prevents calculation errors.
-                    }
-
-                    this.bgProcess = true;
-
-                    // 1. SIMPAN DATA SEMENTARA (Snapshot)
-                    // Use tempId (which is the UUID) so backend uses it too
-                    const payload = {
-                        id: tempId,
-                        customer: this.form.customer,
-                        items: this.cart,
-                        dp: this.form.dp,
-                        deadline: this.form.deadline,
-                        originalDate: this.form.originalDate,
-                        cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A'
-                    };
-
-                    // 2. UI Updates Immediate
-                    // this.notify("Data Disimpan (Layar diupdate)!"); // Removed for cleaner UI
-                    this.resetForm();
-                    this.cart = [];
-                    localStorage.removeItem('grow_cart_backup');
-                    this.tab = 'home'; // Instant switch
-
-                    try {
-                        // 3. KIRIM KE SERVER DI BACKGROUND
-                        const res = await this.api('saveTransaction', payload);
-
-                        // 4. SYNC (Silent or Active)
-                        if (res && res.success) {
-                            // Data saved. We might want to re-fetch to get the REAL ID generated by server.
-                            // But for user experience, they already see the data.
-                            // We call fetch() quietly to sync everything eventually.
-                            this.fetch();
-                        } else {
-                            if (!navigator.onLine) {
-                                this.addToQueue('saveTransaction', payload);
-                            } else {
-                                this.notify("GAGAL SIMPAN! Cek Koneksi (Data di Queue)", 'error');
-                                this.addToQueue('saveTransaction', payload); // Fallback
-                            }
-                        }
-                    } catch (e) {
-                        this.notify("Simpan Offline: " + e.message, 'info');
-                        this.addToQueue('saveTransaction', payload);
-                    } finally {
-                        this.bgProcess = false;
-                    }
-                },
-
-                async submitExpense() {
-                    // Enhanced validations
-                    if (!this.expForm.category || this.expForm.category.trim() === '') {
-                        return this.notify("Pilih Kategori", 'error');
-                    }
-                    if (!this.expForm.desc || this.expForm.desc.trim() === '') {
-                        return this.notify("Keterangan wajib diisi", 'error');
-                    }
-                    if (!this.expForm.amount || this.expForm.amount <= 0) {
-                        return this.notify("Nominal harus lebih dari 0", 'error');
-                    }
-
-                    const amount = parseFloat(this.expForm.amount);
-                    const isNew = !this.expForm.id;
-                    const now = new Date();
-
-                    // --- OPTIMISTIC UPDATE ---
-                    const newItem = {
-                        id: this.expForm.id || this.generateUUID(),
-                        date: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
-                        isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0],
-                        cat: this.expForm.category,
-                        desc: this.expForm.desc,
-                        amount: amount
-                    };
-
-                    if (isNew) {
-                        // 1. Add to List
-                        this.expenses.unshift(newItem);
-                        // 2. Update Stats
-                        this.stats.totalExpense += amount;
-                        this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
-                    } else {
-                        // Edit Mode: update item in place
-                        const idx = this.expenses.findIndex(e => e.id === this.expForm.id);
-                        if (idx !== -1) {
-                            const oldAmount = parseFloat(this.expenses[idx].amount) || 0;
-                            this.expenses[idx] = { ...this.expenses[idx], ...newItem }; // Update fields
-                            // Diff Stats
-                            const diff = amount - oldAmount;
-                            this.stats.totalExpense += diff;
-                            this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
-                        }
-                    }
-
-                    this.bgProcess = true;
-                    // Snapshot payload for API
-                    const payload = { ...this.expForm, id: newItem.id };
-
-                    // this.notify("Biaya Disimpan (Optimistic)!"); // Removed for cleaner UI
-                    this.resetExpForm();
-                    // Scroll to top to see new item
-                    const container = document.querySelector('main');
-                    if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
-
-                    try {
-                        const res = await this.api('saveExpense', payload);
-                        if (res && res.success) {
-                            // Silent sync to confirm IDs
-                            this.fetch();
-                        } else {
-                            if (!navigator.onLine) {
-                                this.addToQueue('saveExpense', payload);
-                            } else {
-                                this.notify(res ? res.message : "Gagal simpan (Queue)", 'error');
-                                this.addToQueue('saveExpense', payload);
-                            }
-                        }
-                    } catch (e) {
-                        this.notify("Disimpan Offline", 'info');
-                        this.addToQueue('saveExpense', payload);
-                    } finally {
-                        this.bgProcess = false;
-                    }
-                },
-                editExpense(ex) {
-                    this.expForm = { id: ex.id, category: ex.cat, desc: ex.desc, amount: ex.amount };
-                    // Scroll to top of expense tab
-                    const container = document.querySelector('main');
-                    if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
-                    this.vibrate();
-                },
-                resetExpForm() {
-                    this.expForm = { id: null, category: '', desc: '', amount: '' };
-                },
-
-                async viewDetail(t) {
-                    this.selectedDetail = t; this.detailItems = []; this.isDetailOpen = true; this.loadingDetail = true;
-                    const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
-                    if (res && res.success) { this.detailItems = res.items; } else { this.notify("Gagal memuat detail", 'error'); }
-                    this.loadingDetail = false;
-                },
-
-                async editItem(t) {
-                    this.form.id = t.id; this.form.customer = t.customer; this.form.deadline = t.deadline || ''; this.form.dp = t.dp;
-                    this.cart = []; this.tab = 'add';
-                    // this.notify("Edit Data: " + t.customer, "info"); // Removed for cleaner UI
-
-                    // OPTIMIZATION: Use pre-loaded items if available (Instant Edit)
-                    if (t.items && t.items.length > 0) {
-                        this.cart = JSON.parse(JSON.stringify(t.items)); // Deep copy
-                        this.form.originalDate = t.timestamp || t.isoDate; // Use full timestamp if available
-                        this.vibrate();
-                        return; // DONE! Instant.
-                    }
-
-                    // Fallback for older data: Fetch from server
-                    this.bgProcess = true;
-                    const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
-                    this.bgProcess = false;
-                    if (res && res.success) {
-                        this.cart = res.items;
-                        this.form.originalDate = res.transactionDate;
-                    } else { this.notify("Gagal memuat: " + (res ? res.message : "Error"), "error"); }
-                },
-
-                requestDelete(id, isoDate) { this.deleteId = id; this.deleteDate = isoDate || null; this.deleteType = 'transaction'; this.isDeleteOpen = true; },
-                requestDeleteExpense(id) { this.deleteId = id; this.deleteType = 'expense'; this.isDeleteOpen = true; },
-                async confirmDelete() {
-                    this.isDeleteOpen = false; this.bgProcess = true;
-
-                    let action = 'deleteTransaction';
-                    let payload = { id: this.deleteId, date: this.deleteDate };
-
-                    if (this.deleteType === 'expense') { action = 'deleteExpense'; payload = { id: this.deleteId }; }
-                    else if (this.deleteType === 'user') {
-                        action = 'deleteUser';
-                        payload = { username: this.deleteId };
-                    }
-
-                    const res = await this.api(action, payload);
-                    this.bgProcess = false;
-
-                    if (res && res.success) {
-                        this.notify("Berhasil Dihapus", "success");
-                        if (this.deleteType === 'user') { this.fetchUsers(); }
-                        else { this.fetch(); }
-                    } else {
-                        this.notify(res ? res.message : "Gagal menghapus", 'error');
-                    }
-                },
-
-
-                async printInvoice(t) {
-                    this.loadingPdf = true;
-                    // Pass ID and Date to support multi-month lookup
-                    const dateStr = (typeof t === 'object') ? t.isoDate : null;
-                    const id = (typeof t === 'object') ? t.id : t;
-                    this.handlePDF(await this.api('generateInvoice', { id: id, date: dateStr }));
-                },
-                async printMonthly() { this.loadingPdf = true; this.handlePDF(await this.api('generatePDFReport', { month: this.reportDate.month, year: this.reportDate.year })); },
-                async printAnnual() { this.loadingPdf = true; this.handlePDF(await this.api('generateAnnualReport', { year: this.reportDate.year })); },
-                async printExpenseReport() { this.loadingPdf = true; this.handlePDF(await this.api('generateExpenseOnlyReport', { month: this.reportDate.month, year: this.reportDate.year })); },
-                handlePDF(e) {
-                    this.loadingPdf = false;
-                    if (e && e.success) {
-                        // Auto-download PDF
-                        const link = document.createElement('a');
-                        link.href = e.data;
-                        link.download = e.filename || 'invoice.pdf';
-                        link.click();
-                        this.notify("PDF berhasil didownload", 'success');
-                    } else {
-                        this.notify("Gagal PDF: " + (e ? e.message : "Koneksi Bermasalah"), 'error')
-                    }
-                },
-
-                async submitNewProd() {
-                    if (!this.newProd.category?.trim()) {
-                        return this.notify("Kategori wajib diisi", 'error');
-                    }
-                    if (!this.newProd.name?.trim()) {
-                        return this.notify("Nama produk wajib diisi", 'error');
-                    }
-                    this.bgProcess = true;
-                    const res = await this.api('addNewProduct', { category: this.newProd.category, name: this.newProd.name });
-                    this.bgProcess = false;
-                    if (res && res.success) {
-                        this.isMasterOpen = false;
-                        this.newProd = { category: '', name: '' };
-                        this.notify("Produk Berhasil Ditambah");
-                        this.fetch();
-                    } else {
-                        this.notify(res?.message || "Gagal menambah produk", 'error');
-                    }
-                },
-                async submitSetor() {
-                    // Validasi: prevent setor > modal tersedia
-                    if (!this.setorForm.amount || this.setorForm.amount <= 0) {
-                        return this.notify("Nominal harus lebih dari 0", 'error');
-                    }
-                    if (this.setorForm.amount > this.modalStats.modalGantung) {
-                        // Exception: allow if offline/optimistic might have synced late, but warn user? 
-                        // For now strict check based on LOCAL state is safest to prevent negative.
-                        return this.notify("Nominal melebihi modal tersedia!", 'error');
-                    }
-
-                    const amount = parseFloat(this.setorForm.amount);
-                    const note = this.setorForm.note;
-                    const bank = this.setorForm.bank;
-                    const now = new Date();
-
-                    // --- OPTIMISTIC UPDATE ---
-                    const newItem = {
-                        date: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
-                        timestamp: now.getTime(),
-                        amount: amount,
-                        note: note,
-                        bank: bank
-                    };
-
-                    // 1. Update List
-                    this.deposits.unshift(newItem);
-
-                    // 2. Reduce Modal Gantung (Saldo Laci)
-                    this.modalStats.modalGantung -= amount;
-                    this.modalStats.totalDisetor += amount;
-
-                    this.bgProcess = true;
-                    const payload = { amount, note, bank };
-
-                    this.isSetorOpen = false;
-                    this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
-                    // this.notify("Setor Modal Berhasil (Optimistic)!", 'success'); // Removed for cleaner UI
-
-                    try {
-                        const res = await this.api('saveDeposit', payload);
-                        if (res && res.success) {
-                            // Silent Sync
-                            this.fetch();
-                        } else {
-                            // Queue or Error
-                            // For Setor, we usually want it recorded.
-                            if (!res.success) this.notify("Gagal Sync Setor: " + res.message, 'error');
-                        }
-                    } catch (e) {
-                        this.notify("Setor Offline", 'info');
-                        // Queue logic could be added here if needed, but 'saveDeposit' needs to be handled in queue list
-                    } finally {
-                        this.bgProcess = false;
-                    }
-                },
-                openSetorModal() { this.setorForm.amount = this.modalStats.modalGantung; this.setorForm.bank = 'Mandiri'; this.isSetorOpen = true; },
-                resetForm() { this.isService = false; this.selectedCategory = ""; this.cart = []; this.form = { id: null, customer: '', productName: '', serviceName: '', qty: 1, sellPrice: '', costPrice: '', dp: 0, deadline: '', originalDate: null }; },
-
-                // === OFFLINE QUEUE SYSTEM ===
-                async processPendingQueue() {
-                    if (this.syncInProgress || this.pendingQueue.length === 0) return;
-
-                    this.syncInProgress = true;
-                    const queue = [...this.pendingQueue];
-
-                    for (let i = 0; i < queue.length; i++) {
-                        const item = queue[i];
+                        this.bgProcess = true;
                         try {
-                            const res = await this.api(item.action, item.payload);
+                            const res = await this.api('saveUser', this.currUserForm);
                             if (res && res.success) {
-                                this.pendingQueue = this.pendingQueue.filter(q => q.timestamp !== item.timestamp);
-                                SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                                this.notify("Data karyawan tersimpan", 'success');
+                                this.isUserModalOpen = false;
+                                this.fetchUsers();
+                            } else {
+                                this.notify(res?.message || "Gagal menyimpan (Cek Koneksi/Permission)", 'error');
                             }
                         } catch (e) {
-                            console.error('Failed to sync:', e);
+                            this.notify("Error: " + e.message, 'error');
+                        } finally {
+                            this.bgProcess = false;
                         }
+                    },
+                    async fetchLogs() {
+                        this.loadingLogs = true;
+                        try {
+                            const response = await fetch(`${API_URL}?action=getLogs`, {
+                                method: 'POST',
+                                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                body: JSON.stringify({ token: API_TOKEN })
+                            });
+                            const res = await response.json();
+                            if (res.success) {
+                                this.logs = res.logs;
+                            }
+                        } catch (e) { console.error(e); } finally { this.loadingLogs = false; }
+                    },
+                    handlePhotoUpload(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        if (file.size > 2 * 1024 * 1024) return this.notify("Ukuran foto max 2MB", 'error');
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                const ctx = canvas.getContext('2d');
+                                const MAX_SIZE = 128; // Reduced size to safe limit
+                                let width = img.width, height = img.height;
+                                if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } }
+                                else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+                                canvas.width = width; canvas.height = height;
+                                ctx.drawImage(img, 0, 0, width, height);
+                                const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
+                                this.currUserForm.photo = dataUrl; // Lower quality
+                                this.notify(`Foto Siap! Ukuran: ${Math.round(dataUrl.length / 1024)}KB`, "success");
+                            };
+                            img.src = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    },
+                    confirmDeleteUser(u) {
+                        this.deleteId = u.username;
+                        this.deleteType = 'user';
+                        this.isDeleteOpen = true;
+                        this.deleteUserItem = u;
+                    },
+                    notify(e, t = 'success') { const n = Date.now(); this.notifications.push({ id: n, message: e, type: t }); setTimeout(() => this.notifications = this.notifications.filter(e => e.id !== n), 1500); },
+
+
+                    async api(action, payload = null) {
+                        if (navigator.onLine === false) { this.notify("Anda sedang Offline!", 'error'); return null; }
+
+                        const controller = new AbortController();
+                        const id = setTimeout(() => controller.abort(), 30000); // 30s Timeout (GAS can be slow)
+
+                        const url = `${API_URL}?action=${action}`;
+                        const bodyData = payload || {};
+                        bodyData.token = API_TOKEN;
+
+                        try {
+                            const response = await fetch(url, {
+                                method: 'POST',
+                                redirect: "follow",
+                                signal: controller.signal,
+                                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                body: JSON.stringify(bodyData)
+                            });
+                            clearTimeout(id);
+
+                            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                            // Attempt to parse JSON
+                            const text = await response.text();
+                            try {
+                                const data = JSON.parse(text);
+                                if (data && data.success === false && data.message.includes("Token")) {
+                                    this.notify("Akses Ditolak: Token API Salah", 'error');
+                                    return null;
+                                }
+                                return data;
+                            } catch (e) {
+                                console.error("API Non-JSON Response:", text);
+                                throw new Error("Respon Server Masalah (HTML/Auth)");
+                            }
+
+                        } catch (error) {
+                            console.error("API Error:", error);
+                            clearTimeout(id);
+                            if (error.name === 'AbortError') {
+                                this.notify("Koneksi Timeout (Lambat)", 'error');
+                            } else {
+                                this.notify(error.message || "Koneksi Gagal", 'error');
+                            }
+                            return null;
+                        }
+                    },
+
+                    async fetch(isInitial = false) {
+                        this.loading = true;
+                        if (isInitial) {
+                            const cache = SecureStorage.get('grow_data_cache');
+                            if (cache) {
+                                this.applyData(cache);
+                            }
+                        }
+                        const e = await this.api('getInitialData');
+                        if (e) {
+                            this.applyData(e);
+                            SecureStorage.set('grow_data_cache', e);
+                            this.loadingData = false;
+                            this.initialLoading = false;
+                        }
+                        this.loading = false;
+                    },
+
+                    // Pindahkan logika mapping data ke fungsi terpisah agar rapi
+                    applyData(e) {
+                        this.allProducts = e.products || [];
+                        this.categories = [...new Set(this.allProducts.map(p => p.category))];
+                        this.history = e.history || [];
+                        this.expenses = e.expenses || [];
+                        this.deposits = e.deposits || [];
+                        this.customers = e.customers || []; // New Customer List
+                        this.expenseDescriptions = e.expenseDescriptions || []; // New Expense Desc List
+                        this.modalStats = e.modalStats || { modalGantung: 0, totalHPP: 0, totalDisetor: 0 };
+                        this.stats = e.stats || { omzet: 0, grossProfit: 0, netProfit: 0, totalExpense: 0, totalHPP: 0 };
+                        this.historyKPI = e.historyKPI || { all: { count: 0, total: 0 }, lunas: { count: 0, total: 0 }, belum: { count: 0, total: 0 } };
+                        this.topProduct = e.topProduct || { name: '-', qty: 0 }; // Top Product Binding
+                        this.loadingData = false;
+                    },
+
+                    editCartItem(index) {
+                        const item = this.cart[index];
+                        if (!item) return;
+
+                        // Clear form first to prevent collision
+                        this.form.productName = '';
+                        this.form.serviceName = '';
+                        this.productSearch = '';
+                        this.form.qty = 1;
+                        this.form.sellPrice = '';
+                        this.form.costPrice = '';
+
+                        // Detect if service or product
+                        const isService = item.productName.startsWith('[JASA] ');
+                        this.isService = isService;
+
+                        if (isService) {
+                            this.form.serviceName = item.productName.replace('[JASA] ', '');
+                        } else {
+                            this.form.productName = item.productName;
+                            this.productSearch = item.productName;
+                        }
+
+                        this.form.qty = item.qty;
+                        this.form.sellPrice = item.sellPrice;
+                        this.form.costPrice = item.costPrice;
+
+                        // Remove from cart
+                        this.cart.splice(index, 1);
+                        this.vibrate();
+                        this.notify("Item dikembalikan ke form untuk diedit", 'info');
+
+                        // Scroll to form top if needed (optional)
+                        const formEl = document.getElementById('transactionForm');
+                        if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+                    },
+
+                    get filteredProducts() {
+                        if (!this.productSearch) return [];
+                        const lower = this.productSearch.toLowerCase();
+                        return this.allProducts.filter(p => p.name.toLowerCase().includes(lower) || p.category.toLowerCase().includes(lower)).slice(0, 10);
+                    },
+                    get filteredHistory() {
+                        return this.history.filter(e => {
+                            // Search filter (customer, product, or ID) with null safety
+                            const searchLower = (this.searchQuery || '').toLowerCase();
+                            const customerMatch = (e.customer || '').toLowerCase().includes(searchLower);
+                            const productMatch = (e.product || '').toLowerCase().includes(searchLower);
+                            const idMatch = (e.id || '').toLowerCase().includes(searchLower);
+                            const matchSearch = !this.searchQuery || customerMatch || productMatch || idMatch;
+
+                            // Date range filter with validation
+                            let matchDate = true;
+                            if (this.filterStartDate && this.filterEndDate && this.filterEndDate < this.filterStartDate) {
+                                // Invalid date range, skip date filter
+                                matchDate = true;
+                            } else {
+                                if (this.filterStartDate && e.isoDate < this.filterStartDate) matchDate = false;
+                                if (this.filterEndDate && e.isoDate > this.filterEndDate) matchDate = false;
+                            }
+
+                            // Status filter
+                            const matchStatus = this.filterStatus ? e.status === this.filterStatus : true;
+
+                            return matchSearch && matchDate && matchStatus;
+                        });
+                    },
+                    setQuickFilter(type) {
+                        this.quickFilter = type;
+                        const today = new Date();
+                        const formatDate = (d) => d.toISOString().split('T')[0];
+
+                        if (type === 'today') {
+                            this.filterStartDate = formatDate(today);
+                            this.filterEndDate = formatDate(today);
+                        } else if (type === 'week') {
+                            const weekStart = new Date(today);
+                            weekStart.setDate(today.getDate() - today.getDay()); // Sunday
+                            this.filterStartDate = formatDate(weekStart);
+                            this.filterEndDate = formatDate(today);
+                        } else if (type === 'month') {
+                            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                            this.filterStartDate = formatDate(monthStart);
+                            this.filterEndDate = formatDate(today);
+                        } else if (type === 'all') {
+                            this.filterStartDate = '';
+                            this.filterEndDate = '';
+                        } else if (type === 'custom') {
+                            // Don't set dates, let user choose
+                            // Date validation is handled in filteredHistory getter
+                        } else {
+                            // Clear filter
+                            this.filterStartDate = '';
+                            this.filterEndDate = '';
+                            this.quickFilter = '';
+                        }
+                    },
+                    setExpenseQuickFilter(type) {
+                        this.expQuickFilter = type;
+                        const today = new Date();
+                        const formatDate = (d) => d.toISOString().split('T')[0];
+
+                        if (type === 'today') {
+                            this.expFilterStart = formatDate(today);
+                            this.expFilterEnd = formatDate(today);
+                        } else if (type === 'week') {
+                            const weekStart = new Date(today);
+                            weekStart.setDate(today.getDate() - today.getDay()); // Sunday
+                            this.expFilterStart = formatDate(weekStart);
+                            this.expFilterEnd = formatDate(today);
+                        } else if (type === 'month') {
+                            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                            this.expFilterStart = formatDate(monthStart);
+                            this.expFilterEnd = formatDate(today);
+                        } else if (type === 'all') {
+                            this.expFilterStart = '';
+                            this.expFilterEnd = '';
+                        } else if (type === 'custom') {
+                            // Let user choose
+                        }
+                    },
+                    get filteredExpenses() {
+                        return this.expenses.filter(e => {
+                            // Jika tidak ada filter, tampilkan semua
+                            if (!this.expFilterStart && !this.expFilterEnd) return true;
+
+                            // Jika expense tidak punya isoDate, tetap tampilkan (backward compatibility)
+                            if (!e.isoDate) return true;
+
+                            const expenseDate = e.isoDate; // Format: yyyy-MM-dd
+
+                            // Filter berdasarkan start date
+                            if (this.expFilterStart) {
+                                if (expenseDate < this.expFilterStart) return false;
+                            }
+
+                            // Filter berdasarkan end date
+                            if (this.expFilterEnd) {
+                                if (expenseDate > this.expFilterEnd) return false;
+                            }
+
+                            return true;
+                        });
+                    },
+                    get filteredExpenseTotal() {
+                        // Logic: Jika user sedang filter tanggal, hitung total dari yang tampil (filtered).
+                        // Jika tidak (default view), tampilkan "Total Keluar Bulan Ini" dari server (stats.totalExpense) agar sesuai UX sebelumnya.
+                        if (this.expFilterStart || this.expFilterEnd) {
+                            return this.filteredExpenses.reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0);
+                        }
+                        return this.stats.totalExpense;
+                    },
+                    get expenseKPIs() {
+                        const filtered = this.filteredExpenses;
+                        const total = filtered.reduce((acc, e) => acc + (parseFloat(e.amount) || 0), 0);
+                        const count = filtered.length;
+
+                        // Hitung kategori terboros
+                        const catMap = {};
+                        filtered.forEach(e => {
+                            const cat = e.cat || 'Lainnya';
+                            if (!catMap[cat]) catMap[cat] = 0;
+                            catMap[cat] += parseFloat(e.amount) || 0;
+                        });
+
+                        let topCat = '-';
+                        let maxAmount = 0;
+                        for (const cat in catMap) {
+                            if (catMap[cat] > maxAmount) {
+                                maxAmount = catMap[cat];
+                                topCat = cat;
+                            }
+                        }
+
+                        return { total, count, topCat };
+                    },
+                    get cartTotal() { return this.cart.reduce((acc, item) => acc + (item.qty * item.sellPrice), 0); },
+
+                    daysLeft(e) {
+                        if (!e) return null;
+
+                        // 1. Ambil Waktu Hari Ini (Jam dinolkan)
+                        const t = new Date();
+                        t.setHours(0, 0, 0, 0);
+
+                        // 2. Ambil Waktu Deadline
+                        const a = new Date(e);
+                        // FIX: Paksa deadline jadi jam 00:00 lokal juga, agar tidak ada sisa jam
+                        if (a.getHours() !== 0) a.setHours(0, 0, 0, 0);
+
+                        // 3. Hitung Selisih Hari
+                        const n = Math.ceil((a - t) / 864e5);
+
+                        if (n < 0) return { text: 'TERLEWAT', class: 'bg-red-500 animate-pulse-slow' };
+                        if (0 === n) return { text: 'HARI INI', class: 'bg-orange-500 animate-bounce-slow' };
+                        if (1 === n) return { text: 'BESOK', class: 'bg-brand-500' }; // Tambahan biar lebih natural
+                        if (n <= 3) return { text: `H-${n}`, class: 'bg-amber-400' };
+                        if (n <= 7) return { text: `H-${n}`, class: 'bg-blue-400' };
+                        return null;
+                    },
+                    addToCart() {
+                        const e = this.isService ? "[JASA] " + this.form.serviceName : this.form.productName; const t = this.isService ? 0 : this.form.costPrice;
+                        if (!e) { this.notify("Pilih Produk/Isi Nama Jasa", 'error'); return; } if (!this.isService && (!t || t <= 0)) { this.notify("Harga Modal Wajib Diisi!", 'error'); return; } if (!this.form.qty || this.form.qty <= 0) { this.notify("Qty minimal 1", 'error'); return; } if (!this.form.sellPrice) { this.notify("Harga Jual Wajib Diisi", 'error'); return; }
+                        this.cart.push({ productName: e, qty: parseFloat(this.form.qty), sellPrice: parseFloat(this.form.sellPrice), costPrice: parseFloat(t) });
+                        this.form.productName = ''; this.form.serviceName = ''; this.form.qty = 1; this.form.sellPrice = ''; this.form.costPrice = '';
+                        this.productSearch = '';
+                    },
+
+                    formatRupiah(value) {
+                        if (!value && value !== 0) return '';
+                        let number_string = value.toString().replace(/[^,\d]/g, '').toString(),
+                            split = number_string.split(','),
+                            sisa = split[0].length % 3,
+                            rupiah = split[0].substr(0, sisa),
+                            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                        if (ribuan) {
+                            let separator = sisa ? '.' : '';
+                            rupiah += separator + ribuan.join('.');
+                        }
+
+                        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                        return rupiah;
+                    },
+                    cleanRupiah(value) {
+                        if (!value) return '';
+                        return Number(value.toString().replace(/\./g, ''));
+                    },
+
+                    async save() {
+                        if (this.bgProcess) return; // Prevent double submit
+                        this.vibrate();
+
+                        // Validations
+                        if (!this.form.customer || this.form.customer.trim() === '') {
+                            return this.notify("Nama pelanggan wajib diisi", 'error');
+                        }
+                        if (this.cart.length === 0) {
+                            return this.notify("Keranjang Kosong", 'error');
+                        }
+
+                        const items = this.cart;
+                        const grandTotal = items.reduce((acc, item) => acc + (parseFloat(item.qty || 1) * parseFloat(item.sellPrice || 0)), 0);
+                        const totalModal = items.reduce((acc, item) => acc + (parseFloat(item.qty || 1) * parseFloat(item.costPrice || 0)), 0);
+                        const totalDP = parseFloat(this.form.dp) || 0;
+                        const sisa = Math.round(grandTotal - totalDP);
+                        const status = sisa <= 0 ? "LUNAS" : "BELUM LUNAS";
+                        // Profit Logic (Cash Basis)
+                        const cashIn = (status === 'LUNAS') ? grandTotal : totalDP;
+                        const profit = cashIn - totalModal;
+
+                        // NEW ITEM SNAPSHOT (Optimistic)
+                        const isNew = !this.form.id;
+                        const tempId = this.form.id || this.generateUUID(); // Robust UUID
+                        const now = new Date();
+                        const newItem = {
+                            id: tempId,
+                            displayDate: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+                            isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0], // Local Date ISO
+                            fullDate: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                            timestamp: now.toISOString(), // Preserve exact time for local edits
+                            customer: this.form.customer,
+                            product: items.length > 1 ? `${items[0].productName} (+${items.length - 1} item)` : items[0].productName,
+                            total: grandTotal,
+                            hpp: totalModal,
+                            dp: totalDP,
+                            sisa: sisa,
+                            status: status,
+                            deadline: this.form.deadline,
+                            cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A',
+                            items: JSON.parse(JSON.stringify(items)) // STORE ITEMS FOR INSTANT EDIT
+                        };
+
+                        // --- APPLY TO LOCAL STATE (OPTIMISTIC) ---
+                        if (isNew) {
+                            // 1. Add to History
+                            this.history.unshift(newItem);
+
+                            // 2. Update KPI Cards
+                            this.historyKPI.all.count++;
+                            this.historyKPI.all.total += grandTotal;
+                            if (status === 'LUNAS') {
+                                this.historyKPI.lunas.count++;
+                                this.historyKPI.lunas.total += grandTotal;
+                            } else {
+                                this.historyKPI.belum.count++;
+                                this.historyKPI.belum.total += sisa;
+                            }
+
+                            // 3. Update Dashboard Stats
+                            this.stats.omzet += grandTotal;
+                            this.stats.totalHPP += totalModal;
+                            this.stats.grossProfit += profit;
+                            this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+
+                            // 3b. Update Modal Stats (Saldo Laci / Modal Gantung)
+                            // Logic: Saldo increases by the Capital (HPP) part of the cash received.
+                            // Cash received = LUNAS ? Total : DP.
+                            const cashRec = (status === 'LUNAS') ? grandTotal : totalDP;
+                            const recoveredCapital = Math.min(cashRec, totalModal);
+                            if (this.modalStats) {
+                                this.modalStats.modalGantung = (this.modalStats.modalGantung || 0) + recoveredCapital;
+                                this.modalStats.totalHPP = (this.modalStats.totalHPP || 0) + totalModal;
+                            }
+
+                            // 4. Update Top Product (Simple check)
+                            if (items[0].qty > this.topProduct.qty) {
+                                // Only update locally if it beats current top (simple heuristic)
+                                // Complex logic to re-aggregate all products is too heavy, skipping for speed.
+                            }
+                        } else {
+                            // Edit Mode: Optimistic update is complex (revert old -> apply new).
+                            // For safety/speed, we only apply full optimistic to NEW items.
+                            // For Edit, we fall back to "Semi-Optimistic" (UI transitions, but data waits for fetch)
+                            // This prevents calculation errors.
+                        }
+
+                        this.bgProcess = true;
+
+                        // 1. SIMPAN DATA SEMENTARA (Snapshot)
+                        // Use tempId (which is the UUID) so backend uses it too
+                        const payload = {
+                            id: tempId,
+                            customer: this.form.customer,
+                            items: this.cart,
+                            dp: this.form.dp,
+                            deadline: this.form.deadline,
+                            originalDate: this.form.originalDate,
+                            cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A'
+                        };
+
+                        // 2. UI Updates Immediate
+                        // this.notify("Data Disimpan (Layar diupdate)!"); // Removed for cleaner UI
+                        this.resetForm();
+                        this.cart = [];
+                        localStorage.removeItem('grow_cart_backup');
+                        this.tab = 'home'; // Instant switch
+
+                        try {
+                            // 3. KIRIM KE SERVER DI BACKGROUND
+                            const res = await this.api('saveTransaction', payload);
+
+                            // 4. SYNC (Silent or Active)
+                            if (res && res.success) {
+                                // Data saved. We might want to re-fetch to get the REAL ID generated by server.
+                                // But for user experience, they already see the data.
+                                // We call fetch() quietly to sync everything eventually.
+                                this.fetch();
+                            } else {
+                                if (!navigator.onLine) {
+                                    this.addToQueue('saveTransaction', payload);
+                                } else {
+                                    this.notify("GAGAL SIMPAN! Cek Koneksi (Data di Queue)", 'error');
+                                    this.addToQueue('saveTransaction', payload); // Fallback
+                                }
+                            }
+                        } catch (e) {
+                            this.notify("Simpan Offline: " + e.message, 'info');
+                            this.addToQueue('saveTransaction', payload);
+                        } finally {
+                            this.bgProcess = false;
+                        }
+                    },
+
+                    async submitExpense() {
+                        // Enhanced validations
+                        if (!this.expForm.category || this.expForm.category.trim() === '') {
+                            return this.notify("Pilih Kategori", 'error');
+                        }
+                        if (!this.expForm.desc || this.expForm.desc.trim() === '') {
+                            return this.notify("Keterangan wajib diisi", 'error');
+                        }
+                        if (!this.expForm.amount || this.expForm.amount <= 0) {
+                            return this.notify("Nominal harus lebih dari 0", 'error');
+                        }
+
+                        const amount = parseFloat(this.expForm.amount);
+                        const isNew = !this.expForm.id;
+                        const now = new Date();
+
+                        // --- OPTIMISTIC UPDATE ---
+                        const newItem = {
+                            id: this.expForm.id || this.generateUUID(),
+                            date: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+                            isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0],
+                            cat: this.expForm.category,
+                            desc: this.expForm.desc,
+                            amount: amount
+                        };
+
+                        if (isNew) {
+                            // 1. Add to List
+                            this.expenses.unshift(newItem);
+                            // 2. Update Stats
+                            this.stats.totalExpense += amount;
+                            this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                        } else {
+                            // Edit Mode: update item in place
+                            const idx = this.expenses.findIndex(e => e.id === this.expForm.id);
+                            if (idx !== -1) {
+                                const oldAmount = parseFloat(this.expenses[idx].amount) || 0;
+                                this.expenses[idx] = { ...this.expenses[idx], ...newItem }; // Update fields
+                                // Diff Stats
+                                const diff = amount - oldAmount;
+                                this.stats.totalExpense += diff;
+                                this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                            }
+                        }
+
+                        this.bgProcess = true;
+                        // Snapshot payload for API
+                        const payload = { ...this.expForm, id: newItem.id };
+
+                        // this.notify("Biaya Disimpan (Optimistic)!"); // Removed for cleaner UI
+                        this.resetExpForm();
+                        // Scroll to top to see new item
+                        const container = document.querySelector('main');
+                        if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
+
+                        try {
+                            const res = await this.api('saveExpense', payload);
+                            if (res && res.success) {
+                                // Silent sync to confirm IDs
+                                this.fetch();
+                            } else {
+                                if (!navigator.onLine) {
+                                    this.addToQueue('saveExpense', payload);
+                                } else {
+                                    this.notify(res ? res.message : "Gagal simpan (Queue)", 'error');
+                                    this.addToQueue('saveExpense', payload);
+                                }
+                            }
+                        } catch (e) {
+                            this.notify("Disimpan Offline", 'info');
+                            this.addToQueue('saveExpense', payload);
+                        } finally {
+                            this.bgProcess = false;
+                        }
+                    },
+                    editExpense(ex) {
+                        this.expForm = { id: ex.id, category: ex.cat, desc: ex.desc, amount: ex.amount };
+                        // Scroll to top of expense tab
+                        const container = document.querySelector('main');
+                        if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
+                        this.vibrate();
+                    },
+                    resetExpForm() {
+                        this.expForm = { id: null, category: '', desc: '', amount: '' };
+                    },
+
+                    async viewDetail(t) {
+                        this.selectedDetail = t; this.detailItems = []; this.isDetailOpen = true; this.loadingDetail = true;
+                        const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
+                        if (res && res.success) { this.detailItems = res.items; } else { this.notify("Gagal memuat detail", 'error'); }
+                        this.loadingDetail = false;
+                    },
+
+                    async editItem(t) {
+                        this.form.id = t.id; this.form.customer = t.customer; this.form.deadline = t.deadline || ''; this.form.dp = t.dp;
+                        this.cart = []; this.tab = 'add';
+                        // this.notify("Edit Data: " + t.customer, "info"); // Removed for cleaner UI
+
+                        // OPTIMIZATION: Use pre-loaded items if available (Instant Edit)
+                        if (t.items && t.items.length > 0) {
+                            this.cart = JSON.parse(JSON.stringify(t.items)); // Deep copy
+                            this.form.originalDate = t.timestamp || t.isoDate; // Use full timestamp if available
+                            this.vibrate();
+                            return; // DONE! Instant.
+                        }
+
+                        // Fallback for older data: Fetch from server
+                        this.bgProcess = true;
+                        const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
+                        this.bgProcess = false;
+                        if (res && res.success) {
+                            this.cart = res.items;
+                            this.form.originalDate = res.transactionDate;
+                        } else { this.notify("Gagal memuat: " + (res ? res.message : "Error"), "error"); }
+                    },
+
+                    requestDelete(id, isoDate) { this.deleteId = id; this.deleteDate = isoDate || null; this.deleteType = 'transaction'; this.isDeleteOpen = true; },
+                    requestDeleteExpense(id) { this.deleteId = id; this.deleteType = 'expense'; this.isDeleteOpen = true; },
+                    async confirmDelete() {
+                        this.isDeleteOpen = false; this.bgProcess = true;
+
+                        let action = 'deleteTransaction';
+                        let payload = { id: this.deleteId, date: this.deleteDate };
+
+                        if (this.deleteType === 'expense') { action = 'deleteExpense'; payload = { id: this.deleteId }; }
+                        else if (this.deleteType === 'user') {
+                            action = 'deleteUser';
+                            payload = { username: this.deleteId };
+                        }
+
+                        const res = await this.api(action, payload);
+                        this.bgProcess = false;
+
+                        if (res && res.success) {
+                            this.notify("Berhasil Dihapus", "success");
+                            if (this.deleteType === 'user') { this.fetchUsers(); }
+                            else { this.fetch(); }
+                        } else {
+                            this.notify(res ? res.message : "Gagal menghapus", 'error');
+                        }
+                    },
+
+
+                    async printInvoice(t) {
+                        this.loadingPdf = true;
+                        // Pass ID and Date to support multi-month lookup
+                        const dateStr = (typeof t === 'object') ? t.isoDate : null;
+                        const id = (typeof t === 'object') ? t.id : t;
+                        this.handlePDF(await this.api('generateInvoice', { id: id, date: dateStr }));
+                    },
+                    async printMonthly() { this.loadingPdf = true; this.handlePDF(await this.api('generatePDFReport', { month: this.reportDate.month, year: this.reportDate.year })); },
+                    async printAnnual() { this.loadingPdf = true; this.handlePDF(await this.api('generateAnnualReport', { year: this.reportDate.year })); },
+                    async printExpenseReport() { this.loadingPdf = true; this.handlePDF(await this.api('generateExpenseOnlyReport', { month: this.reportDate.month, year: this.reportDate.year })); },
+                    handlePDF(e) {
+                        this.loadingPdf = false;
+                        if (e && e.success) {
+                            // Auto-download PDF
+                            const link = document.createElement('a');
+                            link.href = e.data;
+                            link.download = e.filename || 'invoice.pdf';
+                            link.click();
+                            this.notify("PDF berhasil didownload", 'success');
+                        } else {
+                            this.notify("Gagal PDF: " + (e ? e.message : "Koneksi Bermasalah"), 'error')
+                        }
+                    },
+
+                    async submitNewProd() {
+                        if (!this.newProd.category?.trim()) {
+                            return this.notify("Kategori wajib diisi", 'error');
+                        }
+                        if (!this.newProd.name?.trim()) {
+                            return this.notify("Nama produk wajib diisi", 'error');
+                        }
+                        this.bgProcess = true;
+                        const res = await this.api('addNewProduct', { category: this.newProd.category, name: this.newProd.name });
+                        this.bgProcess = false;
+                        if (res && res.success) {
+                            this.isMasterOpen = false;
+                            this.newProd = { category: '', name: '' };
+                            this.notify("Produk Berhasil Ditambah");
+                            this.fetch();
+                        } else {
+                            this.notify(res?.message || "Gagal menambah produk", 'error');
+                        }
+                    },
+                    async submitSetor() {
+                        // Validasi: prevent setor > modal tersedia
+                        if (!this.setorForm.amount || this.setorForm.amount <= 0) {
+                            return this.notify("Nominal harus lebih dari 0", 'error');
+                        }
+                        if (this.setorForm.amount > this.modalStats.modalGantung) {
+                            // Exception: allow if offline/optimistic might have synced late, but warn user? 
+                            // For now strict check based on LOCAL state is safest to prevent negative.
+                            return this.notify("Nominal melebihi modal tersedia!", 'error');
+                        }
+
+                        const amount = parseFloat(this.setorForm.amount);
+                        const note = this.setorForm.note;
+                        const bank = this.setorForm.bank;
+                        const now = new Date();
+
+                        // --- OPTIMISTIC UPDATE ---
+                        const newItem = {
+                            date: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                            timestamp: now.getTime(),
+                            amount: amount,
+                            note: note,
+                            bank: bank
+                        };
+
+                        // 1. Update List
+                        this.deposits.unshift(newItem);
+
+                        // 2. Reduce Modal Gantung (Saldo Laci)
+                        this.modalStats.modalGantung -= amount;
+                        this.modalStats.totalDisetor += amount;
+
+                        this.bgProcess = true;
+                        const payload = { amount, note, bank };
+
+                        this.isSetorOpen = false;
+                        this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
+                        // this.notify("Setor Modal Berhasil (Optimistic)!", 'success'); // Removed for cleaner UI
+
+                        try {
+                            const res = await this.api('saveDeposit', payload);
+                            if (res && res.success) {
+                                // Silent Sync
+                                this.fetch();
+                            } else {
+                                // Queue or Error
+                                // For Setor, we usually want it recorded.
+                                if (!res.success) this.notify("Gagal Sync Setor: " + res.message, 'error');
+                            }
+                        } catch (e) {
+                            this.notify("Setor Offline", 'info');
+                            // Queue logic could be added here if needed, but 'saveDeposit' needs to be handled in queue list
+                        } finally {
+                            this.bgProcess = false;
+                        }
+                    },
+                    openSetorModal() { this.setorForm.amount = this.modalStats.modalGantung; this.setorForm.bank = 'Mandiri'; this.isSetorOpen = true; },
+                    resetForm() { this.isService = false; this.selectedCategory = ""; this.cart = []; this.form = { id: null, customer: '', productName: '', serviceName: '', qty: 1, sellPrice: '', costPrice: '', dp: 0, deadline: '', originalDate: null }; },
+
+                    // === OFFLINE QUEUE SYSTEM ===
+                    async processPendingQueue() {
+                        if (this.syncInProgress || this.pendingQueue.length === 0) return;
+
+                        this.syncInProgress = true;
+                        const queue = [...this.pendingQueue];
+
+                        for (let i = 0; i < queue.length; i++) {
+                            const item = queue[i];
+                            try {
+                                const res = await this.api(item.action, item.payload);
+                                if (res && res.success) {
+                                    this.pendingQueue = this.pendingQueue.filter(q => q.timestamp !== item.timestamp);
+                                    SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                                }
+                            } catch (e) {
+                                console.error('Failed to sync:', e);
+                            }
+                        }
+
+                        this.syncInProgress = false;
+                        if (this.pendingQueue.length === 0) {
+                            this.notify("✅ Semua data tersinkronkan!", 'success');
+                            this.fetch();
+                        }
+                    },
+
+                    addToQueue(action, payload) {
+                        const queueItem = {
+                            action,
+                            payload,
+                            timestamp: Date.now(),
+                            type: action === 'saveTransaction' ? 'Transaksi' : action === 'saveExpense' ? 'Biaya' : 'Data'
+                        };
+                        this.pendingQueue.push(queueItem);
+                        SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                        this.notify(`📦 ${queueItem.type} di queue (${this.pendingQueue.length})`, 'success');
+                    },
+
+                    logout() {
+                        this.isLogoutOpen = false;
+                        this.currentUser = null;
+                        localStorage.clear(); // Clear all encrypted data
+                        this.pendingQueue = [];
+                        window.location.reload();
+                    },
+
+                    restoreCart() { const saved = SecureStorage.get('grow_cart_backup'); if (saved && Array.isArray(saved)) this.cart = saved; },
+                    backupCart() { if (this.cart.length > 0) SecureStorage.set('grow_cart_backup', this.cart); else localStorage.removeItem('grow_cart_backup'); },
+                    generateUUID() {
+                        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+                        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                            return v.toString(16);
+                        });
+                    },
+                    fmt(e) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(e || 0) },
+
+                    // === THERMAL RECEIPT PRINTING ===
+                    async printReceipt(t) {
+                        this.vibrate();
+                        this.loadingDetail = true;
+                        const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
+                        this.loadingDetail = false;
+                        if (!res || !res.success) return this.notify("Gagal memuat detail", 'error');
+
+                        const items = res.items || [];
+                        const total = items.reduce((sum, item) => sum + (item.qty * item.sellPrice), 0);
+                        const dp = t.dp || 0;
+                        const sisa = total - dp;
+                        const isLunas = sisa <= 0;
+
+                        const receiptHTML = `<div style="font-family: 'Courier New', monospace; width: 72mm; margin: 0 auto; padding: 3mm; font-size: 10px; line-height: 1.3; color: #000;"><div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;"><div style="font-weight: bold; font-size: 12px;">GROW SOUVENIR</div><div style="font-size: 8px;">Jl. Vetpur Raya III</div><div style="font-size: 8px;">0815 8899 407</div></div><div style="text-align: center; margin: 5px 0;"><div style="font-weight: bold;">INVOICE #${t.id.substring(0, 8).toUpperCase()}</div><div style="font-size: 9px;">${t.fullDate || t.displayDate}</div></div><div style="border-top: 1px dashed #000; padding: 5px 0;"><div>Kepada: <b>${t.customer}</b></div>${t.deadline ? `<div style="font-size: 9px;">Deadline: ${t.deadline}</div>` : ''}</div><div style="border-top: 1px dashed #000; padding: 5px 0;">${items.map(item => `<div style="margin: 3px 0;"><div style="display: flex; justify-content: space-between;"><span style="flex: 1;">${item.productName}</span></div><div style="display: flex; justify-content: space-between; font-size: 9px;"><span>${item.qty} x ${this.fmt(item.sellPrice)}</span><span><b>${this.fmt(item.qty * item.sellPrice)}</b></span></div></div>`).join('')}</div><div style="border-top: 1px dashed #000; padding: 5px 0;"><div style="display: flex; justify-content: space-between; font-weight: bold;"><span>TOTAL</span><span>${this.fmt(total)}</span></div>${!isLunas ? `<div style="display: flex; justify-content: space-between; font-size: 9px;"><span>DP</span><span>${this.fmt(dp)}</span></div><div style="display: flex; justify-content: space-between; font-weight: bold;"><span>KURANG</span><span>${this.fmt(sisa)}</span></div>` : ''}</div><div style="text-align: center; margin: 10px 0;"><div style="border: 2px solid #000; padding: 5px; font-weight: bold; font-size: 14px;">${isLunas ? 'LUNAS' : 'BELUM LUNAS'}</div></div><div style="text-align: center; border-top: 1px dashed #000; padding-top: 5px; margin-top: 5px; font-size: 9px;"><div>Terima Kasih</div></div></div>`;
+
+                        let receiptDiv = document.getElementById('thermal-receipt');
+                        if (!receiptDiv) {
+                            receiptDiv = document.createElement('div');
+                            receiptDiv.id = 'thermal-receipt';
+                            receiptDiv.style.display = 'none';
+                            document.body.appendChild(receiptDiv);
+                        }
+                        receiptDiv.innerHTML = receiptHTML;
+                        window.print();
                     }
-
-                    this.syncInProgress = false;
-                    if (this.pendingQueue.length === 0) {
-                        this.notify("✅ Semua data tersinkronkan!", 'success');
-                        this.fetch();
-                    }
-                },
-
-                addToQueue(action, payload) {
-                    const queueItem = {
-                        action,
-                        payload,
-                        timestamp: Date.now(),
-                        type: action === 'saveTransaction' ? 'Transaksi' : action === 'saveExpense' ? 'Biaya' : 'Data'
-                    };
-                    this.pendingQueue.push(queueItem);
-                    SecureStorage.set('grow_pending_queue', this.pendingQueue);
-                    this.notify(`📦 ${queueItem.type} di queue (${this.pendingQueue.length})`, 'success');
-                },
-
-                logout() {
-                    this.isLogoutOpen = false;
-                    this.currentUser = null;
-                    localStorage.clear(); // Clear all encrypted data
-                    this.pendingQueue = [];
-                    window.location.reload();
-                },
-
-                restoreCart() { const saved = SecureStorage.get('grow_cart_backup'); if (saved && Array.isArray(saved)) this.cart = saved; },
-                backupCart() { if (this.cart.length > 0) SecureStorage.set('grow_cart_backup', this.cart); else localStorage.removeItem('grow_cart_backup'); },
-                generateUUID() {
-                    if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
-                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                        return v.toString(16);
-                    });
-                },
-                fmt(e) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(e || 0) },
-
-                // === THERMAL RECEIPT PRINTING ===
-                async printReceipt(t) {
-                    this.vibrate();
-                    this.loadingDetail = true;
-                    const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
-                    this.loadingDetail = false;
-                    if (!res || !res.success) return this.notify("Gagal memuat detail", 'error');
-
-                    const items = res.items || [];
-                    const total = items.reduce((sum, item) => sum + (item.qty * item.sellPrice), 0);
-                    const dp = t.dp || 0;
-                    const sisa = total - dp;
-                    const isLunas = sisa <= 0;
-
-                    const receiptHTML = `<div style="font-family: 'Courier New', monospace; width: 72mm; margin: 0 auto; padding: 3mm; font-size: 10px; line-height: 1.3; color: #000;"><div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;"><div style="font-weight: bold; font-size: 12px;">GROW SOUVENIR</div><div style="font-size: 8px;">Jl. Vetpur Raya III</div><div style="font-size: 8px;">0815 8899 407</div></div><div style="text-align: center; margin: 5px 0;"><div style="font-weight: bold;">INVOICE #${t.id.substring(0, 8).toUpperCase()}</div><div style="font-size: 9px;">${t.fullDate || t.displayDate}</div></div><div style="border-top: 1px dashed #000; padding: 5px 0;"><div>Kepada: <b>${t.customer}</b></div>${t.deadline ? `<div style="font-size: 9px;">Deadline: ${t.deadline}</div>` : ''}</div><div style="border-top: 1px dashed #000; padding: 5px 0;">${items.map(item => `<div style="margin: 3px 0;"><div style="display: flex; justify-content: space-between;"><span style="flex: 1;">${item.productName}</span></div><div style="display: flex; justify-content: space-between; font-size: 9px;"><span>${item.qty} x ${this.fmt(item.sellPrice)}</span><span><b>${this.fmt(item.qty * item.sellPrice)}</b></span></div></div>`).join('')}</div><div style="border-top: 1px dashed #000; padding: 5px 0;"><div style="display: flex; justify-content: space-between; font-weight: bold;"><span>TOTAL</span><span>${this.fmt(total)}</span></div>${!isLunas ? `<div style="display: flex; justify-content: space-between; font-size: 9px;"><span>DP</span><span>${this.fmt(dp)}</span></div><div style="display: flex; justify-content: space-between; font-weight: bold;"><span>KURANG</span><span>${this.fmt(sisa)}</span></div>` : ''}</div><div style="text-align: center; margin: 10px 0;"><div style="border: 2px solid #000; padding: 5px; font-weight: bold; font-size: 14px;">${isLunas ? 'LUNAS' : 'BELUM LUNAS'}</div></div><div style="text-align: center; border-top: 1px dashed #000; padding-top: 5px; margin-top: 5px; font-size: 9px;"><div>Terima Kasih</div></div></div>`;
-
-                    let receiptDiv = document.getElementById('thermal-receipt');
-                    if (!receiptDiv) {
-                        receiptDiv = document.createElement('div');
-                        receiptDiv.id = 'thermal-receipt';
-                        receiptDiv.style.display = 'none';
-                        document.body.appendChild(receiptDiv);
-                    }
-                    receiptDiv.innerHTML = receiptHTML;
-                    window.print();
                 }
             }
-        }
-    </script>
-    <style>
-        @media print {
-            body * {
-                visibility: hidden
-            }
-
-            #thermal-receipt,
-            #thermal-receipt * {
-                visibility: visible
-            }
-
-            #thermal-receipt {
-                position: absolute;
-                left: 0;
-                top: 0;
-                display: block !important
-            }
-
-            @page {
-                margin: 0;
-                size: 80mm auto
-            }
-        }
-    </style>
-    <script>
-        // === PULL TO REFRESH LOGIC (VANILLA JS - INVISIBLE) ===
-        (function () {
-            let startY = 0;
-            let currentY = 0;
-            const threshold = 120; // Jarak tarik untuk refresh
-            const mainContent = document.querySelector('main');
-
-            function isAtTop() {
-                if (mainContent) return mainContent.scrollTop <= 0;
-                return window.scrollY <= 0;
-            }
-
-            window.addEventListener('touchstart', (e) => {
-                if (!isAtTop()) return;
-                startY = e.touches[0].clientY;
-            }, { passive: true });
-
-            window.addEventListener('touchmove', (e) => {
-                if (!isAtTop()) return;
-                currentY = e.touches[0].clientY;
-            }, { passive: true });
-
-            window.addEventListener('touchend', (e) => {
-                if (!isAtTop()) return; // Safety check
-                const diff = currentY - startY;
-
-                // Jika tarik cukup jauh -> RELOAD
-                if (diff > threshold) {
-                    if (navigator.vibrate) navigator.vibrate(50);
-                    window.location.reload();
+        </script>
+        <style>
+            @media print {
+                body * {
+                    visibility: hidden
                 }
 
-                startY = 0;
-                currentY = 0;
-            });
-        })();
-    </script>
+                #thermal-receipt,
+                #thermal-receipt * {
+                    visibility: visible
+                }
+
+                #thermal-receipt {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    display: block !important
+                }
+
+                @page {
+                    margin: 0;
+                    size: 80mm auto
+                }
+            }
+        </style>
+        <script>
+            // === PULL TO REFRESH LOGIC (VANILLA JS - INVISIBLE) ===
+            (function () {
+                let startY = 0;
+                let currentY = 0;
+                const threshold = 120; // Jarak tarik untuk refresh
+                const mainContent = document.querySelector('main');
+
+                function isAtTop() {
+                    if (mainContent) return mainContent.scrollTop <= 0;
+                    return window.scrollY <= 0;
+                }
+
+                window.addEventListener('touchstart', (e) => {
+                    if (!isAtTop()) return;
+                    startY = e.touches[0].clientY;
+                }, { passive: true });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (!isAtTop()) return;
+                    currentY = e.touches[0].clientY;
+                }, { passive: true });
+
+                window.addEventListener('touchend', (e) => {
+                    if (!isAtTop()) return; // Safety check
+                    const diff = currentY - startY;
+
+                    // Jika tarik cukup jauh -> RELOAD
+                    if (diff > threshold) {
+                        if (navigator.vibrate) navigator.vibrate(50);
+                        window.location.reload();
+                    }
+
+                    startY = 0;
+                    currentY = 0;
+                });
+            })();
+        </script>
 </body>
 
 </html>

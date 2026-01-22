@@ -253,6 +253,9 @@
         </div>
     </div>
 
+
+
+
     <div x-show="currentUser" x-cloak class="flex flex-col h-full fade-in">
 
         <header class="glass-nav sticky top-0 z-30 px-6 py-4 flex justify-between items-center shadow-sm">
@@ -452,7 +455,7 @@
             </div>
         </div>
 
-        <main class="flex-1 overflow-y-auto no-scrollbar p-5 pb-36 relative">
+        <main class="flex-1 overflow-y-auto no-scrollbar p-5 pb-36 relative" style="overscroll-behavior-y: contain;">
 
             <div x-show="initialLoading" x-transition:leave="transition ease-in duration-500"
                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
@@ -979,13 +982,15 @@
                                     placeholder="Qty">
                                 <div class="flex-1 relative"><span
                                         class="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-400">Rp</span><input
-                                        type="number" x-model="form.sellPrice"
+                                        type="tel" :value="formatRupiah(form.sellPrice)"
+                                        @input="form.sellPrice = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
                                         class="w-full bg-white border-0 rounded-xl pl-8 pr-3 py-3 text-right text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 text-brand-700 shadow-sm"
                                         placeholder="Harga Jual"></div>
                             </div>
                             <div x-show="!isService" class="relative"><span
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-400">Rp</span><input
-                                    type="number" x-model="form.costPrice"
+                                    type="tel" :value="formatRupiah(form.costPrice)"
+                                    @input="form.costPrice = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
                                     class="w-full bg-white border-0 rounded-xl pl-8 pr-3 py-3 text-right text-xs font-bold outline-none focus:ring-2 focus:ring-slate-400 text-slate-500 shadow-sm"
                                     placeholder="Harga Modal"></div>
                             <button @click="addToCart(); vibrate()"
@@ -1033,7 +1038,8 @@
                         <div x-show="cart.length > 0" class="bg-amber-50 p-3 rounded-2xl border border-amber-100">
                             <div class="relative"><span
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-amber-500">DP</span><input
-                                    type="number" x-model="form.dp"
+                                    type="tel" :value="formatRupiah(form.dp)"
+                                    @input="form.dp = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
                                     class="w-full bg-white rounded-xl pl-8 pr-3 py-3 text-right text-xs font-bold outline-none focus:ring-2 focus:ring-amber-500 transition shadow-sm"
                                     placeholder="0"></div>
                             <div class="flex gap-2 mt-2 overflow-x-auto no-scrollbar"><button
@@ -1084,7 +1090,8 @@
                             </datalist>
                             <div class="relative"><span
                                     class="absolute left-4 top-1/2 -translate-y-1/2 text-[9px] font-bold text-rose-300">Rp</span><input
-                                    type="number" x-model="expForm.amount"
+                                    type="tel" :value="formatRupiah(expForm.amount)"
+                                    @input="expForm.amount = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
                                     class="w-full bg-slate-50 border-0 rounded-2xl pl-8 pr-4 py-3 text-xs font-bold outline-none focus:ring-2 focus:ring-rose-500"
                                     placeholder="Nominal"></div>
                             <div class="flex gap-3 mt-5">
@@ -1569,7 +1576,8 @@
 
             <div class="relative"><span
                     class="absolute left-5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-400">Rp</span><input
-                    type="number" x-model="setorForm.amount"
+                    type="tel" :value="formatRupiah(setorForm.amount)"
+                    @input="setorForm.amount = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
                     class="w-full bg-slate-50 border-0 rounded-2xl pl-10 pr-5 py-4 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-500 transition"
                     placeholder="Nominal Disetor"></div>
             <input type="text" x-model="setorForm.note"
@@ -1761,7 +1769,7 @@
     <script>
         // === KONFIGURASI API ===
         // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA YANG BARU
-        const API_URL = "https://script.google.com/macros/s/AKfycby0ZN79PRY7Q8rFw8ShT5n9K2nt7VZ9ccwK6YriB2ciYsPfd23Hl9ZY81FEEk1PFGLY/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxGY7l3rezFjKaU5yWJOitUm1y3xkm9Ghf4WEHpvP3boM2fWG1LBkDFBgLrAxnko8ZUIA/exec";
         const API_TOKEN = "GROW_SECURE_2026";
         const ENCRYPTION_KEY = "GROW_2026_SECRET_KEY_XYZ"; // Change this in production!
 
@@ -2269,6 +2277,27 @@
                     this.productSearch = '';
                 },
 
+                formatRupiah(value) {
+                    if (!value && value !== 0) return '';
+                    let number_string = value.toString().replace(/[^,\d]/g, '').toString(),
+                        split = number_string.split(','),
+                        sisa = split[0].length % 3,
+                        rupiah = split[0].substr(0, sisa),
+                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                    if (ribuan) {
+                        separator = sisa ? '.' : '';
+                        rupiah += separator + ribuan.join('.');
+                    }
+
+                    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                    return rupiah;
+                },
+                cleanRupiah(value) {
+                    if (!value) return '';
+                    return Number(value.toString().replace(/\./g, ''));
+                },
+
                 async save() {
                     if (this.bgProcess) return; // Prevent double submit
                     this.vibrate();
@@ -2752,6 +2781,44 @@
             }
         }
     </style>
+    <script>
+        // === PULL TO REFRESH LOGIC (VANILLA JS - INVISIBLE) ===
+        (function () {
+            let startY = 0;
+            let currentY = 0;
+            const threshold = 120; // Jarak tarik untuk refresh
+            const mainContent = document.querySelector('main');
+
+            function isAtTop() {
+                if (mainContent) return mainContent.scrollTop <= 0;
+                return window.scrollY <= 0;
+            }
+
+            window.addEventListener('touchstart', (e) => {
+                if (!isAtTop()) return;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isAtTop()) return;
+                currentY = e.touches[0].clientY;
+            }, { passive: true });
+
+            window.addEventListener('touchend', (e) => {
+                if (!isAtTop()) return; // Safety check
+                const diff = currentY - startY;
+
+                // Jika tarik cukup jauh -> RELOAD
+                if (diff > threshold) {
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    window.location.reload();
+                }
+
+                startY = 0;
+                currentY = 0;
+            });
+        })();
+    </script>
 </body>
 
 </html>

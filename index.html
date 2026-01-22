@@ -1396,67 +1396,7 @@
                         </div>
                     </button>
 
-                    <!-- Nav to TEAM (Owner Only) -->
-                    <template x-if="currentUser?.role === 'Owner'">
-                        <button @click="tab='team'; vibrate()"
-                            class="glass-card p-6 rounded-[2rem] shadow-soft relative overflow-hidden group active:scale-95 transition">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-r from-brand-50 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition duration-500">
-                            </div>
-                            <div class="flex justify-between items-center relative z-10">
-                                <div class="text-left">
-                                    <div
-                                        class="w-10 h-10 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center mb-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <p class="text-lg font-black text-slate-800">Kelola Tim</p>
-                                    <p class="text-[10px] text-slate-500 font-medium">Manajemen karyawan & akses</p>
-                                </div>
-                                <div
-                                    class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 group-hover:text-brand-600 transition">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </button>
-                    </template>
 
-                    <!-- Nav to USER LOG (Owner Only) -->
-                    <template x-if="currentUser?.role === 'Owner'">
-                        <button @click="tab='userLog'; vibrate()"
-                            class="glass-card p-6 rounded-[2rem] shadow-soft relative overflow-hidden group active:scale-95 transition">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-r from-indigo-50 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition duration-500">
-                            </div>
-                            <div class="flex justify-between items-center relative z-10">
-                                <div class="text-left">
-                                    <div
-                                        class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <p class="text-lg font-black text-slate-800">Aktivitas Tim</p>
-                                    <p class="text-[10px] text-slate-500 font-medium">Log kinerja & audit sistem</p>
-                                </div>
-                                <div
-                                    class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </button>
-                    </template>
                 </div>
             </div>
             <!-- TAB TEAM (OWNER ONLY) -->

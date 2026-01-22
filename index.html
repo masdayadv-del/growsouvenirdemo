@@ -1921,37 +1921,57 @@
             x-cloak>
             <div
                 class="bg-white rounded-[2.5rem] w-full max-w-md shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-                <div class="p-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <div class="px-6 pt-6 pb-3 flex justify-between items-start">
                     <div>
-                        <h3 class="font-extrabold text-slate-800 text-lg">Detail Transaksi</h3>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider"
-                            x-text="selectedDetail?.id"></p>
+                        <h3 class="font-extrabold text-slate-800 text-xl tracking-tight">Detail Transaksi</h3>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5"
+                            x-text="'ID: ' + selectedDetail?.id"></p>
                     </div>
-                    <button @click="isDetailOpen=false"
-                        class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-400 flex items-center justify-center hover:bg-slate-100"><svg
+                    <button @click="isDetailOpen=false; vibrate()"
+                        class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-slate-100 transition"><svg
                             class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12">
                             </path>
                         </svg></button>
                 </div>
-                <div class="p-6 overflow-y-auto no-scrollbar space-y-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">Pelanggan</p>
-                            <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.customer"></p>
+
+                <div class="px-6 overflow-y-auto no-scrollbar space-y-5 pb-6">
+                    <!-- Info Section: Compact Row Layout -->
+                    <div class="space-y-3">
+                        <!-- Customer & Date -->
+                        <div class="flex justify-between items-start border-b border-slate-50 pb-3">
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Pelanggan
+                                </p>
+                                <p class="font-bold text-slate-800 text-sm" x-text="selectedDetail?.customer"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Waktu</p>
+                                <p class="font-bold text-slate-800 text-xs" x-text="selectedDetail?.fullDate"></p>
+                            </div>
                         </div>
-                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">Tanggal</p>
-                            <p class="font-bold text-slate-800 text-sm mt-0.5" x-text="selectedDetail?.fullDate"></p>
+
+                        <!-- Cashier -->
+                        <div class="flex justify-between items-center"
+                            x-show="selectedDetail?.cashier || selectedDetail?.user">
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Kasir /
+                                        Petugas</p>
+                                    <p class="font-bold text-slate-700 text-xs"
+                                        x-text="selectedDetail?.cashier || selectedDetail?.user || '-'"></p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Cashier Detail -->
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100"
-                        x-show="selectedDetail?.cashier || selectedDetail?.user">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase">Kasir / Petugas</p>
-                        <p class="font-bold text-slate-800 text-sm mt-0.5"
-                            x-text="selectedDetail?.cashier || selectedDetail?.user || '-'"></p>
                     </div>
 
                     <!-- Rincian Barang -->
@@ -1969,14 +1989,7 @@
                                         <p class="text-[10px] text-slate-400"><span x-text="item.qty"></span> x <span
                                                 class="text-brand-600 font-bold"
                                                 x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.sellPrice)"></span></p>
-                                        <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                            <p class="text-[9px] text-slate-400 mt-0.5">HPP: <span
-                                                    x-text="isSensitiveHidden ? 'Rp ****' : fmt(item.costPrice)"></span>
-                                                •
-                                                Laba: <span class="text-emerald-500 font-bold"
-                                                    x-text="isSensitiveHidden ? 'Rp ****' : fmt((item.sellPrice - item.costPrice) * item.qty)"></span>
-                                            </p>
-                                        </template>
+                                        <!-- HPP & Laba per item removed per request for cleaner UI -->
                                     </div>
                                     <p class="text-xs font-black text-brand-600"
                                         x-text="isSensitiveHidden ? 'Rp *******' : fmt(item.sellPrice * item.qty)">
@@ -1993,6 +2006,21 @@
                         <div class="flex justify-between text-xs opacity-70"><span>Sudah Bayar (DP)</span><span
                                 class="text-green-400"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.dp)"></span></div>
+
+                        <!-- Owner/Admin Financial Info -->
+                        <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
+                            <div class="space-y-2 pt-2 border-t border-white/10 mt-2">
+                                <div class="flex justify-between text-xs opacity-70"><span>Total Modal</span><span
+                                        class="text-rose-400"
+                                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(detailItems.reduce((a,c) => a + (c.costPrice * c.qty), 0))"></span>
+                                </div>
+                                <div class="flex justify-between text-xs font-bold text-emerald-400"><span>Estimasi
+                                        Laba</span><span
+                                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(detailItems.reduce((a,c) => a + ((c.sellPrice - c.costPrice) * c.qty), 0))"></span>
+                                </div>
+                            </div>
+                        </template>
+
                         <div class="w-full h-px bg-white/10 my-1"></div>
                         <div class="flex justify-between font-bold text-sm"><span>Sisa Kekurangan</span><span
                                 class="text-red-400"
@@ -2778,7 +2806,19 @@
                     },
 
                     async viewDetail(t) {
-                        this.selectedDetail = t; this.detailItems = []; this.isDetailOpen = true; this.loadingDetail = true;
+                        this.selectedDetail = t;
+                        this.detailItems = [];
+                        this.isDetailOpen = true;
+
+                        // OPTIMIZATION: Use pre-loaded items if available (Instant View)
+                        if (t.items && t.items.length > 0) {
+                            this.detailItems = JSON.parse(JSON.stringify(t.items));
+                            this.loadingDetail = false;
+                            this.vibrate();
+                            return;
+                        }
+
+                        this.loadingDetail = true;
                         const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
                         if (res && res.success) { this.detailItems = res.items; } else { this.notify("Gagal memuat detail", 'error'); }
                         this.loadingDetail = false;
@@ -2878,101 +2918,56 @@
                         }
                     },
                     async submitSetor() {
-                        // Validasi: prevent setor > modal tersedia
                         if (!this.setorForm.amount || this.setorForm.amount <= 0) {
-                            return this.notify("Nominal harus lebih dari 0", 'error');
+                            return this.notify("Nominal wajib diisi", 'error');
                         }
-                        if (this.setorForm.amount > this.modalStats.modalGantung) {
-                            // Exception: allow if offline/optimistic might have synced late, but warn user? 
-                            // For now strict check based on LOCAL state is safest to prevent negative.
-                            return this.notify("Nominal melebihi modal tersedia!", 'error');
-                        }
+                        this.bgProcess = true;
 
+                        // Optimistic Update
                         const amount = parseFloat(this.setorForm.amount);
-                        const note = this.setorForm.note;
-                        const bank = this.setorForm.bank;
-                        const now = new Date();
-
-                        // --- OPTIMISTIC UPDATE ---
-                        const newItem = {
-                            date: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
-                            timestamp: now.getTime(),
-                            amount: amount,
-                            note: note,
-                            bank: bank
-                        };
-
-                        // 1. Update List
-                        this.deposits.unshift(newItem);
-
-                        // 2. Reduce Modal Gantung (Saldo Laci)
                         this.modalStats.modalGantung -= amount;
                         this.modalStats.totalDisetor += amount;
+                        this.deposits.unshift({
+                            date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                            amount: amount,
+                            note: this.setorForm.note,
+                            bank: this.setorForm.bank
+                        });
 
-                        this.bgProcess = true;
-                        const payload = { amount, note, bank };
-
-                        this.isSetorOpen = false;
-                        this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
-                        // this.notify("Setor Modal Berhasil (Optimistic)!", 'success'); // Removed for cleaner UI
-
-                        try {
-                            const res = await this.api('saveDeposit', payload);
-                            if (res && res.success) {
-                                // Silent Sync
-                                this.fetch();
-                            } else {
-                                // Queue or Error
-                                // For Setor, we usually want it recorded.
-                                if (!res.success) this.notify("Gagal Sync Setor: " + res.message, 'error');
-                            }
-                        } catch (e) {
-                            this.notify("Setor Offline", 'info');
-                            // Queue logic could be added here if needed, but 'saveDeposit' needs to be handled in queue list
-                        } finally {
-                            this.bgProcess = false;
+                        const res = await this.api('saveDeposit', this.setorForm);
+                        this.bgProcess = false;
+                        if (res && res.success) {
+                            this.isSetorOpen = false;
+                            this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
+                            this.notify("Setor Modal Berhasil");
+                            this.fetch();
+                        } else {
+                            this.notify(res?.message || "Gagal setor modal", 'error');
                         }
                     },
                     openSetorModal() { this.setorForm.amount = this.modalStats.modalGantung; this.setorForm.bank = 'Mandiri'; this.isSetorOpen = true; },
                     resetForm() { this.isService = false; this.selectedCategory = ""; this.cart = []; this.form = { id: null, customer: '', productName: '', serviceName: '', qty: 1, sellPrice: '', costPrice: '', dp: 0, deadline: '', originalDate: null }; },
 
-                    // === OFFLINE QUEUE SYSTEM ===
                     async processPendingQueue() {
                         if (this.syncInProgress || this.pendingQueue.length === 0) return;
-
                         this.syncInProgress = true;
                         const queue = [...this.pendingQueue];
-
                         for (let i = 0; i < queue.length; i++) {
                             const item = queue[i];
                             try {
-                                const res = await this.api(item.action, item.payload);
-                                if (res && res.success) {
-                                    this.pendingQueue = this.pendingQueue.filter(q => q.timestamp !== item.timestamp);
-                                    SecureStorage.set('grow_pending_queue', this.pendingQueue);
-                                }
-                            } catch (e) {
-                                console.error('Failed to sync:', e);
-                            }
+                                await this.api(item.action, item.payload);
+                                this.pendingQueue = this.pendingQueue.filter(q => q.timestamp !== item.timestamp);
+                                SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                            } catch (e) { console.error('Failed to sync:', e); }
                         }
-
                         this.syncInProgress = false;
-                        if (this.pendingQueue.length === 0) {
-                            this.notify("✅ Semua data tersinkronkan!", 'success');
-                            this.fetch();
-                        }
+                        if (this.pendingQueue.length === 0) { this.notify("✅ Data tersinkronkan!", 'success'); this.fetch(); }
                     },
-
                     addToQueue(action, payload) {
-                        const queueItem = {
-                            action,
-                            payload,
-                            timestamp: Date.now(),
-                            type: action === 'saveTransaction' ? 'Transaksi' : action === 'saveExpense' ? 'Biaya' : 'Data'
-                        };
+                        const queueItem = { action, payload, timestamp: Date.now(), type: 'Data' };
                         this.pendingQueue.push(queueItem);
                         SecureStorage.set('grow_pending_queue', this.pendingQueue);
-                        this.notify(`📦 ${queueItem.type} di queue (${this.pendingQueue.length})`, 'success');
+                        this.notify(`Data di queue (${this.pendingQueue.length})`, 'info');
                     },
 
                     logout() {

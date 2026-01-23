@@ -1193,8 +1193,8 @@
 
                 <div class="space-y-3 pb-24">
                     <template x-for="ex in filteredExpenses" :key="ex.id">
-                        <div
-                            class="bg-white p-3 rounded-2xl border border-slate-50 shadow-soft relative active:scale-[0.99] transition">
+                        <div @click="viewExpenseDetail(ex); vibrate()"
+                            class="bg-white p-3 rounded-2xl border border-slate-50 shadow-soft relative active:scale-[0.99] transition cursor-pointer">
                             <div class="flex justify-between items-start">
                                 <div>
                                     <p class="text-xs font-bold text-slate-800" x-text="ex.desc"></p>
@@ -1207,7 +1207,7 @@
                                     x-text="isSensitiveHidden ? 'Rp *******' : fmt(ex.amount)"></p>
                             </div>
                             <div class="flex justify-end gap-2 border-t border-slate-50 pt-2 mt-2">
-                                <button @click="editExpense(ex); vibrate()"
+                                <button @click.stop="editExpense(ex); vibrate()"
                                     class="flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[9px] font-bold active:bg-blue-100 hover:bg-blue-100 transition"><svg
                                         class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1215,7 +1215,7 @@
                                         </path>
                                     </svg>Edit</button>
                                 <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                    <button @click="requestDeleteExpense(ex.id); vibrate()"
+                                    <button @click.stop="requestDeleteExpense(ex.id); vibrate()"
                                         class="flex items-center px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-[9px] font-bold active:bg-rose-100 hover:bg-rose-100 transition"><svg
                                             class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1581,13 +1581,14 @@
                     </template>
                 </div>
 
-                <!-- VIEW 2: AUDIT LOG (New Table View) -->
+                <!-- VIEW 2: AUDIT LOG (Timeline View) -->
                 <div x-show="logFilterAction==='Audit'"
                     class="flex-1 flex flex-col min-h-0 bg-white rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] border-t border-slate-100 pb-24">
-                    <div class="p-4 border-b border-slate-50 flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-700">Histori Aktivitas</h3>
+                    <div
+                        class="p-4 border-b border-slate-50 flex justify-between items-center sticky top-0 bg-white z-20 rounded-t-2xl">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Histori Aktivitas</h3>
                         <button @click="fetchLogs(); vibrate()"
-                            class="p-1.5 rounded-lg bg-slate-50 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition">
+                            class="p-2 rounded-xl bg-slate-50 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition active:scale-95">
                             <svg class="w-4 h-4" :class="{'animate-spin': loadingLogs}" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1597,66 +1598,183 @@
                         </button>
                     </div>
 
-                    <div class="flex-1 overflow-y-auto no-scrollbar p-0">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-slate-50 sticky top-0 z-10">
-                                <tr>
-                                    <th class="p-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Waktu
-                                    </th>
-                                    <th class="p-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">User
-                                    </th>
-                                    <th class="p-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">Aksi
-                                    </th>
-                                    <th
-                                        class="p-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider text-right">
-                                        Detail</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                <template x-for="log in logs" :key="log.timestamp">
-                                    <tr class="hover:bg-slate-50/50 transition">
-                                        <td class="p-3">
-                                            <p class="text-[10px] font-bold text-slate-700"
-                                                x-text="new Date(log.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})">
-                                            </p>
-                                            <p class="text-[8px] text-slate-400"
-                                                x-text="new Date(log.timestamp).toLocaleDateString('id-ID', {day:'numeric', month:'short'})">
-                                            </p>
-                                        </td>
-                                        <td class="p-3">
-                                            <p class="text-[10px] font-bold text-slate-800" x-text="log.user"></p>
-                                            <span class="text-[8px] px-1 rounded bg-slate-100 text-slate-500 font-bold"
-                                                x-text="log.role"></span>
-                                        </td>
-                                        <td class="p-3">
-                                            <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[9px] font-bold max-w-[100px]"
-                                                :class="{
-                                                      'bg-rose-50 text-rose-600': log.action.includes('DELETE'),
-                                                      'bg-amber-50 text-amber-600': log.action.includes('EDIT'),
-                                                      'bg-emerald-50 text-emerald-600': log.action.includes('NEW'),
-                                                      'bg-blue-50 text-blue-600': log.action.includes('LOGIN')
-                                                  }">
-                                                <span x-text="log.action.replace('_TRANSACTION','')"></span>
-                                            </div>
-                                        </td>
-                                        <td class="p-3 text-right">
-                                            <button
-                                                class="text-[9px] font-bold text-indigo-500 hover:text-indigo-700 underline"
-                                                @click="alert(log.details)">Lihat</button>
-                                        </td>
-                                    </tr>
-                                </template>
-                                <tr x-show="logs.length === 0 && !loadingLogs">
-                                    <td colspan="4" class="p-8 text-center text-slate-400 text-xs">Belum ada aktivitas
-                                        tercatat</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="flex-1 overflow-y-auto no-scrollbar p-5 relative">
+                        <!-- Connecting Line -->
+                        <div class="absolute left-[27px] top-5 bottom-0 w-0.5 bg-slate-100"></div>
 
-                        <div x-show="loadingLogs" class="p-4 flex justify-center">
-                            <span
-                                class="animate-spin w-5 h-5 border-2 border-indigo-200 border-t-indigo-600 rounded-full"></span>
+                        <div class="space-y-6 relative">
+                            <template x-for="log in logs" :key="log.timestamp">
+                                <div class="flex gap-4 group fade-in">
+                                    <!-- Timeline Icon -->
+                                    <div class="relative z-10 flex-shrink-0 mt-1">
+                                        <div class="w-10 h-10 rounded-full flex items-center justify-center border-[3px] border-white shadow-sm transition group-hover:scale-110"
+                                            :class="{
+                                                'bg-rose-100 text-rose-600': log.action.includes('DELETE'),
+                                                'bg-amber-100 text-amber-600': log.action.includes('EDIT'),
+                                                'bg-emerald-100 text-emerald-600': log.action.includes('NEW'),
+                                                'bg-blue-100 text-blue-600': log.action.includes('LOGIN')
+                                            }">
+                                            <!-- Icons -->
+                                            <template x-if="log.action.includes('DELETE')">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </template>
+                                            <template x-if="log.action.includes('EDIT')">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                                    </path>
+                                                </svg>
+                                            </template>
+                                            <template x-if="log.action.includes('NEW')">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                </svg>
+                                            </template>
+                                            <template x-if="log.action.includes('LOGIN')">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+                                                    </path>
+                                                </svg>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <!-- Content Card -->
+                                    <div
+                                        class="flex-1 bg-slate-50/50 rounded-2xl p-4 border border-slate-100/50 hover:bg-slate-50 hover:border-slate-200 transition">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span
+                                                class="text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase tracking-wide"
+                                                :class="{
+                                                    'bg-rose-50 text-rose-600': log.action.includes('DELETE'),
+                                                    'bg-amber-50 text-amber-600': log.action.includes('EDIT'),
+                                                    'bg-emerald-50 text-emerald-600': log.action.includes('NEW'),
+                                                    'bg-blue-50 text-blue-600': log.action.includes('LOGIN')
+                                                }"
+                                                x-text="log.action.replace('_TRANSACTION','').replace('_',' ')"></span>
+                                            <div class="text-right">
+                                                <p class="text-[10px] font-bold text-slate-800"
+                                                    x-text="new Date(log.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})">
+                                                </p>
+                                                <p class="text-[8px] text-slate-400"
+                                                    x-text="new Date(log.timestamp).toLocaleDateString('id-ID', {day:'numeric', month:'short'})">
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-center gap-2 mb-3">
+                                            <div
+                                                class="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-600">
+                                                <span x-text="log.user.charAt(0)"></span>
+                                            </div>
+                                            <p class="text-xs font-bold text-slate-700"><span x-text="log.user"></span>
+                                                <span class="text-[10px] font-normal text-slate-400">• <span
+                                                        x-text="log.role"></span></span>
+                                            </p>
+                                        </div>
+
+                                        <button @click="viewLogDetail(log)"
+                                            class="w-full py-2 rounded-xl bg-white border border-slate-200 text-[10px] font-bold text-slate-500 hover:text-brand-600 hover:border-brand-200 shadow-sm transition flex items-center justify-center gap-1">
+                                            <span>Lihat Detail</span>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Empty State -->
+                            <div x-show="logs.length === 0 && !loadingLogs"
+                                class="text-center py-10 opacity-50 relative z-20 bg-white">
+                                <div
+                                    class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-300">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <p class="text-xs font-bold text-slate-400">Belum ada aktivitas tercatat</p>
+                            </div>
                         </div>
+
+                        <div x-show="loadingLogs" class="py-10 flex justify-center z-20 relative">
+                            <span
+                                class="animate-spin w-6 h-6 border-2 border-indigo-200 border-t-indigo-600 rounded-full"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log Detail Modal -->
+                <div x-show="isLogDetailOpen"
+                    class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6"
+                    x-transition.opacity x-cloak>
+                    <div class="bg-white rounded-[2rem] w-full max-w-sm p-6 shadow-2xl relative"
+                        @click.away="closeLogDetail()">
+                        <button @click="closeLogDetail()"
+                            class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-slate-100 hover:text-slate-600 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+
+                        <h3 class="font-extrabold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                            <span class="w-1.5 h-6 bg-indigo-500 rounded-full"></span> Detail Aktivitas
+                        </h3>
+
+                        <template x-if="selectedLog">
+                            <div class="space-y-4">
+                                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                                    <div class="grid grid-cols-2 gap-4 text-xs">
+                                        <div>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">Waktu</p>
+                                            <p class="font-bold text-slate-800"
+                                                x-text="new Date(selectedLog.timestamp).toLocaleString('id-ID')"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">Aktor</p>
+                                            <p class="font-bold text-slate-800" x-text="selectedLog.user"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">Aksi</p>
+                                            <span
+                                                class="inline-block px-2 py-0.5 rounded bg-white border border-slate-200 font-bold text-[10px]"
+                                                x-text="selectedLog.action"></span>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">Target ID</p>
+                                            <p class="font-mono text-[10px] text-slate-600 truncate"
+                                                x-text="selectedLog.targetId || '-'"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-2">Rincian Data</p>
+                                    <div class="bg-slate-900 rounded-2xl p-4 overflow-x-auto custom-scrollbar">
+                                        <pre class="text-[10px] text-emerald-400 font-mono"
+                                            x-html="JSON.stringify(selectedLog.parsedDetails, null, 2)"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
 
@@ -1739,6 +1857,97 @@
                 </button>
             </nav>
         </template>
+
+        <!-- Expense Detail Modal -->
+        <div x-show="isExpenseDetailOpen"
+            class="fixed inset-0 z-[95] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6"
+            x-transition.opacity x-cloak>
+            <div class="bg-white rounded-[2rem] w-full max-w-sm p-6 shadow-2xl relative"
+                @click.away="isExpenseDetailOpen = false">
+                <button @click="isExpenseDetailOpen = false"
+                    class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-slate-100 hover:text-slate-600 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+
+                <h3 class="font-extrabold text-slate-800 text-lg mb-6 flex items-center gap-2">
+                    <span class="w-1.5 h-6 bg-red-500 rounded-full"></span> Detail Pengeluaran
+                </h3>
+
+                <template x-if="selectedExpense">
+                    <div class="space-y-6">
+                        <!-- Amount Highlight -->
+                        <div class="text-center">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Nominal</p>
+                            <p class="text-3xl font-black text-rose-500"
+                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedExpense.amount)"></p>
+                        </div>
+
+                        <!-- Details Card -->
+                        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-4">
+                            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-0.5">Tanggal</p>
+                                    <p class="text-xs font-bold text-slate-800" x-text="selectedExpense.date"></p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-0.5">Kategori</p>
+                                    <span
+                                        class="inline-block px-2 py-0.5 rounded-lg bg-white border border-slate-200 text-[10px] font-bold text-slate-600"
+                                        x-text="selectedExpense.cat"></span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Keterangan</p>
+                                <p class="text-sm font-medium text-slate-700 leading-relaxed"
+                                    x-text="selectedExpense.desc"></p>
+                            </div>
+
+                            <!-- Creator Info -->
+                            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Dibuat Oleh</p>
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500">
+                                        <span x-text="(selectedExpense.user || '?').charAt(0).toUpperCase()"></span>
+                                    </div>
+                                    <p class="text-xs font-bold text-slate-700"
+                                        x-text="selectedExpense.user || 'System'"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex gap-3">
+                            <button @click="editExpense(selectedExpense); isExpenseDetailOpen = false; vibrate()"
+                                class="flex-1 py-3 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs hover:bg-blue-100 transition flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                Edit
+                            </button>
+                            <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
+                                <button
+                                    @click="requestDeleteExpense(selectedExpense.id); isExpenseDetailOpen = false; vibrate()"
+                                    class="flex-1 py-3 rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                        </path>
+                                    </svg>
+                                    Hapus
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
 
         <div x-show="isDeleteOpen"
             class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
@@ -2102,10 +2311,35 @@
 
                     // LOGS STATE
                     logs: [], loadingLogs: false, logFilterUser: '', logFilterAction: '',
+                    selectedLog: null, isLogDetailOpen: false,
+
+                    // EXPENSE DETAIL STATE
+                    selectedExpense: null, isExpenseDetailOpen: false,
+
+                    viewExpenseDetail(ex) {
+                        this.selectedExpense = ex;
+                        this.isExpenseDetailOpen = true;
+                        this.vibrate();
+                    },
+
+                    viewLogDetail(log) {
+                        this.selectedLog = { ...log };
+                        try {
+                            if (typeof log.details === 'string') {
+                                this.selectedLog.parsedDetails = JSON.parse(log.details);
+                            } else {
+                                this.selectedLog.parsedDetails = log.details;
+                            }
+                        } catch (e) {
+                            this.selectedLog.parsedDetails = { error: "Invalid JSON format", raw: log.details };
+                        }
+                        this.isLogDetailOpen = true;
+                        this.vibrate();
+                    },
+                    closeLogDetail() { this.isLogDetailOpen = false; setTimeout(() => this.selectedLog = null, 300); },
 
                     init() {
                         setInterval(() => this.updateTime(), 1000); this.updateTime();
-                        this.restoreCart();
 
                         // === CONNECTION MONITORING ===
                         window.addEventListener('online', () => {
@@ -2119,19 +2353,27 @@
                             this.notify('⚠️ Mode Offline - Data disimpan lokal', 'error');
                         });
 
-                        if (this.currentUser) { this.startApp(); }
-                        let msgIndex = 0; const msgInterval = setInterval(() => { this.loadingText = this.loadingMessages[msgIndex]; msgIndex = (msgIndex + 1) % this.loadingMessages.length; }, 800);
+                        // Setup loading message animation
+                        let msgIndex = 0;
+                        const msgInterval = setInterval(() => {
+                            this.loadingText = this.loadingMessages[msgIndex];
+                            msgIndex = (msgIndex + 1) % this.loadingMessages.length;
+                        }, 800);
 
-
-                        const savedCart = localStorage.getItem('grow_cart_backup');
-                        if (savedCart) { this.cart = JSON.parse(savedCart); if (this.cart.length > 0) this.notify("Keranjang dipulihkan", 'info'); }
+                        // Setup cart watcher BEFORE restoring (to avoid race condition)
                         this.$watch('cart', (val) => localStorage.setItem('grow_cart_backup', JSON.stringify(val)));
                         this.$watch('isSensitiveHidden', (val) => localStorage.setItem('grow_privacy_mode', val));
 
-                        // Init Report Filters (Already initialized in state)
-                        // this.reportDate is declared in state, so we don't need to re-init here
+                        // Restore cart from backup (single source of truth)
+                        this.restoreCart();
 
-                        if (this.currentUser) { this.startApp(msgInterval); } else { this.initialLoading = false; clearInterval(msgInterval); }
+                        // Start app or show login (SINGLE call to startApp)
+                        if (this.currentUser) {
+                            this.startApp(msgInterval);
+                        } else {
+                            this.initialLoading = false;
+                            clearInterval(msgInterval);
+                        }
                     },
 
                     updateTime() { const now = new Date(); this.timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); this.dateString = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
@@ -2274,7 +2516,7 @@
 
 
                     async api(action, payload = null) {
-                        if (navigator.onLine === false) { this.notify("Anda sedang Offline!", 'error'); return null; }
+                        if (!navigator.onLine) { this.notify("Anda sedang Offline!", 'error'); return null; }
 
                         const controller = new AbortController();
                         const id = setTimeout(() => controller.abort(), 30000); // 30s Timeout (GAS can be slow)
@@ -2408,13 +2650,16 @@
 
                             // Date range filter with validation
                             let matchDate = true;
-                            if (this.filterStartDate && this.filterEndDate && this.filterEndDate < this.filterStartDate) {
-                                // Invalid date range, skip date filter
-                                matchDate = true;
-                            } else {
-                                if (this.filterStartDate && e.isoDate < this.filterStartDate) matchDate = false;
-                                if (this.filterEndDate && e.isoDate > this.filterEndDate) matchDate = false;
+                            let startDate = this.filterStartDate;
+                            let endDate = this.filterEndDate;
+
+                            // Auto-swap if dates are reversed
+                            if (startDate && endDate && endDate < startDate) {
+                                [startDate, endDate] = [endDate, startDate];
                             }
+
+                            if (startDate && e.isoDate < startDate) matchDate = false;
+                            if (endDate && e.isoDate > endDate) matchDate = false;
 
                             // Status filter
                             const matchStatus = this.filterStatus ? e.status === this.filterStatus : true;
@@ -2628,6 +2873,10 @@
                             items: JSON.parse(JSON.stringify(items)) // STORE ITEMS FOR INSTANT EDIT
                         };
 
+                        // Calculate recovered capital for modal stats (needed for both update and rollback)
+                        const cashRec = (status === 'LUNAS') ? grandTotal : totalDP;
+                        const recoveredCapital = Math.min(cashRec, totalModal);
+
                         // --- APPLY TO LOCAL STATE (OPTIMISTIC) ---
                         if (isNew) {
                             // 1. Add to History
@@ -2651,10 +2900,7 @@
                             this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
 
                             // 3b. Update Modal Stats (Saldo Laci / Modal Gantung)
-                            // Logic: Saldo increases by the Capital (HPP) part of the cash received.
-                            // Cash received = LUNAS ? Total : DP.
-                            const cashRec = (status === 'LUNAS') ? grandTotal : totalDP;
-                            const recoveredCapital = Math.min(cashRec, totalModal);
+                            // Uses recoveredCapital calculated earlier
                             if (this.modalStats) {
                                 this.modalStats.modalGantung = (this.modalStats.modalGantung || 0) + recoveredCapital;
                                 this.modalStats.totalHPP = (this.modalStats.totalHPP || 0) + totalModal;
@@ -2666,10 +2912,65 @@
                                 // Complex logic to re-aggregate all products is too heavy, skipping for speed.
                             }
                         } else {
-                            // Edit Mode: Optimistic update is complex (revert old -> apply new).
-                            // For safety/speed, we only apply full optimistic to NEW items.
-                            // For Edit, we fall back to "Semi-Optimistic" (UI transitions, but data waits for fetch)
-                            // This prevents calculation errors.
+                            // Edit Mode: Apply Optimistic Update to existing item
+                            const existingItem = this.history.find(h => h.id === tempId);
+                            if (existingItem) {
+                                // Save COMPLETE backup for rollback if API fails
+                                var editBackup = JSON.parse(JSON.stringify(existingItem));
+
+                                // Save old values for potential KPI adjustment
+                                var oldTotal = existingItem.total || 0;
+                                var oldStatus = existingItem.status;
+                                var oldSisa = existingItem.sisa || 0;
+                                var oldHpp = existingItem.hpp || 0;
+                                var oldDp = existingItem.dp || 0;
+
+                                // Update item in place
+                                existingItem.customer = this.form.customer;
+                                existingItem.product = items.length > 1 ? `${items[0].productName} (+${items.length - 1} item)` : items[0].productName;
+                                existingItem.total = grandTotal;
+                                existingItem.hpp = totalModal;
+                                existingItem.dp = totalDP;
+                                existingItem.sisa = sisa;
+                                existingItem.status = status;
+                                existingItem.deadline = this.form.deadline;
+                                existingItem.items = JSON.parse(JSON.stringify(items));
+
+                                // Adjust KPI: Remove old values, add new values
+                                // All KPI: adjust total
+                                this.historyKPI.all.total = this.historyKPI.all.total - oldTotal + grandTotal;
+
+                                // Status change handling
+                                if (oldStatus !== status) {
+                                    if (oldStatus === 'LUNAS' && status === 'BELUM LUNAS') {
+                                        this.historyKPI.lunas.count--;
+                                        this.historyKPI.lunas.total -= oldTotal;
+                                        this.historyKPI.belum.count++;
+                                        this.historyKPI.belum.total += sisa;
+                                    } else if (oldStatus === 'BELUM LUNAS' && status === 'LUNAS') {
+                                        this.historyKPI.belum.count--;
+                                        this.historyKPI.belum.total -= oldSisa;
+                                        this.historyKPI.lunas.count++;
+                                        this.historyKPI.lunas.total += grandTotal;
+                                    }
+                                } else {
+                                    // Same status, just adjust totals
+                                    if (status === 'LUNAS') {
+                                        this.historyKPI.lunas.total = this.historyKPI.lunas.total - oldTotal + grandTotal;
+                                    } else {
+                                        this.historyKPI.belum.total = this.historyKPI.belum.total - oldSisa + sisa;
+                                    }
+                                }
+
+                                // Adjust dashboard stats
+                                this.stats.omzet = this.stats.omzet - oldTotal + grandTotal;
+                                this.stats.totalHPP = this.stats.totalHPP - oldHpp + totalModal;
+                                // Recalculate profit based on new values
+                                const oldCashIn = (oldStatus === 'LUNAS') ? oldTotal : oldDp;
+                                const oldProfit = oldCashIn - oldHpp;
+                                this.stats.grossProfit = this.stats.grossProfit - oldProfit + profit;
+                                this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                            }
                         }
 
                         this.bgProcess = true;
@@ -2683,7 +2984,9 @@
                             dp: this.form.dp,
                             deadline: this.form.deadline,
                             originalDate: this.form.originalDate,
-                            cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A'
+                            cashier: this.currentUser ? (this.currentUser.name || this.currentUser.username) : 'N/A',
+                            username: this.currentUser?.name || this.currentUser?.username || 'System',
+                            role: this.currentUser?.role || 'System'
                         };
 
                         // 2. UI Updates Immediate
@@ -2699,27 +3002,152 @@
 
                             // 4. SYNC (Silent or Active)
                             if (res && res.success) {
-                                // Data saved. We might want to re-fetch to get the REAL ID generated by server.
-                                // But for user experience, they already see the data.
-                                // We call fetch() quietly to sync everything eventually.
-                                this.fetch();
+                                // Data saved. Optimistic update already updated local state.
+                                // Skip full refetch to avoid UI flicker and slow loading.
+                                // Only update tempId with real ID from server if provided.
+                                if (res.id && isNew) {
+                                    const item = this.history.find(h => h.id === tempId);
+                                    if (item) item.id = res.id;
+                                }
+                                // Update localStorage cache with current state
+                                SecureStorage.set('grow_data_cache', {
+                                    products: this.allProducts,
+                                    customers: this.customers,
+                                    expenseDescriptions: this.expenseDescriptions,
+                                    history: this.history,
+                                    expenses: this.expenses,
+                                    deposits: this.deposits,
+                                    stats: this.stats,
+                                    modalStats: this.modalStats,
+                                    historyKPI: this.historyKPI,
+                                    topProduct: this.topProduct
+                                });
                             } else {
+                                // ROLLBACK optimistic update
+                                if (isNew) {
+                                    this.rollbackOptimisticTransaction(tempId, grandTotal, totalModal, profit, sisa, status, recoveredCapital);
+                                } else if (editBackup) {
+                                    // Rollback edit mode: restore from backup
+                                    const itemToRestore = this.history.find(h => h.id === tempId);
+                                    if (itemToRestore) {
+                                        Object.assign(itemToRestore, editBackup);
+                                        // Revert KPI changes
+                                        this.historyKPI.all.total = this.historyKPI.all.total - grandTotal + oldTotal;
+                                        if (oldStatus !== status) {
+                                            if (status === 'LUNAS' && oldStatus === 'BELUM LUNAS') {
+                                                this.historyKPI.lunas.count--;
+                                                this.historyKPI.lunas.total -= grandTotal;
+                                                this.historyKPI.belum.count++;
+                                                this.historyKPI.belum.total += oldSisa;
+                                            } else if (status === 'BELUM LUNAS' && oldStatus === 'LUNAS') {
+                                                this.historyKPI.belum.count--;
+                                                this.historyKPI.belum.total -= sisa;
+                                                this.historyKPI.lunas.count++;
+                                                this.historyKPI.lunas.total += oldTotal;
+                                            }
+                                        } else {
+                                            if (status === 'LUNAS') {
+                                                this.historyKPI.lunas.total = this.historyKPI.lunas.total - grandTotal + oldTotal;
+                                            } else {
+                                                this.historyKPI.belum.total = this.historyKPI.belum.total - sisa + oldSisa;
+                                            }
+                                        }
+                                        // Revert stats
+                                        this.stats.omzet = this.stats.omzet - grandTotal + oldTotal;
+                                        this.stats.totalHPP = this.stats.totalHPP - totalModal + oldHpp;
+                                        const oldCashIn = (oldStatus === 'LUNAS') ? oldTotal : oldDp;
+                                        const oldProfit = oldCashIn - oldHpp;
+                                        this.stats.grossProfit = this.stats.grossProfit - profit + oldProfit;
+                                        this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                                    }
+                                }
+
                                 if (!navigator.onLine) {
                                     this.addToQueue('saveTransaction', payload);
+                                    this.notify("📴 Offline: Data akan dikirim saat online", 'info');
                                 } else {
-                                    this.notify("GAGAL SIMPAN! Cek Koneksi (Data di Queue)", 'error');
+                                    this.notify("⚠️ Gagal simpan: Data masuk antrian", 'error');
                                     this.addToQueue('saveTransaction', payload); // Fallback
                                 }
                             }
                         } catch (e) {
-                            this.notify("Simpan Offline: " + e.message, 'info');
+                            // ROLLBACK optimistic update
+                            if (isNew) {
+                                this.rollbackOptimisticTransaction(tempId, grandTotal, totalModal, profit, sisa, status, recoveredCapital);
+                            } else if (editBackup) {
+                                // Rollback edit mode: restore from backup
+                                const itemToRestore = this.history.find(h => h.id === tempId);
+                                if (itemToRestore) {
+                                    Object.assign(itemToRestore, editBackup);
+                                    // Revert KPI and stats (same logic as in else block)
+                                    this.historyKPI.all.total = this.historyKPI.all.total - grandTotal + oldTotal;
+                                    if (oldStatus !== status) {
+                                        if (status === 'LUNAS' && oldStatus === 'BELUM LUNAS') {
+                                            this.historyKPI.lunas.count--;
+                                            this.historyKPI.lunas.total -= grandTotal;
+                                            this.historyKPI.belum.count++;
+                                            this.historyKPI.belum.total += oldSisa;
+                                        } else if (status === 'BELUM LUNAS' && oldStatus === 'LUNAS') {
+                                            this.historyKPI.belum.count--;
+                                            this.historyKPI.belum.total -= sisa;
+                                            this.historyKPI.lunas.count++;
+                                            this.historyKPI.lunas.total += oldTotal;
+                                        }
+                                    } else {
+                                        if (status === 'LUNAS') {
+                                            this.historyKPI.lunas.total = this.historyKPI.lunas.total - grandTotal + oldTotal;
+                                        } else {
+                                            this.historyKPI.belum.total = this.historyKPI.belum.total - sisa + oldSisa;
+                                        }
+                                    }
+                                    this.stats.omzet = this.stats.omzet - grandTotal + oldTotal;
+                                    this.stats.totalHPP = this.stats.totalHPP - totalModal + oldHpp;
+                                    const oldCashIn = (oldStatus === 'LUNAS') ? oldTotal : oldDp;
+                                    const oldProfit = oldCashIn - oldHpp;
+                                    this.stats.grossProfit = this.stats.grossProfit - profit + oldProfit;
+                                    this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                                }
+                            }
+
+                            this.notify("📴 Simpan Offline: " + e.message, 'info');
                             this.addToQueue('saveTransaction', payload);
                         } finally {
                             this.bgProcess = false;
                         }
                     },
 
+                    // Rollback helper for failed optimistic transaction saves
+                    rollbackOptimisticTransaction(id, grandTotal, totalModal, profit, sisa, status, recoveredCapital) {
+                        // 1. Remove from history
+                        this.history = this.history.filter(h => h.id !== id);
+
+                        // 2. Revert KPI Cards
+                        this.historyKPI.all.count = Math.max(0, this.historyKPI.all.count - 1);
+                        this.historyKPI.all.total = Math.max(0, this.historyKPI.all.total - grandTotal);
+                        if (status === 'LUNAS') {
+                            this.historyKPI.lunas.count = Math.max(0, this.historyKPI.lunas.count - 1);
+                            this.historyKPI.lunas.total = Math.max(0, this.historyKPI.lunas.total - grandTotal);
+                        } else {
+                            this.historyKPI.belum.count = Math.max(0, this.historyKPI.belum.count - 1);
+                            this.historyKPI.belum.total = Math.max(0, this.historyKPI.belum.total - sisa);
+                        }
+
+                        // 3. Revert Dashboard Stats
+                        this.stats.omzet = Math.max(0, this.stats.omzet - grandTotal);
+                        this.stats.totalHPP = Math.max(0, this.stats.totalHPP - totalModal);
+                        this.stats.grossProfit -= profit;
+                        this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+
+                        // 4. Revert Modal Stats
+                        if (this.modalStats && recoveredCapital) {
+                            this.modalStats.modalGantung = Math.max(0, (this.modalStats.modalGantung || 0) - recoveredCapital);
+                            this.modalStats.totalHPP = Math.max(0, (this.modalStats.totalHPP || 0) - totalModal);
+                        }
+                    },
+
                     async submitExpense() {
+                        if (this.bgProcess) return; // Prevent double submit
+
                         // Enhanced validations
                         if (!this.expForm.category || this.expForm.category.trim() === '') {
                             return this.notify("Pilih Kategori", 'error');
@@ -2735,6 +3163,12 @@
                         const isNew = !this.expForm.id;
                         const now = new Date();
 
+                        // Save backup for rollback BEFORE any changes
+                        var expenseBackup = isNew ? null : JSON.parse(JSON.stringify(this.expenses.find(e => e.id === this.expForm.id)));
+                        var expenseIndex = isNew ? 0 : this.expenses.findIndex(e => e.id === this.expForm.id);
+                        var oldTotalExpense = this.stats.totalExpense;
+                        var oldNetProfit = this.stats.netProfit;
+
                         // --- OPTIMISTIC UPDATE ---
                         const newItem = {
                             id: this.expForm.id || this.generateUUID(),
@@ -2742,7 +3176,8 @@
                             isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0],
                             cat: this.expForm.category,
                             desc: this.expForm.desc,
-                            amount: amount
+                            amount: amount,
+                            user: this.currentUser?.name || this.currentUser?.username || 'System'
                         };
 
                         if (isNew) {
@@ -2766,7 +3201,11 @@
 
                         this.bgProcess = true;
                         // Snapshot payload for API
-                        const payload = { ...this.expForm, id: newItem.id };
+                        const payload = {
+                            ...this.expForm,
+                            id: newItem.id,
+                            username: this.currentUser?.name || this.currentUser?.username
+                        };
 
                         // this.notify("Biaya Disimpan (Optimistic)!"); // Removed for cleaner UI
                         this.resetExpForm();
@@ -2777,9 +3216,29 @@
                         try {
                             const res = await this.api('saveExpense', payload);
                             if (res && res.success) {
-                                // Silent sync to confirm IDs
-                                this.fetch();
+                                // Update localStorage cache
+                                SecureStorage.set('grow_data_cache', {
+                                    products: this.allProducts,
+                                    customers: this.customers,
+                                    expenseDescriptions: this.expenseDescriptions,
+                                    history: this.history,
+                                    expenses: this.expenses,
+                                    deposits: this.deposits,
+                                    stats: this.stats,
+                                    modalStats: this.modalStats,
+                                    historyKPI: this.historyKPI,
+                                    topProduct: this.topProduct
+                                });
                             } else {
+                                // Rollback optimistic update
+                                if (isNew) {
+                                    this.expenses.shift(); // Remove first item
+                                } else if (expenseBackup) {
+                                    this.expenses[expenseIndex] = expenseBackup;
+                                }
+                                this.stats.totalExpense = oldTotalExpense;
+                                this.stats.netProfit = oldNetProfit;
+
                                 if (!navigator.onLine) {
                                     this.addToQueue('saveExpense', payload);
                                 } else {
@@ -2788,6 +3247,15 @@
                                 }
                             }
                         } catch (e) {
+                            // Rollback on exception
+                            if (isNew) {
+                                this.expenses.shift();
+                            } else if (expenseBackup) {
+                                this.expenses[expenseIndex] = expenseBackup;
+                            }
+                            this.stats.totalExpense = oldTotalExpense;
+                            this.stats.netProfit = oldNetProfit;
+
                             this.notify("Disimpan Offline", 'info');
                             this.addToQueue('saveExpense', payload);
                         } finally {
@@ -2853,12 +3321,76 @@
                         this.isDeleteOpen = false; this.bgProcess = true;
 
                         let action = 'deleteTransaction';
-                        let payload = { id: this.deleteId, date: this.deleteDate };
+                        let payload = {
+                            id: this.deleteId,
+                            date: this.deleteDate,
+                            username: this.currentUser?.name || this.currentUser?.username,
+                            role: this.currentUser?.role
+                        };
 
-                        if (this.deleteType === 'expense') { action = 'deleteExpense'; payload = { id: this.deleteId }; }
+                        // Store backup for rollback
+                        let deletedItem = null;
+                        let deletedIndex = -1;
+                        let oldKPI = null;
+                        let oldStats = null;
+
+                        if (this.deleteType === 'expense') {
+                            action = 'deleteExpense';
+                            payload = {
+                                id: this.deleteId,
+                                username: this.currentUser?.name || this.currentUser?.username,
+                                role: this.currentUser?.role
+                            };
+
+                            // Optimistic delete for expense
+                            deletedIndex = this.expenses.findIndex(e => e.id === this.deleteId);
+                            if (deletedIndex !== -1) {
+                                deletedItem = { ...this.expenses[deletedIndex] };
+                                oldStats = { ...this.stats };
+
+                                // Remove from list
+                                this.expenses.splice(deletedIndex, 1);
+                                // Update stats
+                                this.stats.totalExpense -= (deletedItem.amount || 0);
+                                this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                            }
+                        }
                         else if (this.deleteType === 'user') {
                             action = 'deleteUser';
                             payload = { username: this.deleteId };
+                            // User deletion still needs fetch for users list
+                        }
+                        else {
+                            // Transaction delete - optimistic
+                            deletedIndex = this.history.findIndex(h => h.id === this.deleteId);
+                            if (deletedIndex !== -1) {
+                                deletedItem = { ...this.history[deletedIndex] };
+                                oldKPI = JSON.parse(JSON.stringify(this.historyKPI));
+                                oldStats = { ...this.stats };
+
+                                // Remove from history
+                                this.history.splice(deletedIndex, 1);
+
+                                // Update KPI
+                                this.historyKPI.all.count = Math.max(0, this.historyKPI.all.count - 1);
+                                this.historyKPI.all.total = Math.max(0, this.historyKPI.all.total - (deletedItem.total || 0));
+
+                                if (deletedItem.status === 'LUNAS') {
+                                    this.historyKPI.lunas.count = Math.max(0, this.historyKPI.lunas.count - 1);
+                                    this.historyKPI.lunas.total = Math.max(0, this.historyKPI.lunas.total - (deletedItem.total || 0));
+                                } else {
+                                    this.historyKPI.belum.count = Math.max(0, this.historyKPI.belum.count - 1);
+                                    this.historyKPI.belum.total = Math.max(0, this.historyKPI.belum.total - (deletedItem.sisa || 0));
+                                }
+
+                                // Update stats
+                                this.stats.omzet = Math.max(0, this.stats.omzet - (deletedItem.total || 0));
+                                this.stats.totalHPP = Math.max(0, this.stats.totalHPP - (deletedItem.hpp || 0));
+                                const cashIn = (deletedItem.status === 'LUNAS') ? deletedItem.total : (deletedItem.dp || 0);
+                                const profit = cashIn - (deletedItem.hpp || 0);
+                                this.stats.grossProfit -= profit;
+                                this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+                            }
                         }
 
                         const res = await this.api(action, payload);
@@ -2866,9 +3398,35 @@
 
                         if (res && res.success) {
                             this.notify("Berhasil Dihapus", "success");
-                            if (this.deleteType === 'user') { this.fetchUsers(); }
-                            else { this.fetch(); }
+                            if (this.deleteType === 'user') {
+                                this.fetchUsers();
+                            } else {
+                                // Update localStorage cache
+                                SecureStorage.set('grow_data_cache', {
+                                    products: this.allProducts,
+                                    customers: this.customers,
+                                    expenseDescriptions: this.expenseDescriptions,
+                                    history: this.history,
+                                    expenses: this.expenses,
+                                    deposits: this.deposits,
+                                    stats: this.stats,
+                                    modalStats: this.modalStats,
+                                    historyKPI: this.historyKPI,
+                                    topProduct: this.topProduct
+                                });
+                            }
                         } else {
+                            // Rollback on failure
+                            if (deletedItem && deletedIndex !== -1) {
+                                if (this.deleteType === 'expense') {
+                                    this.expenses.splice(deletedIndex, 0, deletedItem);
+                                    if (oldStats) Object.assign(this.stats, oldStats);
+                                } else if (this.deleteType === 'transaction') {
+                                    this.history.splice(deletedIndex, 0, deletedItem);
+                                    if (oldKPI) Object.assign(this.historyKPI, oldKPI);
+                                    if (oldStats) Object.assign(this.stats, oldStats);
+                                }
+                            }
                             this.notify(res ? res.message : "Gagal menghapus", 'error');
                         }
                     },
@@ -2899,6 +3457,8 @@
                     },
 
                     async submitNewProd() {
+                        if (this.bgProcess) return; // Prevent double submit
+
                         if (!this.newProd.category?.trim()) {
                             return this.notify("Kategori wajib diisi", 'error');
                         }
@@ -2906,18 +3466,42 @@
                             return this.notify("Nama produk wajib diisi", 'error');
                         }
                         this.bgProcess = true;
+                        // Optimistic: Add product locally
+                        const newProduct = { category: this.newProd.category, name: this.newProd.name };
+                        this.allProducts.push(newProduct);
+                        if (!this.categories.includes(this.newProd.category)) {
+                            this.categories.push(this.newProd.category);
+                        }
+
                         const res = await this.api('addNewProduct', { category: this.newProd.category, name: this.newProd.name });
                         this.bgProcess = false;
                         if (res && res.success) {
                             this.isMasterOpen = false;
                             this.newProd = { category: '', name: '' };
                             this.notify("Produk Berhasil Ditambah");
-                            this.fetch();
+                            // Update localStorage cache
+                            SecureStorage.set('grow_data_cache', {
+                                products: this.allProducts,
+                                customers: this.customers,
+                                expenseDescriptions: this.expenseDescriptions,
+                                history: this.history,
+                                expenses: this.expenses,
+                                deposits: this.deposits,
+                                stats: this.stats,
+                                modalStats: this.modalStats,
+                                historyKPI: this.historyKPI,
+                                topProduct: this.topProduct
+                            });
                         } else {
+                            // Rollback: remove product
+                            this.allProducts = this.allProducts.filter(p => p.name !== newProduct.name || p.category !== newProduct.category);
+                            this.categories = [...new Set(this.allProducts.map(p => p.category))];
                             this.notify(res?.message || "Gagal menambah produk", 'error');
                         }
                     },
                     async submitSetor() {
+                        if (this.bgProcess) return; // Prevent double submit
+
                         if (!this.setorForm.amount || this.setorForm.amount <= 0) {
                             return this.notify("Nominal wajib diisi", 'error');
                         }
@@ -2934,14 +3518,33 @@
                             bank: this.setorForm.bank
                         });
 
+                        // Store deposit ID/snapshot for rollback
+                        const tempDeposit = this.deposits[0]; // Just added at index 0
+
                         const res = await this.api('saveDeposit', this.setorForm);
                         this.bgProcess = false;
                         if (res && res.success) {
                             this.isSetorOpen = false;
                             this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
                             this.notify("Setor Modal Berhasil");
-                            this.fetch();
+                            // Update localStorage cache
+                            SecureStorage.set('grow_data_cache', {
+                                products: this.allProducts,
+                                customers: this.customers,
+                                expenseDescriptions: this.expenseDescriptions,
+                                history: this.history,
+                                expenses: this.expenses,
+                                deposits: this.deposits,
+                                stats: this.stats,
+                                modalStats: this.modalStats,
+                                historyKPI: this.historyKPI,
+                                topProduct: this.topProduct
+                            });
                         } else {
+                            // Rollback optimistic update
+                            this.modalStats.modalGantung += amount;
+                            this.modalStats.totalDisetor -= amount;
+                            this.deposits.shift(); // Remove the first (just added) item
                             this.notify(res?.message || "Gagal setor modal", 'error');
                         }
                     },
@@ -2955,9 +3558,11 @@
                         for (let i = 0; i < queue.length; i++) {
                             const item = queue[i];
                             try {
-                                await this.api(item.action, item.payload);
-                                this.pendingQueue = this.pendingQueue.filter(q => q.timestamp !== item.timestamp);
-                                SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                                const res = await this.api(item.action, item.payload);
+                                if (res && res.success) {
+                                    this.pendingQueue = this.pendingQueue.filter(q => q.timestamp !== item.timestamp);
+                                    SecureStorage.set('grow_pending_queue', this.pendingQueue);
+                                }
                             } catch (e) { console.error('Failed to sync:', e); }
                         }
                         this.syncInProgress = false;
@@ -3047,7 +3652,7 @@
             (function () {
                 let startY = 0;
                 let currentY = 0;
-                const threshold = 120; // Jarak tarik untuk refresh
+                const threshold = 180; // Jarak tarik untuk refresh (increased to prevent accidental refresh)
                 const mainContent = document.querySelector('main');
 
                 function isAtTop() {

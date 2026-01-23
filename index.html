@@ -547,6 +547,7 @@
                             <div x-show="loadingData" class="h-6 w-20 skeleton rounded mt-1"></div>
                         </div>
 
+
                         <div @click="tab='expense'; vibrate()"
                             class="flex items-center gap-2 cursor-pointer opacity-90 hover:opacity-100 transition mt-1 bg-rose-50 rounded-lg p-1.5 w-fit">
                             <svg class="w-3 h-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -663,8 +664,10 @@
 
                 <div class="sticky top-0 z-20 pb-2 pt-1 bg-[#F8FAFC]">
                     <!-- Title -->
-                    <h3 class="font-extrabold text-sm text-slate-800 px-2 pt-2 mb-2 pb-2">
-                        RIWAYAT TRANSAKSI</h3>
+                    <h3 class="font-extrabold text-sm text-slate-800 px-2 pt-2 mb-2 pb-2 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-brand-500 rounded-full"></span>
+                        RIWAYAT TRANSAKSI
+                    </h3>
 
                     <!-- Search Bar -->
                     <div class="px-2 mb-2">
@@ -862,49 +865,13 @@
                                     <p class="text-[8px] text-rose-500 font-bold" x-show="t.sisa > 0"
                                         x-text="isSensitiveHidden ? 'Rp ****' : ('Kurang: ' + fmt(t.sisa))"></p>
                                 </div>
-                            </div>
-                            <div class="flex flex-wrap justify-center gap-2 border-t border-slate-50 pt-2 mt-2">
-                                <button @click.stop="editItem(t); vibrate()"
-                                    class="flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[9px] font-bold active:bg-blue-100 hover:bg-blue-100 transition"><svg
-                                        class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <!-- Chevron Icon -->
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                        </path>
-                                    </svg>Edit</button>
-                                <button @click.stop="printInvoice(t); vibrate()" :disabled="loadingPdf"
-                                    class="flex items-center px-3 py-1 bg-slate-50 text-slate-600 rounded-lg text-[9px] font-bold active:bg-slate-100 hover:bg-slate-100 transition disabled:opacity-50">
-                                    <svg x-show="!loadingPdf" class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2.4-9h6m-6 6h6m-6-10h6m-6 6h6m2-14H5a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 00-2-2V5a2 2 0 00-2-2z">
-                                        </path>
+                                            d="M9 5l7 7-7 7"></path>
                                     </svg>
-                                    <svg x-show="loadingPdf" class="w-3 h-3 mr-1 animate-spin" fill="none"
-                                        viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
-                                    <span x-text="loadingPdf ? 'Loading...' : 'Print'"></span>
-                                </button>
-                                <button @click.stop="printReceipt(t);vibrate()"
-                                    class="flex items-center px-2 py-1 bg-green-50 text-green-600 rounded-lg text-[9px] font-bold active:bg-green-100 hover:bg-green-100 transition"><svg
-                                        class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4v-4m0 0h9m-9 0h9m-9 0v4m-9-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                        </path>
-                                    </svg>Struk</button>
-                                <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                    <button @click.stop="requestDelete(t.id, t.isoDate); vibrate()"
-                                        class="flex items-center px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-[9px] font-bold active:bg-rose-100 hover:bg-rose-100 transition"><svg
-                                            class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>Hapus</button>
-                                </template>
+                                </div>
                             </div>
                         </div>
                     </template>
@@ -992,7 +959,8 @@
                                     class="w-full bg-white border-0 rounded-xl pl-8 pr-3 py-3 text-right text-xs font-bold outline-none focus:ring-2 focus:ring-slate-400 text-slate-500 shadow-sm"
                                     placeholder="Harga Modal"></div>
                             <button @click="addToCart(); vibrate()"
-                                class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl text-xs active:scale-95 transition shadow-lg shadow-slate-500/20">TAMBAH</button>
+                                class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl text-xs active:scale-95 transition shadow-lg shadow-slate-500/20 hover:bg-slate-800">TAMBAH
+                                KE KERANJANG</button>
                         </div>
 
                         <div x-show="cart.length > 0" class="space-y-2">
@@ -1054,53 +1022,106 @@
                     </div>
                     <div class="flex gap-3 mt-5">
                         <button type="button" @click="resetForm(); tab='list'; vibrate()"
-                            class="flex-1 bg-white border border-slate-200 text-slate-500 py-3 rounded-xl font-bold text-xs hover:bg-slate-50">Batal</button>
+                            class="flex-1 bg-white border border-slate-200 text-slate-500 py-3.5 rounded-2xl font-bold text-xs hover:bg-slate-50 active:scale-95 transition">BATAL</button>
                         <button type="button" @click="save" :disabled="bgProcess || cart.length === 0"
-                            class="flex-1 bg-brand-600 text-white font-bold py-3 rounded-xl text-xs shadow-lg active:scale-95 disabled:opacity-50">SIMPAN</button>
+                            class="flex-1 bg-gradient-to-r from-brand-600 to-blue-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-brand-500/30 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-xl transition-all">
+                            SIMPAN TRANSAKSI
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div x-show="tab === 'expense'" x-cloak class="space-y-5 max-w-md mx-auto fade-in">
-                <div class="bg-white rounded-[2.5rem] border border-slate-50 shadow-soft p-6">
+                <div
+                    class="bg-white rounded-[2.5rem] border border-slate-50 shadow-xl shadow-slate-200/50 p-6 relative overflow-hidden">
+                    <!-- Background Decor -->
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-rose-50/50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none">
+                    </div>
+
                     <h2
-                        class="text-sm font-bold text-slate-800 uppercase mb-4 tracking-wide text-center flex items-center justify-center gap-2">
-                        <span x-show="expForm.id" class="w-1.5 h-1.5 bg-rose-600 rounded-full"></span>
-                        <span x-text="expForm.id ? 'Edit Biaya' : 'Catat Biaya'"></span>
+                        class="text-xs font-bold text-slate-400 uppercase tracking-widest text-center mb-6 flex items-center justify-center gap-2">
+                        <span x-show="expForm.id" class="w-1.5 h-1.5 bg-rose-600 rounded-full animate-pulse"></span>
+                        <span x-text="expForm.id ? 'EDIT PENGELUARAN' : 'PENGELUARAN BARU'"></span>
                     </h2>
+
                     <form @submit.prevent="submitExpense">
-                        <div class="space-y-3"><select x-model="expForm.category"
-                                class="w-full bg-slate-50 border-0 rounded-2xl px-4 py-3 text-xs font-bold outline-none focus:ring-2 focus:ring-rose-500">
-                                <option value="" disabled>Pilih Kategori</option>
-                                <option>Operasional</option>
-                                <option>Bahan Baku</option>
-                                <option>Gaji</option>
-                                <option>Transportasi</option>
-                                <option>Lainnya</option>
-                            </select>
-                            <input type="text" x-model="expForm.desc" list="expenseDescList"
-                                class="w-full bg-slate-50 border-0 rounded-2xl px-4 py-3 text-xs font-bold outline-none focus:ring-2 focus:ring-rose-500"
-                                placeholder="Keterangan">
-                            <datalist id="expenseDescList">
-                                <template x-for="d in expenseDescriptions" :key="d">
-                                    <option :value="d"></option>
-                                </template>
-                            </datalist>
-                            <div class="relative"><span
-                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-[9px] font-bold text-rose-300">Rp</span><input
-                                    type="tel" :value="formatRupiah(expForm.amount)"
-                                    @input="expForm.amount = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
-                                    class="w-full bg-slate-50 border-0 rounded-2xl pl-8 pr-4 py-3 text-xs font-bold outline-none focus:ring-2 focus:ring-rose-500"
-                                    placeholder="Nominal"></div>
-                            <div class="flex gap-3 mt-5">
+                        <div class="space-y-5">
+                            <!-- Amount Input (Centerpiece) -->
+                            <div class="text-center relative py-2">
+                                <label
+                                    class="text-[10px] font-bold text-rose-300 uppercase tracking-wider mb-1 block">Nominal</label>
+                                <div class="relative inline-block w-full">
+                                    <span
+                                        class="absolute left-0 top-1/2 -translate-y-1/2 text-lg font-bold text-rose-300">Rp</span>
+                                    <input type="tel" :value="formatRupiah(expForm.amount)"
+                                        @input="expForm.amount = cleanRupiah($el.value); $el.value = formatRupiah($el.value)"
+                                        class="w-full bg-transparent border-0 border-b-2 border-slate-100 text-center text-3xl font-black text-rose-600 focus:border-rose-500 focus:ring-0 placeholder-slate-200 transition-all p-2"
+                                        placeholder="0">
+                                </div>
+                            </div>
+
+                            <!-- Inputs Grid -->
+                            <div class="space-y-4">
+                                <!-- Category -->
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <select x-model="expForm.category"
+                                        class="w-full bg-slate-50/50 border border-slate-100 rounded-2xl pl-11 pr-4 py-3.5 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition appearance-none">
+                                        <option value="" disabled>Pilih Kategori</option>
+                                        <option>Operasional</option>
+                                        <option>Bahan Baku</option>
+                                        <option>Gaji</option>
+                                        <option>Transportasi</option>
+                                        <option>Lainnya</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                        <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <input type="text" x-model="expForm.desc" list="expenseDescList"
+                                        class="w-full bg-slate-50/50 border border-slate-100 rounded-2xl pl-11 pr-4 py-3.5 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition"
+                                        placeholder="Tulis Keterangan...">
+                                    <datalist id="expenseDescList">
+                                        <template x-for="d in expenseDescriptions" :key="d">
+                                            <option :value="d"></option>
+                                        </template>
+                                    </datalist>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-3 pt-2">
                                 <button x-show="expForm.id" type="button" @click="resetExpForm(); vibrate()"
-                                    class="flex-1 bg-slate-100 text-slate-500 font-bold py-3.5 rounded-2xl text-xs active:scale-95 transition">BATAL</button>
+                                    class="flex-1 bg-white border border-slate-200 text-slate-500 font-bold py-3.5 rounded-2xl text-xs hover:bg-slate-50 active:scale-95 transition">BATAL</button>
                                 <button type="submit" :disabled="bgProcess"
-                                    class="flex-1 bg-rose-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg active:scale-95 flex justify-center gap-2">
+                                    class="flex-1 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-rose-500/30 active:scale-95 flex justify-center gap-2 hover:shadow-xl transition-all disabled:opacity-70">
                                     <span x-show="bgProcess"
                                         class="animate-spin w-3 h-3 border-2 border-white/30 border-t-white rounded-full"></span>
                                     <span
-                                        x-text="bgProcess ? 'MENYIMPAN...' : (expForm.id ? 'UPDATE' : 'SIMPAN')"></span>
+                                        x-text="bgProcess ? 'MENYIMPAN...' : (expForm.id ? 'UPDATE DATA' : 'SIMPAN PENGELUARAN')"></span>
                                 </button>
                             </div>
                         </div>
@@ -1191,6 +1212,12 @@
                     </div>
                 </div>
 
+                <!-- Expense History Header -->
+                <h3 class="font-extrabold text-sm text-slate-800 px-2 pt-2 mb-2 pb-2 flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-rose-500 rounded-full"></span>
+                    RIWAYAT PENGELUARAN
+                </h3>
+
                 <div class="space-y-3 pb-24">
                     <template x-for="ex in filteredExpenses" :key="ex.id">
                         <div @click="viewExpenseDetail(ex); vibrate()"
@@ -1203,26 +1230,18 @@
                                             class="text-[8px] font-bold bg-slate-100 text-slate-500 px-1.5 rounded"
                                             x-text="ex.cat"></span></div>
                                 </div>
-                                <p class="text-xs font-black text-rose-500"
-                                    x-text="isSensitiveHidden ? 'Rp *******' : fmt(ex.amount)"></p>
-                            </div>
-                            <div class="flex justify-end gap-2 border-t border-slate-50 pt-2 mt-2">
-                                <button @click.stop="editExpense(ex); vibrate()"
-                                    class="flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[9px] font-bold active:bg-blue-100 hover:bg-blue-100 transition"><svg
-                                        class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                        </path>
-                                    </svg>Edit</button>
-                                <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                    <button @click.stop="requestDeleteExpense(ex.id); vibrate()"
-                                        class="flex items-center px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-[9px] font-bold active:bg-rose-100 hover:bg-rose-100 transition"><svg
-                                            class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="text-right">
+                                    <p class="text-xs font-black text-rose-500"
+                                        x-text="isSensitiveHidden ? 'Rp *******' : fmt(ex.amount)"></p>
+                                    <!-- Chevron -->
+                                    <div class="mt-2 flex justify-end">
+                                        <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>Hapus</button>
-                                </template>
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </template>
@@ -1244,7 +1263,10 @@
             </div>
 
             <div x-show="tab === 'report'" x-cloak class="space-y-6 max-w-md mx-auto fade-in">
-                <h2 class="text-sm font-bold text-slate-800 uppercase mb-2 ml-2">Pusat Laporan</h2>
+                <h2 class="text-sm font-bold text-slate-800 uppercase mb-2 ml-2 flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-amber-500 rounded-full"></span>
+                    Pusat Laporan
+                </h2>
 
                 <!-- Date Picker -->
                 <div class="bg-white rounded-[2rem] p-5 shadow-soft border border-slate-50">
@@ -1405,14 +1427,28 @@
                     <h2 class="text-sm font-bold text-slate-800 uppercase ml-2 flex items-center gap-2">
                         <span class="w-1.5 h-4 bg-brand-500 rounded-full"></span> Kelola Tim
                     </h2>
-                    <button @click="openUserModal(); vibrate()"
-                        class="bg-brand-600 text-white px-4 py-2 rounded-xl text-[10px] font-bold shadow-lg shadow-brand-500/30 active:scale-95 transition flex items-center gap-1.5 hover:bg-brand-700">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-                            </path>
-                        </svg>
-                        Tambah
-                    </button>
+                    <div class="flex gap-2">
+                        <button @click="confirmFixDB(); vibrate()"
+                            class="bg-slate-100 text-slate-500 px-3 py-2 rounded-xl text-[10px] font-bold shadow-sm active:scale-95 transition flex items-center gap-1.5 hover:bg-slate-200"
+                            title="Perbaiki Database">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </button>
+                        <button @click="openUserModal(); vibrate()"
+                            class="bg-brand-600 text-white px-4 py-2 rounded-xl text-[10px] font-bold shadow-lg shadow-brand-500/30 active:scale-95 transition flex items-center gap-1.5 hover:bg-brand-700">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4">
+                                </path>
+                            </svg>
+                            Tambah
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Team List Area -->
@@ -1921,28 +1957,35 @@
                         </div>
 
                         <!-- Actions -->
-                        <div class="flex gap-3">
-                            <button @click="editExpense(selectedExpense); isExpenseDetailOpen = false; vibrate()"
-                                class="flex-1 py-3 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs hover:bg-blue-100 transition flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                    </path>
-                                </svg>
-                                Edit
-                            </button>
-                            <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
-                                <button
-                                    @click="requestDeleteExpense(selectedExpense.id); isExpenseDetailOpen = false; vibrate()"
-                                    class="flex-1 py-3 rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition flex items-center justify-center gap-2">
+                        <div class="pt-4 mt-2 border-t border-slate-50">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Aksi
+                                Cepat</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <!-- Edit (Blue) -->
+                                <button @click="editExpense(selectedExpense); isExpenseDetailOpen = false; vibrate()"
+                                    class="flex items-center justify-center gap-2 p-3.5 bg-blue-50 text-blue-600 rounded-2xl font-bold text-xs border border-blue-100 active:scale-95 transition hover:bg-blue-100 shadow-sm">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                         </path>
                                     </svg>
-                                    Hapus
+                                    Edit Data
                                 </button>
-                            </template>
+
+                                <!-- Delete (Red - Admin/Owner Only) -->
+                                <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
+                                    <button
+                                        @click="requestDeleteExpense(selectedExpense.id); isExpenseDetailOpen = false; vibrate()"
+                                        class="flex items-center justify-center gap-2 p-3.5 bg-rose-50 text-rose-600 rounded-2xl font-bold text-xs border border-rose-100 active:scale-95 transition hover:bg-rose-100 shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                        Hapus
+                                    </button>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -1968,6 +2011,68 @@
                 </div>
             </div>
         </div>
+
+        <!-- Payment Modal (NEW) -->
+        <div x-show="isPaymentModalOpen"
+            class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
+            <div class="bg-white rounded-[2rem] w-full max-w-md p-6 shadow-2xl space-y-4">
+                <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+                    <span class="w-1.5 h-6 bg-cyan-600 rounded-full"></span> Terima Pembayaran
+                </h3>
+
+                <div class="bg-cyan-50 rounded-xl p-4">
+                    <p class="text-[9px] font-bold text-cyan-600 uppercase tracking-wide mb-1">Sisa yang Harus Dibayar
+                    </p>
+                    <p class="text-2xl font-black text-cyan-600" x-text="fmt(paymentForm.currentSisa)"></p>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Nominal Dibayar</label>
+                    <input type="number" x-model="paymentForm.nominal"
+                        class="w-full bg-slate-50 border-0 rounded-xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-cyan-500 mt-1"
+                        placeholder="0">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Keterangan
+                        (Opsional)</label>
+                    <textarea x-model="paymentForm.keterangan"
+                        class="w-full bg-slate-50 border-0 rounded-xl p-4 text-xs outline-none focus:ring-2 focus:ring-cyan-500 mt-1 resize-none"
+                        rows="2" placeholder="Catatan pembayaran..."></textarea>
+                </div>
+
+                <!-- Payment History -->
+                <div x-show="paymentHistory.length > 0" class="border-t border-slate-100 pt-4">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Riwayat Pembayaran</p>
+                    <div class="space-y-2 max-h-32 overflow-y-auto">
+                        <template x-for="p in paymentHistory" :key="p.id">
+                            <div class="flex justify-between items-center text-xs bg-slate-50 rounded-lg p-2">
+                                <div>
+                                    <p class="font-bold text-slate-700" x-text="p.date"></p>
+                                    <p class="text-[10px] text-slate-400" x-text="p.user"></p>
+                                </div>
+                                <p class="font-bold text-cyan-600" x-text="fmt(p.nominal)"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button @click="isPaymentModalOpen=false"
+                        class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500">Batal</button>
+                    <button @click="submitPayment" :disabled="bgProcess"
+                        class="flex-1 bg-cyan-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        Terima Bayar
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div x-show="isMasterOpen"
             class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
             <div class="bg-white rounded-[2rem] w-full max-w-sm p-6 shadow-2xl space-y-4">
@@ -2125,6 +2230,51 @@
             </div>
         </div>
 
+        <!-- FIX DB CONFIRMATION MODAL -->
+        <div x-show="isFixDBOpen"
+            class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
+            <div class="bg-white rounded-[2rem] w-full max-w-xs p-6 shadow-2xl text-center fade-in text-center">
+                <div
+                    class="mx-auto w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mb-4 text-amber-500">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-extrabold text-slate-800 text-lg">Perbaiki Database?</h3>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">Sistem akan memindai dan memperbaiki struktur
+                    kolom yang tidak lengkap (termasuk kolom Kasir).</p>
+                <div class="flex gap-3 mt-6">
+                    <button @click="isFixDBOpen=false"
+                        class="flex-1 bg-slate-100 py-3.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200 transition">Batal</button>
+                    <button @click="executeFixDB"
+                        class="flex-1 bg-brand-600 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg hover:bg-brand-700 transition">Perbaiki</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FIX DB RESULT MODAL -->
+        <div x-show="isFixResultOpen"
+            class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6" x-cloak>
+            <div class="bg-white rounded-[2rem] w-full max-w-sm p-6 shadow-2xl relative">
+                <div
+                    class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mb-4 text-emerald-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="font-extrabold text-slate-800 text-lg text-center mb-2">Perbaikan Selesai!</h3>
+                <div
+                    class="bg-slate-50 rounded-xl p-4 max-h-40 overflow-y-auto custom-scrollbar border border-slate-100 mb-4">
+                    <p class="text-[10px] font-mono text-slate-600 whitespace-pre-wrap" x-text="fixLogs"></p>
+                </div>
+                <button @click="isFixResultOpen=false; fetch(true)"
+                    class="w-full bg-slate-800 text-white py-3.5 rounded-xl text-xs font-bold shadow-lg">Tutup &
+                    Refresh</button>
+            </div>
+        </div>
+
         <div x-show="isDetailOpen"
             class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
             x-cloak>
@@ -2235,6 +2385,68 @@
                                 class="text-red-400"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(selectedDetail?.sisa)"></span></div>
                     </div>
+
+                    <!-- ACTIONS GRID -->
+                    <div class="pt-4 mt-2 border-t border-slate-50">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Aksi Cepat
+                        </p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- Print Struk (Primary) -->
+                            <button @click="printReceipt(selectedDetail); vibrate()"
+                                class="flex items-center justify-center gap-2 p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl font-bold text-xs border border-emerald-100 active:scale-95 transition hover:bg-emerald-100 shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4v-4m0 0h9m-9 0h9m-9 0v4m-9-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                                Cetak Struk
+                            </button>
+
+                            <!-- Edit (Blue) -->
+                            <button @click="editItem(selectedDetail); isDetailOpen=false; vibrate()"
+                                class="flex items-center justify-center gap-2 p-3.5 bg-blue-50 text-blue-600 rounded-2xl font-bold text-xs border border-blue-100 active:scale-95 transition hover:bg-blue-100 shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                Edit Data
+                            </button>
+
+                            <!-- Print Invoice (Secondary) -->
+                            <button @click="printInvoice(selectedDetail); vibrate()" :disabled="loadingPdf"
+                                class="flex items-center justify-center gap-2 p-3.5 bg-slate-50 text-slate-600 rounded-2xl font-bold text-xs border border-slate-100 active:scale-95 transition hover:bg-slate-100 disabled:opacity-50 shadow-sm">
+                                <svg x-show="!loadingPdf" class="w-4 h-4" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                                <svg x-show="loadingPdf" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <span x-text="loadingPdf ? 'Loading...' : 'Invoice'"></span>
+                            </button>
+
+                            <!-- Delete (Red - Admin/Owner Only) -->
+                            <template x-if="currentUser.role === 'Admin' || currentUser.role === 'Owner'">
+                                <button
+                                    @click="requestDelete(selectedDetail?.id, selectedDetail?.isoDate); isDetailOpen=false; vibrate()"
+                                    class="flex items-center justify-center gap-2 p-3.5 bg-rose-50 text-rose-600 rounded-2xl font-bold text-xs border border-rose-100 active:scale-95 transition hover:bg-rose-100 shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                        </path>
+                                    </svg>
+                                    Hapus
+                                </button>
+                            </template>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2244,7 +2456,7 @@
         <script>
             // === KONFIGURASI API ===
             // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA YANG BARU
-            const API_URL = "https://script.google.com/macros/s/AKfycby0ZN79PRY7Q8rFw8ShT5n9K2nt7VZ9ccwK6YriB2ciYsPfd23Hl9ZY81FEEk1PFGLY/exec";
+            const API_URL = "https://script.google.com/macros/s/AKfycbxBJj2R7fcgMq5j7ETTfALIZhgQ8JCBs1QF-hBIwMrdxQqlCJYHpbvplS8Ih4rp-zL5/exec";
             const API_TOKEN = "GROW_SECURE_2026";
             const ENCRYPTION_KEY = "GROW_2026_SECRET_KEY_XYZ"; // Change this in production!
 
@@ -2285,7 +2497,10 @@
                     isLogoutOpen: false, isDetailOpen: false, loadingDetail: false, selectedDetail: null, detailItems: [],
 
                     tab: 'home', initialLoading: true, bgProcess: false, loading: false, loadingPdf: false, notifications: [], isMasterOpen: false, isSetorOpen: false, isDeleteOpen: false, deleteId: null, deleteDate: null, isOffline: false, loadingData: true,
+                    isFixDBOpen: false, fixLogs: null, isFixResultOpen: false,
                     isSensitiveHidden: localStorage.getItem('grow_privacy_mode') === 'true',
+                    // Payment Tracking State (NEW)
+                    isPaymentModalOpen: false, paymentForm: { transactionId: '', transactionDate: '', nominal: '', keterangan: '', currentSisa: 0 }, paymentHistory: [], loadingPayment: false,
                     allProducts: [], categories: [], history: [], expenses: [], deposits: [],
                     customers: [], expenseDescriptions: [],
                     stats: { omzet: 0, grossProfit: 0, netProfit: 0, totalExpense: 0, totalHPP: 0 },
@@ -2439,6 +2654,41 @@
                         }
                         this.isUserModalOpen = true;
                     },
+
+                    // === DATABASE MAINTENANCE ===
+                    confirmFixDB() {
+                        this.isFixDBOpen = true;
+                        this.vibrate();
+                    },
+
+                    executeFixDB() {
+                        this.isFixDBOpen = false;
+                        this.bgProcess = true;
+                        this.notify("Memulai perbaikan database...", "info");
+
+                        fetch(`${API_URL}?action=fixDatabaseSchema`, {
+                            method: 'POST',
+                            redirect: "follow",
+                            headers: { "Content-Type": "text/plain;charset=utf-8" },
+                            body: JSON.stringify({ token: API_TOKEN, action: "fixDatabaseSchema" })
+                        })
+                            .then(r => r.json())
+                            .then(data => {
+                                this.bgProcess = false;
+                                if (data.success) {
+                                    this.fixLogs = "Log Perbaikan:\n" + data.logs.join("\n");
+                                    this.isFixResultOpen = true; // Show Result Modal
+                                    this.notify("✅ Database Berhasil Diperbaiki!", "success");
+                                } else {
+                                    this.notify("Gagal: " + data.message, "error");
+                                }
+                            })
+                            .catch(e => {
+                                this.bgProcess = false;
+                                this.notify("Error koneksi: " + e.message, "error");
+                            });
+                    },
+
                     editUser(u) { this.openUserModal(u); },
                     async saveUserSubmit() {
                         // Validation
@@ -3278,17 +3528,59 @@
                         this.detailItems = [];
                         this.isDetailOpen = true;
 
-                        // OPTIMIZATION: Use pre-loaded items if available (Instant View)
+                        // RATE LIMIT: Prevent multiple fetches for same ID in short time
+                        const now = Date.now();
+                        if (this._lastFetch && this._lastFetch.id === t.id && (now - this._lastFetch.time) < 2000) {
+                            if (t.items && t.items.length > 0) {
+                                this.detailItems = JSON.parse(JSON.stringify(t.items));
+                                this.loadingDetail = false;
+                                return;
+                            }
+                        }
+
+                        // STRATEGY: Render Instant, then Background Fetch if needed
+                        let needsFetch = true;
+
                         if (t.items && t.items.length > 0) {
+                            // 1. Render Instantly
                             this.detailItems = JSON.parse(JSON.stringify(t.items));
                             this.loadingDetail = false;
                             this.vibrate();
-                            return;
+
+                            // 2. Check completeness. If we have cashier/user, we are good!
+                            if (t.cashier || t.user) {
+                                needsFetch = false;
+                            } else {
+                                // 3. If missing cashier, we still show the modal (instant), 
+                                // but we CONTINUE to fetch in background to fill the missing name.
+                                // We don't set loadingDetail=true here to avoid spinner flickering on already visible content.
+                            }
+                        } else {
+                            this.loadingDetail = true;
                         }
 
-                        this.loadingDetail = true;
+                        if (!needsFetch) return;
+
+                        // FETCH DATA (Foreground or Background)
+                        this._lastFetch = { id: t.id, time: now };
                         const res = await this.api('getTransactionDetail', { id: t.id, date: t.isoDate });
-                        if (res && res.success) { this.detailItems = res.items; } else { this.notify("Gagal memuat detail", 'error'); }
+
+                        if (res && res.success) {
+                            // Update Items (in case they changed)
+                            this.detailItems = res.items;
+
+                            // SELF-HEALING: Patch Cashier Name
+                            if (res.cashier) {
+                                this.selectedDetail.cashier = res.cashier;
+                                const listIdx = this.history.findIndex(h => h.id === t.id);
+                                if (listIdx !== -1) {
+                                    this.history[listIdx].cashier = res.cashier;
+                                    this.history[listIdx].user = res.cashier; // patching both for safety
+                                }
+                            }
+                        } else {
+                            if (this.loadingDetail) this.notify("Gagal memuat detail", 'error');
+                        }
                         this.loadingDetail = false;
                     },
 
@@ -3313,6 +3605,88 @@
                             this.cart = res.items;
                             this.form.originalDate = res.transactionDate;
                         } else { this.notify("Gagal memuat: " + (res ? res.message : "Error"), "error"); }
+                    },
+
+                    // ===== PAYMENT TRACKING FUNCTIONS (NEW) =====
+                    async openPaymentModal(transaction) {
+                        this.paymentForm.transactionId = transaction.id;
+                        this.paymentForm.transactionDate = transaction.isoDate;
+                        this.paymentForm.currentSisa = transaction.sisa || 0;
+                        this.paymentForm.nominal = '';
+                        this.paymentForm.keterangan = '';
+                        await this.loadPaymentHistory(transaction.id);
+                        this.isPaymentModalOpen = true;
+                        this.vibrate();
+                    },
+
+                    async loadPaymentHistory(transactionId) {
+                        this.loadingPayment = true;
+                        const res = await this.api('getPaymentHistory', { transactionId: transactionId });
+                        this.loadingPayment = false;
+                        if (res && res.success) {
+                            this.paymentHistory = res.payments || [];
+                        } else {
+                            this.paymentHistory = [];
+                        }
+                    },
+
+                    async submitPayment() {
+                        if (this.bgProcess) return;
+                        const nominal = parseFloat(this.paymentForm.nominal);
+                        if (!nominal || nominal <= 0) return this.notify("Nominal harus diisi", 'error');
+                        if (nominal > this.paymentForm.currentSisa) {
+                            return this.notify(`Pembayaran (Rp ${nominal.toLocaleString('id-ID')}) melebihi Sisa (Rp ${this.paymentForm.currentSisa.toLocaleString('id-ID')})`, 'error');
+                        }
+
+                        this.bgProcess = true;
+                        const res = await this.api('addPayment', {
+                            transactionId: this.paymentForm.transactionId,
+                            transactionDate: this.paymentForm.transactionDate,
+                            nominal: nominal,
+                            keterangan: this.paymentForm.keterangan,
+                            username: this.currentUser?.name || this.currentUser?.username,
+                            role: this.currentUser?.role
+                        });
+                        this.bgProcess = false;
+
+                        if (res && res.success) {
+                            this.notify(res.message || "Pembayaran berhasil dicatat", 'success');
+                            this.isPaymentModalOpen = false;
+
+                            // Update transaction in history list
+                            const idx = this.history.findIndex(h => h.id === this.paymentForm.transactionId);
+                            if (idx !== -1) {
+                                this.history[idx].dp = res.newDP;
+                                this.history[idx].sisa = res.newSisa;
+                                this.history[idx].status = res.status;
+                            }
+
+                            // Update selectedDetail if open
+                            if (this.selectedDetail && this.selectedDetail.id === this.paymentForm.transactionId) {
+                                this.selectedDetail.dp = res.newDP;
+                                this.selectedDetail.sisa = res.newSisa;
+                                this.selectedDetail.status = res.status;
+                            }
+
+                            // Reload payment history
+                            await this.loadPaymentHistory(this.paymentForm.transactionId);
+
+                            // Update cache
+                            SecureStorage.set('grow_data_cache', {
+                                products: this.allProducts,
+                                customers: this.customers,
+                                expenseDescriptions: this.expenseDescriptions,
+                                history: this.history,
+                                expenses: this.expenses,
+                                deposits: this.deposits,
+                                stats: this.stats,
+                                modalStats: this.modalStats,
+                                historyKPI: this.historyKPI,
+                                topProduct: this.topProduct
+                            });
+                        } else {
+                            this.notify(res?.message || "Gagal mencatat pembayaran", 'error');
+                        }
                     },
 
                     requestDelete(id, isoDate) { this.deleteId = id; this.deleteDate = isoDate || null; this.deleteType = 'transaction'; this.isDeleteOpen = true; },

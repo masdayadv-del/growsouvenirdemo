@@ -3813,6 +3813,7 @@
                         let deletedIndex = -1;
                         let oldKPI = null;
                         let oldStats = null;
+                        let oldModalStats = null;
 
                         if (this.deleteType === 'expense') {
                             action = 'deleteExpense';
@@ -3847,6 +3848,7 @@
                                 deletedItem = { ...this.history[deletedIndex] };
                                 oldKPI = JSON.parse(JSON.stringify(this.historyKPI));
                                 oldStats = { ...this.stats };
+                                oldModalStats = { ...this.modalStats }; // Backup Modal Stats
 
                                 // Remove from history
                                 this.history.splice(deletedIndex, 1);
@@ -3870,6 +3872,13 @@
                                 const profit = cashIn - (deletedItem.hpp || 0);
                                 this.stats.grossProfit -= profit;
                                 this.stats.netProfit = this.stats.grossProfit - this.stats.totalExpense;
+
+                                // FIX: Update Modal Stats (Saldo Laci) Optimistically
+                                const recoveredCapital = Math.min(cashIn, deletedItem.hpp || 0);
+                                if (this.modalStats) {
+                                    this.modalStats.modalGantung = Math.max(0, (this.modalStats.modalGantung || 0) - recoveredCapital);
+                                    this.modalStats.totalHPP = Math.max(0, (this.modalStats.totalHPP || 0) - (deletedItem.hpp || 0));
+                                }
                             }
                         }
 
@@ -3878,6 +3887,7 @@
 
                         if (res && res.success) {
                             this.notify("Berhasil Dihapus", "success");
+                            this.fetch(true); // Ensure clean state
                             if (this.deleteType === 'user') {
                                 this.fetchUsers();
                             } else {
@@ -3905,6 +3915,7 @@
                                     this.history.splice(deletedIndex, 0, deletedItem);
                                     if (oldKPI) Object.assign(this.historyKPI, oldKPI);
                                     if (oldStats) Object.assign(this.stats, oldStats);
+                                    if (oldModalStats) Object.assign(this.modalStats, oldModalStats);
                                 }
                             }
                             this.notify(res ? res.message : "Gagal menghapus", 'error');

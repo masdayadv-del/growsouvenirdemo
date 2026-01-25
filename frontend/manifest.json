@@ -1,0 +1,28 @@
+{
+  "name": "Grow Souvenir System",
+  "short_name": "Grow App",
+  "description": "Sistem manajemen transaksi dan inventori untuk Grow Souvenir",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#F8FAFC",
+  "orientation": "portrait",
+  "lang": "id",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

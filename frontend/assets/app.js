@@ -20,6 +20,45 @@ function app() {
         filterDate: '', isService: false, selectedCategory: "", filterStatus: '', productSearch: '', showProductList: false,
         searchQuery: '', filterStartDate: '', filterEndDate: '', quickFilter: '',
 
+        // PULL TO REFRESH STATE
+        pulling: false, pullStartY: 0, pullHeight: 0,
+
+        pullStart(e) {
+            const mainEl = this.$el.querySelector('main');
+            // Only enable pull if at the very top
+            if (mainEl.scrollTop <= 0) {
+                this.pulling = true;
+                this.pullStartY = e.touches[0].screenY;
+            }
+        },
+        pullMove(e) {
+            if (!this.pulling) return;
+            const y = e.touches[0].screenY;
+            const diff = y - this.pullStartY;
+
+            if (diff > 0) {
+                // Resistance effect
+                this.pullHeight = Math.min(diff * 0.4, 120);
+                // Prevent default scrolling only if pulling down
+                if (diff > 5 && e.cancelable) e.preventDefault();
+            } else {
+                this.pullHeight = 0;
+            }
+        },
+        async pullEnd() {
+            if (!this.pulling) return;
+            this.pulling = false;
+
+            if (this.pullHeight > 60) {
+                // Trigger Refresh
+                this.pullHeight = 60; // Snap to loading position
+                this.vibrate();
+                await this.fetch(true);
+            }
+
+            this.pullHeight = 0; // Reset
+        },
+
         // === OFFLINE QUEUE SYSTEM ===
         pendingQueue: SecureStorage.get('grow_pending_queue') || [],
         isOnline: navigator.onLine,

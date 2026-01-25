@@ -21,7 +21,7 @@ tailwind.config = {
 
 // === GLOBAL CONSTANTS ===
 // IMPORTANT: This URL MUST be the "Web App URL" from your Google Apps Script Deployment
-const API_URL = "https://script.google.com/macros/s/AKfycbyiP9mAiXRZBZ5Hd7JRUmHSKO_XEwwyFfeW3QaA8b0wFwpGPPUaV2WCOsqFN7SSWmt1/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbw6PbD-s3wnVIob71eTqCPrMgLgOYJL93mLPqN9H6R_5RhaCvxeel46JUDzh7jwDPgP/exec";
 const ENCRYPTION_KEY = "GROW_2026_SECRET_KEY_XYZ"; // Change this in production!
 
 // === ENCRYPTION HELPERS ===

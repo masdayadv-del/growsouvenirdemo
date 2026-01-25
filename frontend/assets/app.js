@@ -67,6 +67,13 @@ function app() {
         init() {
             setInterval(() => this.updateTime(), 1000); this.updateTime();
 
+            // === POLLING FOR LOGS (LIVE) ===
+            setInterval(() => {
+                if (this.tab === 'monitor' && !this.loadingLogs) {
+                    this.fetchLogs(true); // Silent fetch
+                }
+            }, 30000); // Poll every 30s
+
             // === CONNECTION MONITORING ===
             window.addEventListener('online', () => {
                 this.isOnline = true;
@@ -262,15 +269,15 @@ function app() {
                 this.bgProcess = false;
             }
         },
-        async fetchLogs() {
-            this.loadingLogs = true;
+        async fetchLogs(silent = false) {
+            if (!silent) this.loadingLogs = true;
             try {
                 // Fix: Use generic api wrapper instead of fetch
                 const res = await this.api('getLogs');
                 if (res && res.success) {
                     this.logs = res.logs;
                 }
-            } catch (e) { console.error(e); } finally { this.loadingLogs = false; }
+            } catch (e) { console.error(e); } finally { if (!silent) this.loadingLogs = false; }
         },
         async triggerBackup() {
             this.bgProcess = true;
@@ -1118,6 +1125,9 @@ function app() {
             this.form.originalDate = t.isoDate;
             // Capture original timestamp for conflict detection
             this.form.originalTimestamp = t.timestamp;
+
+            // Populate DP for display (will be disabled in UI)
+            this.form.dp = t.dp || 0;
 
             // Restore Cart
             // Ensure detail items are loaded

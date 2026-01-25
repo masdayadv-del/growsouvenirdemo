@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Google Apps Script (backend - jangan di-commit!)
+Code.gs
+
+# Temporary
+*.tmp
+*.log
+
+# Images (ignore semua kecuali icons)
+*.jpg
+
+# Ignore all PNG EXCEPT icons
+*.png
+!icon-*.png

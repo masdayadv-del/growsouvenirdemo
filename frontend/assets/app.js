@@ -272,6 +272,30 @@ function app() {
                 }
             } catch (e) { console.error(e); } finally { this.loadingLogs = false; }
         },
+        async triggerBackup() {
+            this.bgProcess = true;
+            try {
+                const res = await this.api('triggerManualBackup');
+                if (res && res.success) {
+                    this.notify(res.message || "Backup Berhasil!", 'success');
+                } else {
+                    this.notify("Gagal Backup: " + (res?.message || 'Error'), 'error');
+                }
+            } catch (e) { this.notify("Error: " + e.message, 'error'); }
+            finally { this.bgProcess = false; }
+        },
+        async enableAutoBackup() {
+            this.bgProcess = true;
+            try {
+                const res = await this.api('enableAutoBackup');
+                if (res && res.success) {
+                    this.notify(res.message, 'success');
+                } else {
+                    this.notify("Gagal: " + (res?.message || 'Error'), 'error');
+                }
+            } catch (e) { this.notify("Error: " + e.message, 'error'); }
+            finally { this.bgProcess = false; }
+        },
         handlePhotoUpload(e) {
             const file = e.target.files[0];
             if (!file) return;

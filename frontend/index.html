@@ -434,9 +434,10 @@
             </div>
         </div>
 
-        <!-- Main Content (Pull to Refresh Removed) -->
+        <!-- Main Content (Pull to Refresh triggers Linebar) -->
         <main class="flex-1 overflow-y-auto no-scrollbar p-5 pb-36 relative"
-            style="overscroll-behavior-y: contain; padding-bottom: calc(9rem + env(safe-area-inset-bottom, 0px));">
+            style="overscroll-behavior-y: contain; padding-bottom: calc(9rem + env(safe-area-inset-bottom, 0px));"
+            @touchstart="pullStart" @touchend="pullEnd">
 
 
 

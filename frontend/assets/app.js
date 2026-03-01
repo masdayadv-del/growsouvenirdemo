@@ -25,7 +25,35 @@
         _cachedHistoryForTransactions: null,
         _userTransactionsCache: null,
 
-        // PULL TO REFRESH REMOVED
+        // === PULL TO REFRESH (TOP LINEBAR TRIGGER) ===
+        pulling: false,
+        pullStartY: 0,
+        pullStart(e) {
+            const mainEl = e.currentTarget;
+            if (mainEl.scrollTop <= 0) {
+                this.pulling = true;
+                this.pullStartY = e.touches[0].screenY;
+            }
+        },
+        pullMove(e) {
+            if (!this.pulling) return;
+            const y = e.touches[0].screenY;
+            const diff = y - this.pullStartY;
+            if (diff > 5 && e.cancelable) e.preventDefault(); // Prevent default browser reload
+        },
+        async pullEnd(e) {
+            if (!this.pulling) return;
+            this.pulling = false;
+            const y = e.changedTouches[0].screenY;
+            const diff = y - this.pullStartY;
+
+            // If pulled down enough (e.g. 60px)
+            if (diff > 60) {
+                this.vibrate();
+                await this.fetch(true);
+            }
+        },
+
         // === OFFLINE QUEUE SYSTEM ===
         pendingQueue: (() => { const q = SecureStorage.get('grow_pending_queue'); return Array.isArray(q) ? q : []; })(),
         isOnline: navigator.onLine,
@@ -79,7 +107,13 @@
                 });
             });
 
-
+            // Register non-passive touchmove for pull-to-refresh (allows preventDefault)
+            this.$nextTick(() => {
+                const mainEl = document.querySelector('main');
+                if (mainEl) {
+                    mainEl.addEventListener('touchmove', (e) => this.pullMove(e), { passive: false });
+                }
+            });
 
             // Timer runs for app lifetime (SPA design, no cleanup needed)
             setInterval(() => this.updateTime(), 1000); this.updateTime();

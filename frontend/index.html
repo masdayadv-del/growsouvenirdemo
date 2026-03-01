@@ -498,8 +498,6 @@
                             </div>
                             <div class="flex justify-between items-baseline">
                                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">Profit Bersih</p>
-                                <p x-show="stats.omzet > 0" class="text-[8px] font-bold text-emerald-500"
-                                    x-text="'Margin: ' + Math.round((stats.netProfit / stats.omzet) * 100) + '%'"></p>
                             </div>
                             <p class="text-lg font-black text-emerald-600 leading-tight"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.netProfit)"></p>
@@ -518,7 +516,7 @@
                             <!-- Margin % -->
                             <div x-show="stats.omzet > 0" class="ml-2 pl-2 border-l border-rose-200">
                                 <p class="text-[9px] font-bold text-slate-400"
-                                    x-text="'Gross: ' + Math.round((stats.grossProfit / stats.omzet) * 100) + '%'"></p>
+                                    x-text="'Margin: ' + Math.round((stats.netProfit / stats.omzet) * 100) + '%'"></p>
                             </div>
 
 

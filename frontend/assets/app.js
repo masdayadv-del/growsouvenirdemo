@@ -15,7 +15,8 @@
         modalStats: { modalGantung: 0, totalHPP: 0, totalDisetor: 0 },
         historyKPI: { all: { count: 0, total: 0 }, lunas: { count: 0, total: 0 }, belum: { count: 0, total: 0 } },
         filterDate: '', isService: false, selectedCategory: "", filterStatus: '', productSearch: '', showProductList: false,
-        searchQuery: '', filterStartDate: '', filterEndDate: '', quickFilter: '',
+        searchQuery: '', filterStartDate: '', filterEndDate: '', quickFilter: 'month',
+        historyLimit: 30, expenseLimit: 50,
 
         // Performance: Cache for memoized computed properties
         _cachedHistory: null,
@@ -216,8 +217,7 @@
             this.fetch(true).then(() => {
                 if (interval) clearInterval(interval);
                 this.updateTime();
-                if (this.tab === 'expense') this.setExpenseQuickFilter('month');
-                // Always initialize expense filter for correct KPI on first load
+                this.setQuickFilter('month');
                 this.setExpenseQuickFilter('month');
             });
         },
@@ -631,12 +631,40 @@
                 return matchSearch && matchDate && matchStatus;
             });
         },
+        get displayedHistory() {
+            return this.filteredHistory.slice(0, this.historyLimit);
+        },
+        get filteredHistoryKPI() {
+            const filtered = this.filteredHistory;
+            const kpi = {
+                all: { count: filtered.length, total: 0 },
+                lunas: { count: 0, total: 0 },
+                belum: { count: 0, total: 0 }
+            };
+            filtered.forEach(t => {
+                kpi.all.total += t.total || 0;
+                if (t.status === 'LUNAS') {
+                    kpi.lunas.count++;
+                    kpi.lunas.total += t.total || 0;
+                } else {
+                    kpi.belum.count++;
+                    kpi.belum.total += t.sisa || 0;
+                }
+            });
+            return kpi;
+        },
 
         setQuickFilter(type) {
             this.quickFilter = type;
             this.showServerResults = false; // Reset server search on filter change
+            this.historyLimit = 30; // Reset pagination
             const today = new Date();
-            const formatDate = (d) => d.toISOString().split('T')[0];
+            const formatDate = (d) => {
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            };
 
             if (type === 'today') {
                 this.filterStartDate = formatDate(today);
@@ -655,18 +683,19 @@
                 this.filterEndDate = '';
             } else if (type === 'custom') {
                 // Don't set dates, let user choose
-            } else {
-                // Clear filter
-                this.filterStartDate = '';
-                this.filterEndDate = '';
-                this.quickFilter = '';
             }
         },
 
         setExpenseQuickFilter(type) {
             this.expQuickFilter = type;
+            this.expenseLimit = 50; // Reset pagination
             const today = new Date();
-            const formatDate = (d) => d.toISOString().split('T')[0];
+            const formatDate = (d) => {
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            };
 
             if (type === 'today') {
                 this.expFilterStart = formatDate(today);
@@ -714,6 +743,7 @@
             const groups = {};
             const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
+            let itemsCount = 0;
             this.filteredExpenses.forEach(ex => {
                 if (!ex.isoDate) return;
                 const date = new Date(ex.isoDate);
@@ -731,7 +761,10 @@
                         sortKey: date.getFullYear() * 100 + date.getMonth()
                     };
                 }
-                groups[key].items.push(ex);
+                if (itemsCount < this.expenseLimit) {
+                    groups[key].items.push(ex);
+                    itemsCount++;
+                }
                 groups[key].total += ex.amount;
             });
 
@@ -739,12 +772,7 @@
             return Object.values(groups).sort((a, b) => b.sortKey - a.sortKey);
         },
         get filteredExpenseTotal() {
-            // Logic: Jika user sedang filter tanggal, hitung total dari yang tampil (filtered).
-            // Jika tidak (default view), tampilkan "Total Keluar Bulan Ini" dari server (stats.totalExpense) agar sesuai UX sebelumnya.
-            if (this.expFilterStart || this.expFilterEnd) {
-                return this.filteredExpenses.reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0);
-            }
-            return this.stats.totalExpense;
+            return this.filteredExpenses.reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0);
         },
         get expenseKPIs() {
             const filtered = this.filteredExpenses;
@@ -1094,6 +1122,8 @@
                         topProduct: this.topProduct
                     });
                     this.notify("Transaksi berhasil disimpan", 'success');
+                    // Re-sync stats dari server agar Profit Bersih dll up-to-date
+                    setTimeout(() => this.fetch(), 500);
                 } else {
                     // ROLLBACK optimistic update
                     throw new Error(res ? res.message : "Unknown Error");
@@ -1265,19 +1295,8 @@
                 const res = await this.api('deleteTransaction', { id: this.deleteId, date: this.deleteDate });
                 if (res && res.success) {
                     this.notify("Data dihapus permanen", 'success');
-                    // Update cache
-                    SecureStorage.set('grow_data_cache', {
-                        products: this.allProducts,
-                        customers: this.customers,
-                        expenseDescriptions: this.expenseDescriptions,
-                        history: this.history,
-                        expenses: this.expenses,
-                        deposits: this.deposits,
-                        stats: this.stats,
-                        modalStats: this.modalStats,
-                        historyKPI: this.historyKPI,
-                        topProduct: this.topProduct
-                    });
+                    // Re-sync stats dari server agar Profit Bersih dll up-to-date
+                    this.fetch();
                 } else {
                     // Rollback
                     if (backupItem) {

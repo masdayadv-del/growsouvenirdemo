@@ -1680,8 +1680,8 @@
                 ${this.getDocHeaderHTML('LAPORAN TAHUNAN', 'Tahun ' + data.year, 'PERIODE')}
                 <div class="summary-grid">
                     <div class="card" style="background:#eff6ff"><div class="card-lbl">Omzet</div><div class="card-val text-blue">Rp ${f(sum.omzet)}</div></div>
-                    <div class="card" style="background:#fef2f2"><div class="card-lbl">Modal</div><div class="card-val text-red">(${f(sum.modal)})</div></div>
-                    <div class="card" style="background:#fff7ed"><div class="card-lbl">Biaya</div><div class="card-val text-orange">(${f(sum.expense)})</div></div>
+                    <div class="card" style="background:#fef2f2"><div class="card-lbl">Modal</div><div class="card-val text-red">Rp ${f(sum.modal)}</div></div>
+                    <div class="card" style="background:#fff7ed"><div class="card-lbl">Biaya</div><div class="card-val text-orange">Rp ${f(sum.expense)}</div></div>
                     <div class="card" style="background:#f0fdf4"><div class="card-lbl">Profit</div><div class="card-val text-green">Rp ${f(sum.profit)}</div></div>
                 </div>
                 <div class="section-head">REKAPITULASI BULANAN</div>
@@ -1689,9 +1689,9 @@
                     <colgroup><col style="width:20%"><col style="width:20%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
                     <thead><tr><th>BULAN</th><th class="al-right">OMZET</th><th class="al-right">MODAL</th><th class="al-right">BIAYA</th><th class="al-right">NET</th></tr></thead>
                     <tbody>
-                        ${data.months.map(m => '<tr><td class="font-bold">' + m.month + '</td><td class="al-right text-blue">' + f(m.omzet) + '</td><td class="al-right text-red">(' + f(m.modal) + ')</td><td class="al-right text-orange">(' + f(m.expense) + ')</td><td class="al-right text-green font-bold">' + f(m.net) + '</td></tr>').join('')}
+                        ${data.months.map(m => '<tr><td class="font-bold">' + m.month + '</td><td class="al-right text-blue">' + f(m.omzet) + '</td><td class="al-right text-red">' + f(m.modal) + '</td><td class="al-right text-orange">' + f(m.expense) + '</td><td class="al-right text-green font-bold">' + f(m.net) + '</td></tr>').join('')}
                     </tbody>
-                    <tfoot><tr class="total-row"><td class="font-bold">TOTAL</td><td class="al-right text-blue font-bold">${f(sum.omzet)}</td><td class="al-right text-red">(${f(sum.modal)})</td><td class="al-right text-orange">(${f(sum.expense)})</td><td class="al-right text-green font-bold">${f(sum.profit)}</td></tr></tfoot>
+                    <tfoot><tr class="total-row"><td class="font-bold">TOTAL</td><td class="al-right text-blue font-bold">${f(sum.omzet)}</td><td class="al-right text-red">${f(sum.modal)}</td><td class="al-right text-orange">${f(sum.expense)}</td><td class="al-right text-green font-bold">${f(sum.profit)}</td></tr></tfoot>
                 </table>`;
             this.openPrintPreview(this.buildDocument('report', fileName, bodyContent));
         },
@@ -1740,8 +1740,8 @@
                 ${this.getDocHeaderHTML('LAPORAN BULANAN', data.period, 'PERIODE')}
                 <div class="summary-grid">
                     <div class="card" style="background:#eff6ff"><div class="card-lbl">Omzet</div><div class="card-val text-blue">Rp ${f(sum.omzet)}</div></div>
-                    <div class="card" style="background:#fef2f2"><div class="card-lbl">Modal</div><div class="card-val text-red">(${f(sum.modal)})</div></div>
-                    <div class="card" style="background:#fff7ed"><div class="card-lbl">Biaya</div><div class="card-val text-orange">(${f(sum.expense)})</div></div>
+                    <div class="card" style="background:#fef2f2"><div class="card-lbl">Modal</div><div class="card-val text-red">Rp ${f(sum.modal)}</div></div>
+                    <div class="card" style="background:#fff7ed"><div class="card-lbl">Biaya</div><div class="card-val text-orange">Rp ${f(sum.expense)}</div></div>
                     <div class="card" style="background:#f0fdf4"><div class="card-lbl">Profit</div><div class="card-val text-green">Rp ${f(sum.profit)}</div></div>
                 </div>
                 <div class="section-head">PENJUALAN</div>

@@ -1168,8 +1168,7 @@
                                 </h3>
                                 <button @click="fetchLogs(); vibrate()"
                                     class="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-50 transition active:scale-90 relative">
-                                    <svg class="w-4 h-4" :class="{'animate-spin': loadingLogs}" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <use href="#i-refresh" />
                                     </svg>
                                     <span x-show="bgProcess"
@@ -1363,8 +1362,6 @@
                                     class="flex-1 bg-white border border-slate-200 text-slate-500 font-bold py-3.5 rounded-2xl text-xs hover:bg-slate-50 active:scale-95 transition">BATAL</button>
                                 <button type="submit" :disabled="bgProcess"
                                     class="flex-1 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-rose-500/30 active:scale-95 flex justify-center gap-2 hover:shadow-xl transition-all disabled:opacity-70">
-                                    <span x-show="bgProcess"
-                                        class="animate-spin w-3 h-3 border-2 border-white/30 border-t-white rounded-full"></span>
                                     <span
                                         x-text="bgProcess ? 'MENYIMPAN...' : (expForm.id ? 'UPDATE DATA' : 'SIMPAN PENGELUARAN')"></span>
                                 </button>
@@ -1593,17 +1590,8 @@
                                 <div class="text-left">
                                     <div
                                         class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-2">
-                                        <svg class="w-5 h-5" x-show="!loadingPdf" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <use href="#i-chart-bar" />
-                                        </svg>
-                                        <svg x-show="loadingPdf" class="w-5 h-5 animate-spin" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                            </path>
                                         </svg>
                                     </div>
                                     <p class="text-lg font-black text-slate-800">Laporan Bulanan</p>
@@ -1628,18 +1616,9 @@
                                 <div class="text-left">
                                     <div
                                         class="w-10 h-10 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mb-2">
-                                        <svg x-show="!loadingPdf" class="w-5 h-5" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <svg x-show="loadingPdf" class="w-5 h-5 animate-spin" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                            </path>
                                         </svg>
                                     </div>
                                     <p class="text-lg font-black text-slate-800">Laporan Pengeluaran</p>
@@ -1664,17 +1643,8 @@
                                 <div class="text-left">
                                     <div
                                         class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-2">
-                                        <svg class="w-5 h-5" x-show="!loadingPdf" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <use href="#i-clock" />
-                                        </svg>
-                                        <svg x-show="loadingPdf" class="w-5 h-5 animate-spin" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                            </path>
                                         </svg>
                                     </div>
                                     <p class="text-lg font-black text-slate-800">Laporan Tahunan</p>
@@ -1908,8 +1878,7 @@
                             </h3>
                             <button @click="fetchLogs(); vibrate()"
                                 class="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-50 transition active:scale-90 relative">
-                                <svg class="w-4 h-4" :class="{'animate-spin': loadingLogs}" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <use href="#i-refresh" />
                                 </svg>
                             </button>
@@ -2023,8 +1992,7 @@
                             </div>
 
                             <div x-show="loadingLogs" class="py-10 flex justify-center z-20 relative">
-                                <span
-                                    class="animate-spin w-6 h-6 border-2 border-indigo-200 border-t-indigo-600 rounded-full"></span>
+                                <span class="text-xs font-bold text-slate-400">Loading...</span>
                             </div>
                         </div>
                     </div>

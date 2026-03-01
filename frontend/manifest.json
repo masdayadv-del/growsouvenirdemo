@@ -1,13 +1,13 @@
 {
   "id": "/grow-souvenir",
   "name": "Grow Souvenir System",
-  "short_name": "Grow App",
+  "short_name": "Grow App Demo",
   "description": "Sistem manajemen transaksi dan inventori untuk Grow Souvenir & Advertising",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F8FAFC",
-  "theme_color": "#4F46E5",
+  "theme_color": "#F8FAFC",
   "orientation": "portrait",
   "lang": "id",
   "categories": [

@@ -11,6 +11,20 @@
         [x-cloak] {
             display: none !important;
         }
+
+        @keyframes indeterminateBar {
+            0% {
+                transform: translateX(-100%) scaleX(0.2);
+            }
+
+            50% {
+                transform: translateX(0) scaleX(0.5);
+            }
+
+            100% {
+                transform: translateX(100%) scaleX(0.2);
+            }
+        }
     </style>
 
     <link rel="icon" type="image/png" href="assets/icon-192.png">
@@ -54,6 +68,13 @@
 
 <body class="h-screen flex flex-col text-slate-800 overflow-hidden bg-slate-50 selection:bg-brand-100" x-data="app()"
     x-init="init()">
+
+    <!-- Top Barline Loader (replaces skeleton loading) -->
+    <div x-show="loading || bgProcess || loadingData" x-cloak
+        class="fixed top-0 left-0 w-full h-1 z-[9999] overflow-hidden bg-brand-200">
+        <div class="h-full bg-brand-600"
+            style="width: 100%; animation: indeterminateBar 1.5s infinite linear; transform-origin: 0% 50%;"></div>
+    </div>
 
     <!-- SVG Icon Sprite (optimasi: 57 duplikat dihapus) -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -467,9 +488,9 @@
                                 </svg>
                             </div>
                             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">Omzet</p>
-                            <p x-show="!loadingData" class="text-lg font-black text-slate-800 leading-tight"
+                            <p  class="text-lg font-black text-slate-800 leading-tight"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.omzet)"></p>
-                            <div x-show="loadingData" class="h-6 w-20 skeleton rounded mt-1"></div>
+                            
                         </div>
 
                         <div @click="tab='list'; vibrate()"
@@ -477,9 +498,9 @@
                             <svg class="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <use href="#i-tag" />
                             </svg>
-                            <p x-show="!loadingData" class="text-[10px] font-bold text-blue-500"
+                            <p  class="text-[10px] font-bold text-blue-500"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.totalHPP)"></p>
-                            <div x-show="loadingData" class="h-2 w-10 skeleton rounded"></div>
+                            
                         </div>
                     </div>
 
@@ -498,13 +519,13 @@
                             </div>
                             <div class="flex justify-between items-baseline">
                                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">Profit Bersih</p>
-                                <p x-show="!loadingData && stats.omzet > 0"
+                                <p x-show="stats.omzet > 0"
                                     class="text-[8px] font-bold text-emerald-500"
                                     x-text="'Margin: ' + Math.round((stats.netProfit / stats.omzet) * 100) + '%'"></p>
                             </div>
-                            <p x-show="!loadingData" class="text-lg font-black text-emerald-600 leading-tight"
+                            <p  class="text-lg font-black text-emerald-600 leading-tight"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.netProfit)"></p>
-                            <div x-show="loadingData" class="h-6 w-20 skeleton rounded mt-1"></div>
+                            
                         </div>
 
 
@@ -513,16 +534,16 @@
                             <svg class="w-3 h-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <use href="#i-document-text" />
                             </svg>
-                            <p x-show="!loadingData" class="text-[10px] font-bold text-rose-500"
+                            <p  class="text-[10px] font-bold text-rose-500"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.totalExpense)"></p>
 
                             <!-- Margin % -->
-                            <div x-show="!loadingData && stats.omzet > 0" class="ml-2 pl-2 border-l border-rose-200">
+                            <div x-show="stats.omzet > 0" class="ml-2 pl-2 border-l border-rose-200">
                                 <p class="text-[9px] font-bold text-slate-400"
                                     x-text="'Gross: ' + Math.round((stats.grossProfit / stats.omzet) * 100) + '%'"></p>
                             </div>
 
-                            <div x-show="loadingData" class="h-2 w-10 skeleton rounded"></div>
+                            
                         </div>
                     </div>
 
@@ -547,9 +568,9 @@
                         </div>
                         <p class="text-[7px] opacity-60 mb-2">Dana tunai siap pakai untuk operasional</p>
                         <div class="flex items-end justify-between">
-                            <h2 x-show="!loadingData" class="text-2xl font-black text-amber-400 tracking-tight"
+                            <h2  class="text-2xl font-black text-amber-400 tracking-tight"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(modalStats.modalGantung)"></h2>
-                            <div x-show="loadingData" class="h-8 w-24 bg-white/10 rounded animate-pulse"></div>
+                            
                             <button @click="openSetorModal()"
                                 class="bg-white text-slate-900 text-[9px] font-bold px-4 py-2 rounded-full active:scale-95 transition shadow hover:bg-slate-100 flex items-center gap-1">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -589,12 +610,7 @@
                             class="text-[9px] font-bold text-brand-600 hover:underline">Lihat Semua</button>
                     </div>
                     <div class="space-y-3">
-                        <template x-if="loadingData">
-                            <div class="space-y-2">
-                                <div class="h-8 skeleton rounded-lg"></div>
-                                <div class="h-8 skeleton rounded-lg"></div>
-                            </div>
-                        </template>
+                        
                         <template x-for="t in history.slice(0, 5)" :key="t.id">
                             <div @click="viewDetail(t); vibrate()"
                                 class="bg-white p-4 rounded-[1.5rem] border border-slate-50 shadow-soft relative active:scale-[0.99] transition">
@@ -637,7 +653,7 @@
                                 </div>
                             </div>
                         </template>
-                        <div x-show="!loadingData && history.length === 0"
+                        <div x-show="history.length === 0"
                             class="text-center py-2 text-[10px] text-slate-400">Belum ada data.</div>
                     </div>
                 </div>
@@ -743,7 +759,7 @@
                     <div class="grid grid-cols-3 gap-2 mb-2 pt-1 px-2">
                         <!-- KPI Cards as Filters -->
                         <!-- Card 1: SEMUA -->
-                        <div @click="!loadingData && (filterStatus='', vibrate())"
+                        <div @click="(filterStatus='', vibrate())"
                             class="p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
                             :class="filterStatus==='' ? 'bg-slate-800 text-white border-slate-700 shadow-lg shadow-slate-500/20' : 'bg-white text-slate-600 border-slate-100 shadow-sm'">
                             <div class="flex justify-between items-start mb-1">
@@ -758,20 +774,17 @@
                                 </div>
                             </div>
                             <!-- Content / Skeleton -->
-                            <div x-show="!loadingData">
+                            <div >
                                 <h3 class="text-sm font-black mb-0.5" x-text="filteredHistoryKPI.all.count"></h3>
                                 <p class="text-[9px] font-bold opacity-60 truncate"
                                     x-text="isSensitiveHidden ? 'Rp ****' : fmt(filteredHistoryKPI.all.total)">
                                 </p>
                             </div>
-                            <div x-show="loadingData" class="space-y-1">
-                                <div class="h-4 bg-white/20 rounded animate-pulse w-8"></div>
-                                <div class="h-3 bg-white/10 rounded animate-pulse w-16"></div>
-                            </div>
+                            
                         </div>
 
                         <!-- Card 2: LUNAS -->
-                        <div @click="!loadingData && (filterStatus='LUNAS', vibrate())"
+                        <div @click="(filterStatus='LUNAS', vibrate())"
                             class="p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
                             :class="filterStatus==='LUNAS' ? 'bg-emerald-500 text-white border-emerald-400 shadow-lg shadow-emerald-500/30' : 'bg-white text-emerald-600 border-emerald-50 shadow-sm'">
                             <div class="flex justify-between items-start mb-1">
@@ -785,20 +798,17 @@
                                 </div>
                             </div>
                             <!-- Content / Skeleton -->
-                            <div x-show="!loadingData">
+                            <div >
                                 <h3 class="text-sm font-black mb-0.5" x-text="filteredHistoryKPI.lunas.count"></h3>
                                 <p class="text-[9px] font-bold opacity-60 truncate"
                                     x-text="isSensitiveHidden ? 'Rp ****' : fmt(filteredHistoryKPI.lunas.total)">
                                 </p>
                             </div>
-                            <div x-show="loadingData" class="space-y-1">
-                                <div class="h-4 bg-white/20 rounded animate-pulse w-8"></div>
-                                <div class="h-3 bg-white/10 rounded animate-pulse w-16"></div>
-                            </div>
+                            
                         </div>
 
                         <!-- Card 3: BELUM LUNAS -->
-                        <div @click="!loadingData && (filterStatus='BELUM LUNAS', vibrate())"
+                        <div @click="(filterStatus='BELUM LUNAS', vibrate())"
                             class="p-3 rounded-2xl border transition-all duration-300 active:scale-95 hover:shadow-md relative overflow-hidden cursor-pointer"
                             :class="filterStatus==='BELUM LUNAS' ? 'bg-rose-500 text-white border-rose-400 shadow-lg shadow-rose-500/30' : 'bg-white text-rose-600 border-rose-50 shadow-sm'">
                             <div class="flex justify-between items-start mb-1">
@@ -812,16 +822,13 @@
                                 </div>
                             </div>
                             <!-- Content / Skeleton -->
-                            <div x-show="!loadingData">
+                            <div >
                                 <h3 class="text-sm font-black mb-0.5" x-text="filteredHistoryKPI.belum.count"></h3>
                                 <p class="text-[9px] font-bold opacity-60 truncate"
                                     x-text="isSensitiveHidden ? 'Rp ****' : fmt(filteredHistoryKPI.belum.total)">
                                 </p>
                             </div>
-                            <div x-show="loadingData" class="space-y-1">
-                                <div class="h-4 bg-white/20 rounded animate-pulse w-8"></div>
-                                <div class="h-3 bg-white/10 rounded animate-pulse w-16"></div>
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -1196,22 +1203,7 @@
                                 <!-- Vertical Line -->
                                 <div class="absolute left-[19px] top-2 bottom-4 w-[2px] bg-slate-100"></div>
 
-                                <template x-if="loadingLogs && logs.length === 0">
-                                    <div class="space-y-6 relative z-10">
-                                        <div class="flex gap-4">
-                                            <div
-                                                class="w-10 h-10 rounded-full bg-slate-50 border-4 border-white shrink-0">
-                                            </div>
-                                            <div class="h-16 w-full skeleton rounded-2xl"></div>
-                                        </div>
-                                        <div class="flex gap-4">
-                                            <div
-                                                class="w-10 h-10 rounded-full bg-slate-50 border-4 border-white shrink-0">
-                                            </div>
-                                            <div class="h-16 w-full skeleton rounded-2xl"></div>
-                                        </div>
-                                    </div>
-                                </template>
+                                
 
                                 <template x-if="!loadingLogs && logs.length === 0">
                                     <div class="text-center py-12 opacity-50 relative z-10 bg-white">
@@ -1813,7 +1805,7 @@
                                 </div>
                             </div>
                         </template>
-                        <div x-show="!loadingData && users.length === 0" class="text-center py-10 opacity-50">
+                        <div x-show="users.length === 0" class="text-center py-10 opacity-50">
                             <p class="text-xs font-bold text-slate-400">Belum ada anggota tim.</p>
                         </div>
                     </div>

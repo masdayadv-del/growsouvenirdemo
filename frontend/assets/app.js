@@ -7,6 +7,7 @@
         tab: 'home', initialLoading: true, bgProcess: false, loading: false, loadingPdf: false, notifications: [], isMasterOpen: false, isSetorOpen: false, isDeleteOpen: false, isDeleteDepositOpen: false, deleteId: null, deleteDate: null, deleteDepositIndex: null, isOffline: false, loadingData: true,
         isFixDBOpen: false, fixLogs: null, isFixResultOpen: false,
         isSensitiveHidden: localStorage.getItem('grow_privacy_mode') === 'true',
+        isDarkMode: localStorage.getItem('grow_dark_mode') === 'true',
         // Server Search
         isSearchingServer: false, serverSearchResults: [], showServerResults: false,
         allProducts: [], categories: [], history: [], expenses: [], deposits: [],
@@ -157,6 +158,13 @@
             this.$watch('cart', (val) => localStorage.setItem('grow_cart_backup', JSON.stringify(val)));
             this.$watch('isSensitiveHidden', (val) => localStorage.setItem('grow_privacy_mode', val));
 
+            // === DARK MODE ===
+            this.applyDarkMode(this.isDarkMode);
+            this.$watch('isDarkMode', (val) => {
+                localStorage.setItem('grow_dark_mode', val);
+                this.applyDarkMode(val);
+            });
+
             // Restore cart from backup (single source of truth)
             this.restoreCart();
 
@@ -222,6 +230,18 @@
             });
         },
         vibrate() { if (navigator.vibrate) navigator.vibrate(15); },
+
+        applyDarkMode(dark) {
+            const html = document.documentElement;
+            if (dark) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+            // Update meta theme-color
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', dark ? '#0f172a' : '#4F46E5');
+        },
 
         async login() {
             if (!this.loginForm.u || !this.loginForm.p) return this.notify("Isi Username & Password!", 'error');

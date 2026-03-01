@@ -27,6 +27,13 @@
         }
     </style>
 
+    <!-- Anti-FOUC: Apply dark mode BEFORE render to prevent white flash -->
+    <script>
+        if (localStorage.getItem('grow_dark_mode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
     <link rel="icon" type="image/png" href="assets/icon-192.png">
     <link rel="shortcut icon" href="assets/icon-192.png">
     <link rel="apple-touch-icon" href="assets/icon-192.png">
@@ -265,6 +272,22 @@
                     </svg>
                 </button>
 
+                <!-- Dark Mode Toggle -->
+                <button @click="isDarkMode = !isDarkMode; vibrate()"
+                    class="dark-toggle w-10 h-10 rounded-xl bg-white/50 border border-slate-200/50 flex items-center justify-center text-slate-400 active:scale-95 transition hover:bg-white hover:shadow-sm">
+                    <!-- Sun icon (shown in dark mode) -->
+                    <svg x-show="isDarkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                        </path>
+                    </svg>
+                    <!-- Moon icon (shown in light mode) -->
+                    <svg x-show="!isDarkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                        </path>
+                    </svg>
+                </button>
                 <!-- Offline Queue Indicator -->
                 <button x-show="pendingQueue.length > 0" @click="processPendingQueue(); vibrate()"
                     class="w-10 h-10 rounded-xl bg-white/50 border border-slate-200/50 flex items-center justify-center text-amber-600 active:scale-95 transition hover:bg-white hover:shadow-sm relative animate-pulse"
@@ -488,9 +511,9 @@
                                 </svg>
                             </div>
                             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">Omzet</p>
-                            <p  class="text-lg font-black text-slate-800 leading-tight"
+                            <p class="text-lg font-black text-slate-800 leading-tight"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.omzet)"></p>
-                            
+
                         </div>
 
                         <div @click="tab='list'; vibrate()"
@@ -498,9 +521,9 @@
                             <svg class="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <use href="#i-tag" />
                             </svg>
-                            <p  class="text-[10px] font-bold text-blue-500"
+                            <p class="text-[10px] font-bold text-blue-500"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.totalHPP)"></p>
-                            
+
                         </div>
                     </div>
 
@@ -519,13 +542,12 @@
                             </div>
                             <div class="flex justify-between items-baseline">
                                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">Profit Bersih</p>
-                                <p x-show="stats.omzet > 0"
-                                    class="text-[8px] font-bold text-emerald-500"
+                                <p x-show="stats.omzet > 0" class="text-[8px] font-bold text-emerald-500"
                                     x-text="'Margin: ' + Math.round((stats.netProfit / stats.omzet) * 100) + '%'"></p>
                             </div>
-                            <p  class="text-lg font-black text-emerald-600 leading-tight"
+                            <p class="text-lg font-black text-emerald-600 leading-tight"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.netProfit)"></p>
-                            
+
                         </div>
 
 
@@ -534,7 +556,7 @@
                             <svg class="w-3 h-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <use href="#i-document-text" />
                             </svg>
-                            <p  class="text-[10px] font-bold text-rose-500"
+                            <p class="text-[10px] font-bold text-rose-500"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.totalExpense)"></p>
 
                             <!-- Margin % -->
@@ -543,7 +565,7 @@
                                     x-text="'Gross: ' + Math.round((stats.grossProfit / stats.omzet) * 100) + '%'"></p>
                             </div>
 
-                            
+
                         </div>
                     </div>
 
@@ -568,9 +590,9 @@
                         </div>
                         <p class="text-[7px] opacity-60 mb-2">Dana tunai siap pakai untuk operasional</p>
                         <div class="flex items-end justify-between">
-                            <h2  class="text-2xl font-black text-amber-400 tracking-tight"
+                            <h2 class="text-2xl font-black text-amber-400 tracking-tight"
                                 x-text="isSensitiveHidden ? 'Rp *******' : fmt(modalStats.modalGantung)"></h2>
-                            
+
                             <button @click="openSetorModal()"
                                 class="bg-white text-slate-900 text-[9px] font-bold px-4 py-2 rounded-full active:scale-95 transition shadow hover:bg-slate-100 flex items-center gap-1">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -610,7 +632,7 @@
                             class="text-[9px] font-bold text-brand-600 hover:underline">Lihat Semua</button>
                     </div>
                     <div class="space-y-3">
-                        
+
                         <template x-for="t in history.slice(0, 5)" :key="t.id">
                             <div @click="viewDetail(t); vibrate()"
                                 class="bg-white p-4 rounded-[1.5rem] border border-slate-50 shadow-soft relative active:scale-[0.99] transition">
@@ -653,8 +675,8 @@
                                 </div>
                             </div>
                         </template>
-                        <div x-show="history.length === 0"
-                            class="text-center py-2 text-[10px] text-slate-400">Belum ada data.</div>
+                        <div x-show="history.length === 0" class="text-center py-2 text-[10px] text-slate-400">Belum ada
+                            data.</div>
                     </div>
                 </div>
             </div>
@@ -774,13 +796,13 @@
                                 </div>
                             </div>
                             <!-- Content / Skeleton -->
-                            <div >
+                            <div>
                                 <h3 class="text-sm font-black mb-0.5" x-text="filteredHistoryKPI.all.count"></h3>
                                 <p class="text-[9px] font-bold opacity-60 truncate"
                                     x-text="isSensitiveHidden ? 'Rp ****' : fmt(filteredHistoryKPI.all.total)">
                                 </p>
                             </div>
-                            
+
                         </div>
 
                         <!-- Card 2: LUNAS -->
@@ -798,13 +820,13 @@
                                 </div>
                             </div>
                             <!-- Content / Skeleton -->
-                            <div >
+                            <div>
                                 <h3 class="text-sm font-black mb-0.5" x-text="filteredHistoryKPI.lunas.count"></h3>
                                 <p class="text-[9px] font-bold opacity-60 truncate"
                                     x-text="isSensitiveHidden ? 'Rp ****' : fmt(filteredHistoryKPI.lunas.total)">
                                 </p>
                             </div>
-                            
+
                         </div>
 
                         <!-- Card 3: BELUM LUNAS -->
@@ -822,13 +844,13 @@
                                 </div>
                             </div>
                             <!-- Content / Skeleton -->
-                            <div >
+                            <div>
                                 <h3 class="text-sm font-black mb-0.5" x-text="filteredHistoryKPI.belum.count"></h3>
                                 <p class="text-[9px] font-bold opacity-60 truncate"
                                     x-text="isSensitiveHidden ? 'Rp ****' : fmt(filteredHistoryKPI.belum.total)">
                                 </p>
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -1203,7 +1225,7 @@
                                 <!-- Vertical Line -->
                                 <div class="absolute left-[19px] top-2 bottom-4 w-[2px] bg-slate-100"></div>
 
-                                
+
 
                                 <template x-if="!loadingLogs && logs.length === 0">
                                     <div class="text-center py-12 opacity-50 relative z-10 bg-white">

@@ -506,20 +506,22 @@
 
 
                         <div @click="tab='expense'; vibrate()"
-                            class="flex items-center gap-2 cursor-pointer opacity-90 hover:opacity-100 transition mt-1 bg-rose-50 rounded-lg p-1.5 w-fit">
-                            <svg class="w-3 h-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <use href="#i-document-text" />
-                            </svg>
-                            <p class="text-[10px] font-bold text-rose-500"
-                                x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.totalExpense)"></p>
-
-                            <!-- Margin % -->
-                            <div x-show="stats.omzet > 0" class="ml-2 pl-2 border-l border-rose-200">
-                                <p class="text-[9px] font-bold text-slate-400"
-                                    x-text="'Margin: ' + Math.round((stats.netProfit / stats.omzet) * 100) + '%'"></p>
+                            class="flex items-center gap-2 cursor-pointer opacity-90 hover:opacity-100 transition mt-1 bg-rose-50 rounded-lg p-1.5 w-full sm:w-fit flex-wrap overflow-hidden">
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <svg class="w-3 h-3 text-rose-500 shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <use href="#i-document-text" />
+                                </svg>
+                                <p class="text-[10px] font-bold text-rose-500 truncate"
+                                    x-text="isSensitiveHidden ? 'Rp *******' : fmt(stats.totalExpense)"></p>
                             </div>
 
-
+                            <!-- Margin % -->
+                            <div x-show="stats.omzet > 0"
+                                class="flex-1 min-w-[50px] sm:ml-2 sm:pl-2 sm:border-l sm:border-rose-200 border-l border-rose-200 pl-2">
+                                <p class="text-[9px] font-bold text-slate-400 truncate"
+                                    x-text="'Margin: ' + Math.round((stats.netProfit / stats.omzet) * 100) + '%'"></p>
+                            </div>
                         </div>
                     </div>
 

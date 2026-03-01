@@ -3,11 +3,11 @@
 // Professional PWA with multi-strategy caching
 // ═══════════════════════════════════════════════════════
 
-const CACHE_VERSION = 'grow-v1.0.0';
-const RUNTIME_CACHE = 'grow-runtime-v1';
+const CACHE_VERSION = 'grow-v1.0.1';
+const RUNTIME_CACHE = 'grow-runtime-v1.0.1';
 const FONT_CACHE = 'grow-fonts-v1';
 const CDN_CACHE = 'grow-cdn-v1';
-const API_CACHE = 'grow-api-v1';
+const API_CACHE = 'grow-api-v1.0.1';
 
 // Aset statis yang di-precache saat install
 const PRECACHE_ASSETS = [

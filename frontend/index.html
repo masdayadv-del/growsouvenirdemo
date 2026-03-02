@@ -73,7 +73,7 @@
     <script src="assets/pdf-styles.js"></script>
 </head>
 
-<body class="h-screen flex flex-col text-slate-800 overflow-hidden bg-slate-50 selection:bg-brand-100" x-data="app()"
+<body class="h-screen flex flex-col text-slate-800 overflow-hidden bg-white selection:bg-brand-100" x-data="app()"
     x-init="init()">
 
     <!-- Top Barline Loader (replaces skeleton loading) -->
@@ -181,7 +181,7 @@
     </div>
 
     <div x-show="!currentUser" x-cloak
-        class="fixed inset-0 z-[200] bg-slate-50 flex flex-col items-center justify-center p-6" x-transition.opacity>
+        class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center p-6" x-transition.opacity>
         <div class="absolute top-16 text-center login-timer">
             <p class="text-4xl font-black text-slate-200 tracking-tighter" x-text="timeString">00:00</p>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1" x-text="dateString">...</p>
@@ -315,7 +315,7 @@
                         </div>
 
                         <div
-                            class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-[2.5px] border-[#F8FAFC] rounded-full shadow-sm">
+                            class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-[2.5px] border-white rounded-full shadow-sm">
                         </div>
                     </div>
                 </div>
@@ -641,7 +641,7 @@
 
             <div x-show="tab === 'list'" x-cloak class="space-y-5 max-w-md mx-auto fade-in">
 
-                <div class="sticky top-0 z-20 pb-2 pt-1 bg-[#F8FAFC]">
+                <div class="sticky top-0 z-20 pb-2 pt-1 bg-white">
                     <!-- Title -->
                     <h2 class="text-sm font-bold text-slate-800 uppercase mb-2 ml-2 flex items-center gap-2">
                         <span class="w-1.5 h-4 bg-brand-500 rounded-full"></span>

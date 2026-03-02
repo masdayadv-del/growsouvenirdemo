@@ -1,7 +1,7 @@
 {
   "id": "/grow-souvenir",
   "name": "Grow Souvenir System",
-  "short_name": "Grow App Demo",
+  "short_name": "Grow App",
   "description": "Sistem manajemen transaksi dan inventori untuk Grow Souvenir & Advertising",
   "start_url": "./index.html",
   "scope": "./",

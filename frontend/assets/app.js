@@ -177,6 +177,7 @@ function app() {
                 this.startApp(msgInterval);
             } else {
                 this.initialLoading = false;
+                this.loadingData = false;
                 clearInterval(msgInterval);
             }
         },
@@ -495,20 +496,24 @@ function app() {
 
         async fetch(isInitial = false, silent = false) {
             if (!silent) this.loading = true;
-            if (isInitial) {
-                const cache = SecureStorage.get('grow_data_cache');
-                if (cache) {
-                    this.applyData(cache);
+            try {
+                if (isInitial) {
+                    const cache = SecureStorage.get('grow_data_cache');
+                    if (cache) {
+                        this.applyData(cache);
+                        this.initialLoading = false; // Show UI immediately if cache exists
+                    }
                 }
-            }
-            const e = await this.api('getInitialData');
-            if (e) {
-                this.applyData(e);
-                SecureStorage.set('grow_data_cache', e);
+                const e = await this.api('getInitialData');
+                if (e) {
+                    this.applyData(e);
+                    SecureStorage.set('grow_data_cache', e);
+                }
+            } finally {
+                if (!silent) this.loading = false;
                 this.loadingData = false;
                 this.initialLoading = false;
             }
-            if (!silent) this.loading = false;
         },
 
         async searchServer() {

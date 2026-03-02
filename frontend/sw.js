@@ -3,11 +3,11 @@
 // Professional PWA with multi-strategy caching
 // ═══════════════════════════════════════════════════════
 
-const CACHE_VERSION = 'grow-v1.0.1';
-const RUNTIME_CACHE = 'grow-runtime-v1.0.1';
+const CACHE_VERSION = 'grow-v1.0.2';
+const RUNTIME_CACHE = 'grow-runtime-v1.0.2';
 const FONT_CACHE = 'grow-fonts-v1';
 const CDN_CACHE = 'grow-cdn-v1';
-const API_CACHE = 'grow-api-v1.0.1';
+const API_CACHE = 'grow-api-v1.0.2';
 
 // Aset statis yang di-precache saat install
 const PRECACHE_ASSETS = [
@@ -86,8 +86,9 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // 5) App Shell (same-origin HTML/CSS/JS/images) → Cache First
-    event.respondWith(cacheFirst(request, CACHE_VERSION));
+    // 5) App Shell (same-origin HTML/CSS/JS/images) → Stale While Revalidate
+    // Ini memastikan aplikasi selalu update di background tanpa mengorbankan kecepatan.
+    event.respondWith(staleWhileRevalidate(request, CACHE_VERSION));
 });
 
 

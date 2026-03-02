@@ -76,10 +76,11 @@
 <body class="h-screen flex flex-col text-slate-800 overflow-hidden bg-white selection:bg-brand-100" x-data="app()"
     x-init="init()">
 
-    <!-- Top Barline Loader (replaces skeleton loading) -->
+    <!-- Top Barline Loader (Peningkatan Visibilitas untuk Notch & Putih) -->
     <div x-show="loading || bgProcess || loadingData || loadingPdf || isSearchingServer || loadingLogs || loadingDetail || syncInProgress"
-        x-cloak class="fixed top-0 left-0 w-full h-1 z-[9999] overflow-hidden bg-brand-200">
-        <div class="h-full bg-brand-600"
+        x-cloak class="fixed top-0 left-0 w-full z-[9999] overflow-hidden bg-brand-100/50"
+        style="height: 6px; padding-top: env(safe-area-inset-top, 0px);">
+        <div class="h-full bg-brand-600 shadow-[0_0_8px_rgba(79,70,229,0.4)]"
             style="width: 100%; animation: indeterminateBar 1.5s infinite linear; transform-origin: 0% 50%;"></div>
     </div>
 

@@ -1,4 +1,14 @@
-﻿function app() {
+﻿// === SHARED CONSTANTS (Avoid duplication across methods) ===
+const HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+function _fmtDateISO(d) {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+function app() {
     return {
         currentUser: SecureStorage.get('grow_user') || null,
         loginForm: { u: '', p: '' },
@@ -24,6 +34,10 @@
         _userOmzetCache: null,
         _cachedHistoryForTransactions: null,
         _userTransactionsCache: null,
+        _cachedFilteredHistory: null,
+        _lastFilterKey: null,
+        _cachedFilteredKPI: null,
+        _lastKPIFilterKey: null,
 
         // === PULL TO REFRESH (TOP LINEBAR TRIGGER) ===
         pulling: false,
@@ -170,13 +184,7 @@
         updateTime() {
             const now = new Date();
             this.timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            const day = days[now.getDay()];
-            const dd = now.getDate();
-            const mon = months[now.getMonth()];
-            const yyyy = now.getFullYear();
-            this.dateString = `${day}, ${dd} ${mon} ${yyyy}`;
+            this.dateString = `${HARI[now.getDay()]}, ${now.getDate()} ${BULAN[now.getMonth()]} ${now.getFullYear()}`;
         },
         restoreCart() {
             const backup = localStorage.getItem('grow_cart_backup');
@@ -308,42 +316,24 @@
             this.vibrate();
         },
 
-        executeFixDB() {
+        async executeFixDB() {
             this.isFixDBOpen = false;
             this.bgProcess = true;
             this.notify("Memulai perbaikan database...", "info");
-
-            // API_TOKEN is not in scope here if in JS_Defs, but global consts are shared 
-            // However, we removed API_TOKEN from JS_Defs in V27 update.
-            // We should use SESSION TOKEN logic here (Code.gs was updated to check session)
-            // The fixDatabaseSchema action might require session auth now.
-
-            // Construct payload
-            const payload = { action: "fixDatabaseSchema" };
-            const token = SecureStorage.get('grow_session_token');
-            if (token) payload.token = token;
-
-            fetch(`${API_URL}?action=fixDatabaseSchema`, {
-                method: 'POST',
-                redirect: "follow",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(payload)
-            })
-                .then(r => r.json())
-                .then(data => {
-                    this.bgProcess = false;
-                    if (data.success) {
-                        this.fixLogs = "Log Perbaikan:\n" + (data.logs ? data.logs.join("\n") : "No logs");
-                        this.isFixResultOpen = true; // Show Result Modal
-                        this.notify("âœ… Database Berhasil Diperbaiki!", "success");
-                    } else {
-                        this.notify("Gagal: " + data.message, "error");
-                    }
-                })
-                .catch(e => {
-                    this.bgProcess = false;
-                    this.notify("Error koneksi: " + e.message, "error");
-                });
+            try {
+                const data = await this.api('fixDatabaseSchema');
+                if (data && data.success) {
+                    this.fixLogs = "Log Perbaikan:\n" + (data.logs ? data.logs.join("\n") : "No logs");
+                    this.isFixResultOpen = true;
+                    this.notify("Database Berhasil Diperbaiki!", "success");
+                } else {
+                    this.notify("Gagal: " + (data?.message || 'Error'), "error");
+                }
+            } catch (e) {
+                this.notify("Error koneksi: " + e.message, "error");
+            } finally {
+                this.bgProcess = false;
+            }
         },
 
         editUser(u) { this.openUserModal(u); },
@@ -352,7 +342,8 @@
             if (!this.currUserForm.username?.trim()) {
                 return this.notify("Username wajib diisi", 'error');
             }
-            if (!this.currUserForm.password?.trim()) {
+            // FIX: Password only required for NEW users (backend supports edit without password change)
+            if (!this.currUserForm.isEdit && !this.currUserForm.password?.trim()) {
                 return this.notify("Password wajib diisi", 'error');
             }
             if (!this.currUserForm.name?.trim()) {
@@ -439,8 +430,7 @@
             this.isDeleteOpen = true;
             this.deleteUserItem = u;
         },
-        notify(e, t = 'success') { const n = Date.now(); this.notifications.push({ id: n, message: e, type: t }); setTimeout(() => this.notifications = this.notifications.filter(e => e.id !== n), 1500); },
-
+        notify(e, t = 'success') { const n = Date.now() + '-' + Math.random().toString(36).substr(2, 9); this.notifications.push({ id: n, message: e, type: t }); setTimeout(() => this.notifications = this.notifications.filter(e => e.id !== n), 1500); },
 
         async api(action, payload = null) {
             if (!navigator.onLine) { this.notify("Anda sedang Offline!", 'error'); return null; }
@@ -478,23 +468,21 @@
                             this.logout(); // Auto logout on invalid token
                             return null;
                         }
-                        // Conflict Detection (NEW)
-                        if (data.message.includes("CONFLICT")) {
-                            // Let caller handle or notify here
-                            // We will throw error so save() can handle it
-                            throw new Error("CONFLICT");
+                        // Conflict Detection — matches backend "KONFLIK:" keyword
+                        if (data.message.includes("KONFLIK")) {
+                            throw new Error("KONFLIK");
                         }
                     }
                     return data;
                 } catch (e) {
-                    if (e.message === "CONFLICT") throw e;
+                    if (e.message === "KONFLIK") throw e;
                     console.error("API Non-JSON Response:", text);
                     throw new Error("Respon Server Masalah (HTML/Auth)");
                 }
 
             } catch (error) {
                 clearTimeout(id);
-                if (error.message === "CONFLICT") throw error; // Re-throw conflict
+                if (error.message === "KONFLIK") throw error; // Re-throw conflict
 
                 if (error.name === 'AbortError') {
                     this.notify("Koneksi Timeout (Lambat)", 'error');
@@ -505,8 +493,8 @@
             }
         },
 
-        async fetch(isInitial = false) {
-            this.loading = true;
+        async fetch(isInitial = false, silent = false) {
+            if (!silent) this.loading = true;
             if (isInitial) {
                 const cache = SecureStorage.get('grow_data_cache');
                 if (cache) {
@@ -520,7 +508,7 @@
                 this.loadingData = false;
                 this.initialLoading = false;
             }
-            this.loading = false;
+            if (!silent) this.loading = false;
         },
 
         async searchServer() {
@@ -614,20 +602,30 @@
             return this.allProducts.filter(p => p.name.toLowerCase().includes(lower) || p.category.toLowerCase().includes(lower)).slice(0, 10);
         },
         get filteredHistory() {
-            return this.history.filter(e => {
-                // Search filter (customer, product, or ID) with null safety
+            // Performance Optimization: Cache result based on history and filter state
+            const filterKey = JSON.stringify([
+                this.history, // Array reference check (replaced on fetch)
+                this.searchQuery,
+                this.filterStartDate,
+                this.filterEndDate,
+                this.filterStatus
+            ]);
+
+            if (this._lastFilterKey === filterKey && this._cachedFilteredHistory) {
+                return this._cachedFilteredHistory;
+            }
+
+            const result = this.history.filter(e => {
                 const searchLower = (this.searchQuery || '').toLowerCase();
                 const customerMatch = (e.customer || '').toLowerCase().includes(searchLower);
                 const productMatch = (e.product || '').toLowerCase().includes(searchLower);
                 const idMatch = (e.id || '').toLowerCase().includes(searchLower);
                 const matchSearch = !this.searchQuery || customerMatch || productMatch || idMatch;
 
-                // Date range filter with validation
                 let matchDate = true;
                 let startDate = this.filterStartDate;
                 let endDate = this.filterEndDate;
 
-                // Auto-swap if dates are reversed
                 if (startDate && endDate && endDate < startDate) {
                     [startDate, endDate] = [endDate, startDate];
                 }
@@ -635,17 +633,28 @@
                 if (startDate && e.isoDate < startDate) matchDate = false;
                 if (endDate && e.isoDate > endDate) matchDate = false;
 
-                // Status filter
                 const matchStatus = this.filterStatus ? e.status === this.filterStatus : true;
 
                 return matchSearch && matchDate && matchStatus;
             });
+
+            this._lastFilterKey = filterKey;
+            this._cachedFilteredHistory = result;
+            return result;
         },
         get displayedHistory() {
             return this.filteredHistory.slice(0, this.historyLimit);
         },
         get filteredHistoryKPI() {
+            // Dependent on filteredHistory result
             const filtered = this.filteredHistory;
+
+            // Performance Optimization: Cache result
+            const kpiKey = JSON.stringify([filtered]);
+            if (this._lastKPIFilterKey === kpiKey && this._cachedFilteredKPI) {
+                return this._cachedFilteredKPI;
+            }
+
             const kpi = {
                 all: { count: filtered.length, total: 0 },
                 lunas: { count: 0, total: 0 },
@@ -661,33 +670,30 @@
                     kpi.belum.total += t.sisa || 0;
                 }
             });
+
+            this._lastKPIFilterKey = kpiKey;
+            this._cachedFilteredKPI = kpi;
             return kpi;
         },
 
         setQuickFilter(type) {
             this.quickFilter = type;
-            this.showServerResults = false; // Reset server search on filter change
-            this.historyLimit = 30; // Reset pagination
+            this.showServerResults = false;
+            this.historyLimit = 30;
             const today = new Date();
-            const formatDate = (d) => {
-                const yyyy = d.getFullYear();
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const dd = String(d.getDate()).padStart(2, '0');
-                return `${yyyy}-${mm}-${dd}`;
-            };
 
             if (type === 'today') {
-                this.filterStartDate = formatDate(today);
-                this.filterEndDate = formatDate(today);
+                this.filterStartDate = _fmtDateISO(today);
+                this.filterEndDate = _fmtDateISO(today);
             } else if (type === 'week') {
                 const weekStart = new Date(today);
-                weekStart.setDate(today.getDate() - today.getDay()); // Sunday
-                this.filterStartDate = formatDate(weekStart);
-                this.filterEndDate = formatDate(today);
+                weekStart.setDate(today.getDate() - today.getDay());
+                this.filterStartDate = _fmtDateISO(weekStart);
+                this.filterEndDate = _fmtDateISO(today);
             } else if (type === 'month') {
                 const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-                this.filterStartDate = formatDate(monthStart);
-                this.filterEndDate = formatDate(today);
+                this.filterStartDate = _fmtDateISO(monthStart);
+                this.filterEndDate = _fmtDateISO(today);
             } else if (type === 'all') {
                 this.filterStartDate = '';
                 this.filterEndDate = '';
@@ -698,27 +704,21 @@
 
         setExpenseQuickFilter(type) {
             this.expQuickFilter = type;
-            this.expenseLimit = 50; // Reset pagination
+            this.expenseLimit = 50;
             const today = new Date();
-            const formatDate = (d) => {
-                const yyyy = d.getFullYear();
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const dd = String(d.getDate()).padStart(2, '0');
-                return `${yyyy}-${mm}-${dd}`;
-            };
 
             if (type === 'today') {
-                this.expFilterStart = formatDate(today);
-                this.expFilterEnd = formatDate(today);
+                this.expFilterStart = _fmtDateISO(today);
+                this.expFilterEnd = _fmtDateISO(today);
             } else if (type === 'week') {
                 const weekStart = new Date(today);
-                weekStart.setDate(today.getDate() - today.getDay()); // Sunday
-                this.expFilterStart = formatDate(weekStart);
-                this.expFilterEnd = formatDate(today);
+                weekStart.setDate(today.getDate() - today.getDay());
+                this.expFilterStart = _fmtDateISO(weekStart);
+                this.expFilterEnd = _fmtDateISO(today);
             } else if (type === 'month') {
                 const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-                this.expFilterStart = formatDate(monthStart);
-                this.expFilterEnd = formatDate(today);
+                this.expFilterStart = _fmtDateISO(monthStart);
+                this.expFilterEnd = _fmtDateISO(today);
             } else if (type === 'all') {
                 this.expFilterStart = '';
                 this.expFilterEnd = '';
@@ -751,7 +751,6 @@
         },
         get groupedExpenses() {
             const groups = {};
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
             let itemsCount = 0;
             this.filteredExpenses.forEach(ex => {
@@ -759,7 +758,7 @@
                 const date = new Date(ex.isoDate);
                 if (isNaN(date.getTime())) return;
 
-                const month = months[date.getMonth()];
+                const month = BULAN[date.getMonth()];
                 const year = date.getFullYear();
                 const key = `${month} ${year}`;
 
@@ -920,13 +919,7 @@
             if (!dateStr) return '-';
             const d = new Date(dateStr);
             if (isNaN(d.getTime())) return dateStr;
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            const day = days[d.getDay()];
-            const mon = months[d.getMonth()];
-            const dd = d.getDate();
-            const yyyy = d.getFullYear();
-            return `${day}, ${dd} ${mon} ${yyyy}`;
+            return `${HARI[d.getDay()]}, ${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`;
         },
 
         async save() {
@@ -959,16 +952,10 @@
             const newItem = {
                 id: tempId,
                 displayDate: now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
-                isoDate: new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0], // Local Date ISO
+                isoDate: _fmtDateISO(now),
                 fullDate: (() => {
-                    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                    const day = days[now.getDay()];
-                    const dd = now.getDate();
-                    const mon = months[now.getMonth()];
-                    const yyyy = now.getFullYear();
                     const time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
-                    return `${day}, ${dd} ${mon} ${yyyy}, ${time} WIB`;
+                    return `${HARI[now.getDay()]}, ${now.getDate()} ${BULAN[now.getMonth()]} ${now.getFullYear()}, ${time} WIB`;
                 })(),
                 timestamp: now.toISOString(), // Preserve exact time for local edits
                 customer: this.form.customer,
@@ -1265,13 +1252,37 @@
                 }
 
                 if (this.deleteType === 'expense') {
-                    // EXPENSE DELETE LOGIC
-                    const res = await this.api('deleteExpense', { id: this.deleteId });
-                    if (res && res.success) {
-                        this.notify("Pengeluaran dihapus", 'success');
-                        this.fetch();
-                    } else {
-                        this.notify(res?.message || "Gagal menghapus", 'error');
+                    // EXPENSE DELETE LOGIC (Optimistic UI)
+                    const expItem = this.expenses.find(e => e.id === this.deleteId);
+                    const backupExp = expItem ? JSON.parse(JSON.stringify(expItem)) : null;
+
+                    if (expItem) {
+                        this.expenses = this.expenses.filter(e => e.id !== this.deleteId);
+                    }
+
+                    // Release UI lock immediately for Optimistic UI
+                    this.bgProcess = false;
+
+                    try {
+                        const res = await this.api('deleteExpense', { id: this.deleteId });
+                        if (res && res.success) {
+                            this.notify("Pengeluaran dihapus", 'success');
+                            // Silently refresh
+                            this.fetch(false, true);
+                        } else {
+                            // ROLLBACK
+                            if (backupExp) {
+                                this.expenses.unshift(backupExp);
+                                // Ideally sort it back, but unshift is okay for temporary error state
+                            }
+                            this.notify(res?.message || "Gagal menghapus", 'error');
+                        }
+                    } catch (e) {
+                        // ROLLBACK
+                        if (backupExp) {
+                            this.expenses.unshift(backupExp);
+                        }
+                        this.notify("Error: " + e.message, 'error');
                     }
                     return;
                 }
@@ -1394,26 +1405,76 @@
             if (!this.expForm.category || !this.expForm.desc || !this.expForm.amount) return this.notify("Lengkapi form pengeluaran", "error");
             this.bgProcess = true;
 
-            // Needed for offline sync
+            // Needed for offline sync & optimistic UI
             this.expForm.action = 'saveExpense';
+            const isNew = !this.expForm.id;
+            const optimisticId = this.expForm.id || this.generateUUID();
+            const now = new Date();
+
+            const optimisticData = {
+                ...this.expForm,
+                id: optimisticId,
+                isoDate: this.expForm.isoDate || _fmtDateISO(now),
+                date: this.expForm.date || now.toLocaleDateString('id-ID'),
+                timestamp: this.expForm.timestamp || now.toISOString()
+            };
+
+            // OPTIMISTIC UPDATE: Update UI immediately
+            let backupExpense = null;
+            if (isNew) {
+                this.expenses.unshift(optimisticData);
+            } else {
+                const idx = this.expenses.findIndex(e => e.id === optimisticId);
+                if (idx !== -1) {
+                    backupExpense = JSON.parse(JSON.stringify(this.expenses[idx]));
+                    this.expenses[idx] = optimisticData;
+                }
+            }
+
+            // Sync Stats locally
+            // Note: A full accurate stat sync might be complex if editing amounts, 
+            // for simplicity we rely on the getter `expenseKPIs` which auto-calculates from `this.expenses`.
+
+            // Instantly clear form & close modal if any
+            const originalForm = { ...this.expForm };
+            this.expForm = { id: null, category: '', desc: '', amount: '' };
+            this.tab = 'expense';
+
+            // Release the UI lock IMMEDIATELY so the user can keep working
+            this.bgProcess = false;
 
             try {
-                const res = await this.api('saveExpense', this.expForm);
+                // Background API Call (Silent logic)
+                const res = await this.api('saveExpense', originalForm);
                 if (res && res.success) {
                     this.notify("Pengeluaran disimpan", "success");
-                    this.expForm = { id: null, category: '', desc: '', amount: '' };
-                    this.fetch(); // Refresh data
+                    // Silently refresh to ensure absolute consistency with DB
+                    this.fetch(false, true);
                 } else {
+                    // ROLLBACK
+                    if (isNew) {
+                        this.expenses = this.expenses.filter(e => e.id !== optimisticId);
+                    } else if (backupExpense) {
+                        const idx = this.expenses.findIndex(e => e.id === optimisticId);
+                        if (idx !== -1) this.expenses[idx] = backupExpense;
+                    }
+
                     // OFFLINE SYNC
                     if (!this.isOnline) {
                         this.notify("Offline: Pengeluaran masuk antrian sync", 'info');
-                        this.addToPendingQueue({ ...this.expForm, action: 'saveExpense' });
-                        this.expForm = { id: null, category: '', desc: '', amount: '' };
+                        this.addToPendingQueue({ ...originalForm, action: 'saveExpense' });
                     } else {
                         this.notify(res?.message || "Gagal simpan", "error");
                     }
                 }
             } catch (e) {
+                // ROLLBACK on Error
+                if (isNew) {
+                    this.expenses = this.expenses.filter(e => e.id !== optimisticId);
+                } else if (backupExpense) {
+                    const idx = this.expenses.findIndex(e => e.id === optimisticId);
+                    if (idx !== -1) this.expenses[idx] = backupExpense;
+                }
                 this.notify("Error: " + e.message, 'error');
             } finally {
                 this.bgProcess = false;
@@ -1439,14 +1500,19 @@
             if (!this.setorForm.amount) return this.notify("Isi nominal", "error");
             this.bgProcess = true;
             try {
-                const res = await this.api('saveDeposit', this.setorForm);
+                // BUG FIX: Route to updateDeposit if editIndex exists
+                const action = (this.setorForm.editIndex !== undefined && this.setorForm.editIndex !== null)
+                    ? 'updateDeposit'
+                    : 'saveDeposit';
+
+                const res = await this.api(action, this.setorForm);
                 if (res && res.success) {
-                    this.notify("Setor modal berhasil", "success");
-                    this.isSetorOpen = false; // Close strictly on success
+                    this.notify(action === 'updateDeposit' ? "Update modal berhasil" : "Setor modal berhasil", "success");
+                    this.isSetorOpen = false;
                     this.setorForm = { amount: '', note: '', bank: 'Mandiri' };
                     this.fetch();
                 } else {
-                    this.notify("Gagal setor: " + (res?.message || 'Error'), "error");
+                    this.notify("Gagal: " + (res?.message || 'Error'), "error");
                 }
             } catch (e) {
                 this.notify("Error: " + e.message, 'error');
@@ -1521,33 +1587,25 @@
         },
 
 
-        // =====================================================
-        // PDF GENERATION - UNIFIED CLIENT-SIDE ARCHITECTURE
-        // =====================================================
-
-        // CSS loaded from external pdf-styles.js for easier maintenance
         getPdfCSS(docType) { return getPdfCSS(docType); },
 
-        // Shared currency formatter
         fmtRp(n) { return new Intl.NumberFormat('id-ID').format(n); },
-
-        // Shared fetch helper for PDF endpoints
-        _fetchPdf(action, params, onSuccess) {
+        async _fetchPdf(action, params, onSuccess) {
             this.loadingPdf = true;
-            fetch(API_URL + '?action=' + action, {
-                method: 'POST',
-                body: JSON.stringify({ ...params, format: 'json', token: SecureStorage.get('grow_session_token'), username: this.currentUser?.username })
-            })
-                .then(r => r.json())
-                .then(res => {
-                    this.loadingPdf = false;
-                    if (res.success) onSuccess(res);
-                    else this.notify('Gagal: ' + (res.message || 'Unknown'), 'error');
-                })
-                .catch(() => { this.loadingPdf = false; this.notify('Error jaringan', 'error'); });
+            try {
+                const res = await this.api(action, { ...params, format: 'json' });
+                this.loadingPdf = false;
+                if (res && res.success) {
+                    onSuccess(res);
+                } else {
+                    this.notify('Gagal: ' + (res?.message || 'Unknown'), 'error');
+                }
+            } catch (e) {
+                this.loadingPdf = false;
+                this.notify('Error: ' + e.message, 'error');
+            }
         },
 
-        // SHARED: Build document header HTML
         getDocHeaderHTML(title, meta1, meta2) {
             return `
                 <div class="header">
@@ -1564,14 +1622,12 @@
                 </div>`;
         },
 
-        // SHARED: Open preview window with print bar
         openPrintPreview(html) {
             const popup = window.open('', '_blank');
             if (popup) { popup.document.write(html); popup.document.close(); }
             else this.notify('Popup diblokir! Izinkan popup di browser.', 'error');
         },
 
-        // SHARED: Wrap full document HTML
         buildDocument(docType, fileName, bodyContent) {
             return `<!DOCTYPE html>
             <html>
@@ -1597,9 +1653,6 @@
             </html>`;
         },
 
-        // =====================================================
-        // 1. INVOICE
-        // =====================================================
         downloadPDF(t) {
             this._fetchPdf('generateInvoice', { id: t.id, date: t.isoDate }, res => this.printInvoiceClientSide(res));
         },
@@ -1663,10 +1716,6 @@
         },
 
         printInvoice(t) { this.downloadPDF(t); },
-
-        // =====================================================
-        // 2. LAPORAN TAHUNAN (ANNUAL REPORT)
-        // =====================================================
         downloadAnnualReport() {
             this.notify('Mengambil data laporan tahunan...', 'info');
             this._fetchPdf('generateAnnualReport', { year: this.reportDate.year }, res => this.printAnnualReportClientSide(res));
@@ -1696,9 +1745,6 @@
             this.openPrintPreview(this.buildDocument('report', fileName, bodyContent));
         },
 
-        // =====================================================
-        // 3. LAPORAN PENGELUARAN (EXPENSE REPORT)
-        // =====================================================
         downloadExpenseReport() {
             this.notify('Mengambil data pengeluaran...', 'info');
             this._fetchPdf('generateExpenseOnlyReport', { year: this.reportDate.year, month: this.reportDate.month }, res => this.printExpenseReportClientSide(res));
